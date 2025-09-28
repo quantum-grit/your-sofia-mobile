@@ -1,7 +1,8 @@
 {
-  "name": "bolt-expo-starter",
+  "name": "your.sofia.bg",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "license": "EUPL-1.2",
   "private": true,
   "scripts": {
     "dev": "EXPO_NO_TELEMETRY=1 expo start",
