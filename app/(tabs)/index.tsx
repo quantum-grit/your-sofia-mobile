@@ -113,8 +113,7 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>{t('common.goodMorning')}</Text>
-            <Text style={styles.cityName}>{t('common.cityServices')}</Text>
+            <Text style={styles.headerTitle}>{t('common.goodMorning')}</Text>
           </View>
           <TouchableOpacity style={styles.notificationButton}>
             <Bell size={24} color="#6B7280" />
@@ -208,14 +207,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 30,
-    backgroundColor: '#1E40AF',
+    paddingTop: 16,
+    paddingBottom: 16,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
   },
-  greeting: {
-    fontSize: 16,
-    color: '#93C5FD',
-    fontFamily: 'Inter-Regular',
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1F2937',
   },
   cityName: {
     fontSize: 24,
@@ -225,10 +226,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   notificationButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     justifyContent: 'center',
     alignItems: 'center',
   },

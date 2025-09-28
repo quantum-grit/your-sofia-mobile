@@ -1,5 +1,7 @@
 export default {
   common: {
+    header: 'Твоята София',
+    home: 'Начало',
     goodMorning: 'Добро утро!',
     cityServices: 'Това е твоята София!',
     quickServices: 'Бързи услуги',

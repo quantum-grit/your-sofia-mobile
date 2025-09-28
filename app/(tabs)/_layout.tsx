@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router';
+import { Image } from 'react-native';
 import { 
   Home, 
   FileText, 
@@ -14,7 +15,13 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerLeft: () => (
+          <Image 
+            source={require('../../assets/images/sofia-gerb.png')}
+            style={{ width: 24, height: 24, marginLeft: 16, borderRadius: 12 }}
+          />
+        ),
         tabBarStyle: {
           backgroundColor: '#ffffff',
           borderTopWidth: 1,
@@ -33,37 +40,33 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Начало',
-          tabBarIcon: ({ size, color }) => (
-            <Home size={size} color={color} />
-          ),
+          title: t('common.home'),
+          tabBarIcon: ({ color }) => <Home size={24} color={color} />,
+          headerTitle: t('common.header'),
         }}
       />
       <Tabs.Screen
         name="services"
         options={{
-          title: 'Услуги',
-          tabBarIcon: ({ size, color }) => (
-            <FileText size={size} color={color} />
-          ),
+          title: t('common.cityService'),
+          tabBarIcon: ({ color }) => <FileText size={24} color={color} />,
+          headerTitle: t('common.header'),
         }}
       />
       <Tabs.Screen
         name="payments"
         options={{
-          title: 'Плащания',
-          tabBarIcon: ({ size, color }) => (
-            <CreditCard size={size} color={color} />
-          ),
+          title: t('common.quickServices'),
+          tabBarIcon: ({ color }) => <CreditCard size={24} color={color} />,
+          headerTitle: t('common.header'),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Профил',
-          tabBarIcon: ({ size, color }) => (
-            <User size={size} color={color} />
-          ),
+          title: t('common.profile'),
+          tabBarIcon: ({ color }) => <User size={24} color={color} />,
+          headerTitle: t('common.header'),
         }}
       />
     </Tabs>

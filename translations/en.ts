@@ -1,5 +1,7 @@
 export default {
   common: {
+    header: 'Your Sofia',
+    home: 'Home',
     goodMorning: 'Good morning!',
     cityServices: 'This is your Sofia!',
     quickServices: 'Quick Services',
