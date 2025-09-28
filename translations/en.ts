@@ -1,7 +1,7 @@
 export default {
   common: {
     goodMorning: 'Good morning!',
-    cityServices: 'Sofia City Services',
+    cityServices: 'This is your Sofia!',
     quickServices: 'Quick Services',
     cityService: 'City Services',
     emergencyServices: 'Emergency Services',
@@ -9,8 +9,8 @@ export default {
     edit: 'Edit',
     verifiedCitizen: 'Verified Citizen',
     signOut: 'Sign Out',
-    version: 'Sofia City Services v1.0.0',
-    copyright: '© 2024 Sofia Municipality',
+    version: 'Your Sofia v1.0.0',
+    copyright: '© 2025 Sofia Municipality',
   },
   services: {
     payBills: 'Pay Bills',

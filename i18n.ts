@@ -3,6 +3,8 @@ import { initReactI18next } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from './translations/en';
 import bg from './translations/bg';
+import servicesEn from './translations/services.en';
+import servicesBg from './translations/services.bg';
 import { LanguageDetectorAsyncModule } from 'i18next';
 
 const languageDetector: LanguageDetectorAsyncModule = {
@@ -37,8 +39,14 @@ i18n
   .init({
     compatibilityJSON: 'v4',
     resources: {
-      en: { translation: en },
-      bg: { translation: bg },
+      en: { 
+        translation: en,
+        services: servicesEn
+      },
+      bg: { 
+        translation: bg,
+        services: servicesBg
+      },
     },
     fallbackLng: 'bg',
     interpolation: {

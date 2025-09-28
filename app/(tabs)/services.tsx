@@ -21,8 +21,6 @@ import {
   Search
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
-import servicesEn from '../translations/services.en';
-import servicesBg from '../translations/services.bg';
 
 interface Service {
   id: number;
@@ -41,128 +39,129 @@ interface ServiceCategory {
 const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => [
   {
     id: 1,
-    title: t('services.permits.title'),
+    title: t('permits.title'),
     services: [
       {
         id: 11,
-        title: t('services.permits.buildingPermits.title'),
+        title: t('permits.buildingPermits.title'),
         icon: Building2,
-        description: t('services.permits.buildingPermits.description'),
-        status: t('services.status.available')
+        description: t('permits.buildingPermits.description'),
+        status: t('status.available')
       },
       {
         id: 12,
-        title: t('services.permits.businessLicense.title'),
+        title: t('permits.businessLicense.title'),
         icon: Briefcase,
-        description: t('services.permits.businessLicense.description'),
-        status: t('services.status.available')
+        description: t('permits.businessLicense.description'),
+        status: t('status.available')
       }
     ]
   },
   {
     id: 2,
-    title: t('services.certificates.title'),
+    title: t('certificates.title'),
     services: [
       {
         id: 21,
-        title: t('services.certificates.birth.title'),
+        title: t('certificates.birth.title'),
         icon: FileCheck,
-        description: t('services.certificates.birth.description'),
-        status: t('services.status.available')
+        description: t('certificates.birth.description'),
+        status: t('status.available')
       },
       {
         id: 22,
-        title: t('services.certificates.marriage.title'),
+        title: t('certificates.marriage.title'),
         icon: Users,
-        description: t('services.certificates.marriage.description'),
-        status: t('services.status.available')
+        description: t('certificates.marriage.description'),
+        status: t('status.available')
       }
     ]
   },
   {
     id: 3,
-    title: t('services.transportation.title'),
+    title: t('transportation.title'),
     services: [
       {
         id: 31,
-        title: t('services.transportation.parking.title'),
+        title: t('transportation.parking.title'),
         icon: Car,
-        description: t('services.transportation.parking.description'),
-        status: t('services.status.available')
+        description: t('transportation.parking.description'),
+        status: t('status.available')
       },
       {
         id: 32,
-        title: t('services.transportation.publicTransport.title'),
+        title: t('transportation.publicTransport.title'),
         icon: MapPin,
-        description: t('services.transportation.publicTransport.description'),
-        status: t('services.status.available')
+        description: t('transportation.publicTransport.description'),
+        status: t('status.available')
       }
     ]
   },
   {
     id: 4,
-    title: t('services.health.title'),
+    title: t('health.title'),
     services: [
       {
         id: 41,
-        title: t('services.health.registration.title'),
+        title: t('health.registration.title'),
         icon: Heart,
-        description: t('services.health.registration.description'),
-        status: t('services.status.available')
+        description: t('health.registration.description'),
+        status: t('status.available')
       },
       {
         id: 42,
-        title: t('services.health.socialBenefits.title'),
+        title: t('health.socialBenefits.title'),
         icon: Users,
-        description: t('services.health.socialBenefits.description'),
-        status: t('services.status.available')
+        description: t('health.socialBenefits.description'),
+        status: t('status.available')
       }
     ]
   },
   {
     id: 5,
-    title: t('services.education.title'),
+    title: t('education.title'),
     services: [
       {
         id: 51,
-        title: t('services.education.enrollment.title'),
+        title: t('education.enrollment.title'),
         icon: GraduationCap,
-        description: t('services.education.enrollment.description'),
-        status: t('services.status.available')
+        description: t('education.enrollment.description'),
+        status: t('status.available')
       }
     ]
   },
   {
     id: 6,
-    title: t('services.municipal.title'),
+    title: t('municipal.title'),
     services: [
       {
         id: 61,
-        title: t('services.municipal.propertyReg.title'),
+        title: t('municipal.propertyReg.title'),
         icon: Home,
-        description: t('services.municipal.propertyReg.description'),
-        status: t('services.status.available')
+        description: t('municipal.propertyReg.description'),
+        status: t('status.available')
       },
       {
         id: 62,
-        title: t('services.municipal.waste.title'),
+        title: t('municipal.waste.title'),
         icon: Trash2,
-        description: t('services.municipal.waste.description'),
-        status: t('services.status.available')
+        description: t('municipal.waste.description'),
+        status: t('status.available')
       }
     ]
   }
 ];
 
 export default function ServicesScreen() {
+  const { t: t_services } = useTranslation('services');
   const { t } = useTranslation();
-  const serviceCategories = getServiceCategories(t);
+  const serviceCategories = getServiceCategories(t_services);
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Услуги</Text>
+        <Text style={styles.headerTitle}>{t('common.cityService')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -170,7 +169,7 @@ export default function ServicesScreen() {
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
             <Search size={20} color="#6B7280" />
-            <Text style={styles.searchPlaceholder}>{t('services.search.placeholder')}</Text>
+            <Text style={styles.searchPlaceholder}>{t_services('search.placeholder')}</Text>
           </View>
         </View>
 
@@ -199,12 +198,12 @@ export default function ServicesScreen() {
 
         {/* Support Section */}
         <View style={styles.supportSection}>
-          <Text style={styles.supportTitle}>{t('services.support.title')}</Text>
+          <Text style={styles.supportTitle}>{t_services('support.title')}</Text>
           <Text style={styles.supportDescription}>
-            {t('services.support.description')}
+            {t_services('support.description')}
           </Text>
           <TouchableOpacity style={styles.supportButton}>
-            <Text style={styles.supportButtonText}>{t('services.support.button')}</Text>
+            <Text style={styles.supportButtonText}>{t_services('support.button')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -1,7 +1,7 @@
 export default {
   common: {
     goodMorning: 'Добро утро!',
-    cityServices: 'Софийски градски услуги',
+    cityServices: 'Това е твоята София!',
     quickServices: 'Бързи услуги',
     cityService: 'Градски услуги',
     emergencyServices: 'Спешни услуги',
@@ -9,8 +9,8 @@ export default {
     edit: 'Редактиране',
     verifiedCitizen: 'Потвърден гражданин',
     signOut: 'Изход',
-    version: 'Софийски градски услуги v1.0.0',
-    copyright: '© 2024 Столична община',
+    version: 'Твоята София v1.0.0',
+    copyright: '© 2025 Столична община',
   },
   services: {
     payBills: 'Плащане на сметки',
