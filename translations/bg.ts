@@ -7,6 +7,7 @@ export default {
     quickServices: 'Бързи услуги',
     cityService: 'Градски услуги',
     emergencyServices: 'Спешни услуги',
+    payments: 'Плащания',
     profile: 'Профил',
     edit: 'Редактиране',
     verifiedCitizen: 'Потвърден гражданин',

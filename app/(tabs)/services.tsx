@@ -21,6 +21,7 @@ import {
   Search
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
+import { commonStyles } from '../../styles/common';
 
 interface Service {
   id: number;
@@ -160,8 +161,8 @@ export default function ServicesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('common.cityService')}</Text>
+      <View style={commonStyles.header}>
+        <Text style={commonStyles.headerTitle}>{t('common.cityService')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>

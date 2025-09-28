@@ -21,6 +21,7 @@ import {
 import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { commonStyles } from '../../styles/common';
 
 const { width } = Dimensions.get('window');
 
@@ -111,11 +112,11 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View style={styles.header}>
+        <View style={commonStyles.header}>
           <View>
-            <Text style={styles.headerTitle}>{t('common.goodMorning')}</Text>
+            <Text style={commonStyles.headerTitle}>{t('common.goodMorning')}</Text>
           </View>
-          <TouchableOpacity style={styles.notificationButton}>
+          <TouchableOpacity style={commonStyles.headerButton}>
             <Bell size={24} color="#6B7280" />
           </TouchableOpacity>
         </View>
@@ -202,36 +203,14 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 16,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-  },
+  header: commonStyles.header,
+  headerTitle: commonStyles.headerTitle,
   cityName: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#ffffff',
     fontFamily: 'Inter-Bold',
     marginTop: 4,
-  },
-  notificationButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   section: {
     paddingHorizontal: 20,

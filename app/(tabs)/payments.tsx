@@ -21,6 +21,7 @@ import {
   Clock
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
+import { commonStyles } from '../../styles/common';
 
 interface Bill {
   id: number;
@@ -111,10 +112,10 @@ export default function PaymentsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Платежи и сметки</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Plus size={24} color="#ffffff" />
+      <View style={commonStyles.header}>
+        <Text style={commonStyles.headerTitle}>{t('common.payments')}</Text>
+        <TouchableOpacity style={commonStyles.headerButton}>
+          <Plus size={24} color="#6B7280" />
         </TouchableOpacity>
       </View>
 

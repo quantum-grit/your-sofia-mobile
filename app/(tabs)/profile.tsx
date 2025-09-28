@@ -21,8 +21,9 @@ import {
   Mail,
   MapPin
 } from 'lucide-react-native';
-
 import { useTranslation } from 'react-i18next';
+import { commonStyles } from '../../styles/common';
+
 
 const getProfileSections = (t: (key: string) => string) => [
   {
@@ -105,9 +106,9 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('common.profile')}</Text>
-        <TouchableOpacity style={styles.editButton}>
+      <View style={commonStyles.header}>
+        <Text style={commonStyles.headerTitle}>{t('common.profile')}</Text>
+        <TouchableOpacity style={commonStyles.headerButton}>
           <Edit3 size={20} color="#1E40AF" />
         </TouchableOpacity>
       </View>
