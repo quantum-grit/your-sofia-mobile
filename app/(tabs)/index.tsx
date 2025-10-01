@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { AirQualityCard } from '../../components/AirQualityCard';
 import { TopicFilter } from '../../components/TopicFilter';
 import { NewsCard } from '../../components/NewsCard';
+import { NewsMap } from '../../components/NewsMap';
 import type { AirQualityData } from '../../types/airQuality';
 import type { NewsItem, NewsTopicType } from '../../types/news';
 import { useState } from 'react';
@@ -47,14 +48,22 @@ const mockNewsData: NewsItem[] = [
     description: 'The 29th edition of Sofia Film Fest brings international cinema to the heart of Sofia.',
     date: '5 Oct 2025',
     topic: 'festivals',
-    image: 'https://example.com/sofia-film-fest.jpg'
+    image: 'https://example.com/sofia-film-fest.jpg',
+    location: {
+      latitude: 42.6954,
+      longitude: 23.3307  // NDK coordinates
+    }
   },
   {
     id: '2',
     title: 'Shishman Street Maintenance',
     description: 'Temporary closure of Shishman Street for scheduled tram line maintenance.',
     date: '3 Oct 2025',
-    topic: 'street-closure'
+    topic: 'street-closure',
+    location: {
+      latitude: 42.6912,
+      longitude: 23.3233  // Graf Ignatiev Street coordinates
+    }
   },
   {
     id: '3',
@@ -62,7 +71,11 @@ const mockNewsData: NewsItem[] = [
     description: 'Discussion on the future of urban development in Sofia.',
     date: '10 Oct 2025',
     topic: 'city-events',
-    image: 'https://example.com/city-garden.jpg'
+    image: 'https://example.com/city-garden.jpg',
+    location: {
+      latitude: 42.6937,
+      longitude: 23.3263  // City Garden coordinates
+    }
   }
 ];
 
@@ -193,11 +206,21 @@ export default function HomeScreen() {
             t={t}
           />
           
-          <View style={styles.newsContainer}>
-            {filteredNews.map((item) => (
-              <NewsCard key={item.id} item={item} />
-            ))}
-          </View>
+          {isMapView ? (
+            <NewsMap 
+              news={filteredNews}
+              onMarkerPress={(item) => {
+                // You can implement marker press handling here
+                console.log('Marker pressed:', item);
+              }}
+            />
+          ) : (
+            <View style={styles.newsContainer}>
+              {filteredNews.map((item) => (
+                <NewsCard key={item.id} item={item} />
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Quick Services */}

@@ -7,6 +7,10 @@ export interface NewsItem {
   date: string;
   topic: NewsTopicType;
   image?: string;
+  location?: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export interface NewsFilterChip {
