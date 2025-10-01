@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 160,
+    backgroundColor: '#aedcedff',
   },
   content: {
     padding: 16,

@@ -136,6 +136,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all');
+  const [isMapView, setIsMapView] = useState(false);
   
   const [fontsLoaded] = useFonts({
     'Inter-Regular': Inter_400Regular,
@@ -176,6 +177,14 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('common.newsForYou')}</Text>
+            <TouchableOpacity 
+              style={styles.viewToggleButton}
+              onPress={() => setIsMapView(!isMapView)}
+            >
+              <Text style={styles.viewToggleText}>
+                {isMapView ? t('common.seeList') : t('common.seeMap')}
+              </Text>
+            </TouchableOpacity>
           </View>
           
           <TopicFilter
@@ -317,6 +326,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#1F2937',
+    marginBottom: 4,
     fontFamily: 'Inter-Bold',
   },
   quickServicesGrid: {
@@ -393,7 +403,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 20,
   },
-  seeAllButton: {
+  viewToggleButton: {
+    backgroundColor: '#EFF6FF',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  viewToggleText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#1E40AF',

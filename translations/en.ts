@@ -19,7 +19,8 @@ export default {
     quickServices: 'Quick Services',
     cityService: 'City Services',
     newsForYou: 'News For You',
-    seeAll: 'See All',
+    seeMap: 'See Map',
+    seeList: 'See List',
     topics: {
       all: 'All News',
       festivals: 'Festivals',

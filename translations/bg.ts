@@ -19,7 +19,8 @@ export default {
     quickServices: 'Бързи услуги',
     cityService: 'Градски услуги',
     newsForYou: 'Новини за теб',
-    seeAll: 'Виж всички',
+    seeMap: 'Виж карта',
+    seeList: 'Виж списък',
     topics: {
       all: 'Всички новини',
       festivals: 'Фестивали',
