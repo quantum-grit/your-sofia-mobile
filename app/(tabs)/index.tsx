@@ -21,9 +21,19 @@ import {
 import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { commonStyles } from '../../styles/common';
+import { AirQualityCard } from '../../components/AirQualityCard';
+import type { AirQualityData } from '../../types/airQuality';
 
 const { width } = Dimensions.get('window');
+
+// Mock data for air quality (replace with real API data later)
+const mockAirQualityData: AirQualityData = {
+  aqi: 45,
+  location: 'София - Център',
+  timestamp: new Date().toISOString(),
+  mainPollutant: 'PM2.5',
+  status: 'Good'
+};
 
 const getQuickServices = (t: (key: string) => string) => [
   {
@@ -112,13 +122,18 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View style={commonStyles.header}>
+        <View style={styles.header}>
           <View>
-            <Text style={commonStyles.headerTitle}>{t('common.goodMorning')}</Text>
+            <Text style={styles.headerTitle}>{t('common.goodMorning')}</Text>
           </View>
-          <TouchableOpacity style={commonStyles.headerButton}>
+          <TouchableOpacity style={styles.headerButton}>
             <Bell size={24} color="#6B7280" />
           </TouchableOpacity>
+        </View>
+
+        {/* Air Quality */}
+        <View style={styles.section}>
+          <AirQualityCard data={mockAirQualityData} />
         </View>
 
         {/* Quick Services */}
@@ -198,23 +213,45 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F8FAFC',
   },
   scrollView: {
     flex: 1,
   },
-  header: commonStyles.header,
-  headerTitle: commonStyles.headerTitle,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    fontFamily: 'Inter-Bold',
+  },
+  headerButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  section: {
+    paddingHorizontal: 20,
+    marginTop: 16,
+  },
   cityName: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#ffffff',
     fontFamily: 'Inter-Bold',
     marginTop: 4,
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginTop: 30,
   },
   sectionTitle: {
     fontSize: 20,

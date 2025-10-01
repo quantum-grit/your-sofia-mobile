@@ -1,4 +1,16 @@
 export default {
+  airQuality: {
+    title: 'Качество на въздуха',
+    mainPollutant: 'Основен замърсител',
+    location: 'Локация',
+    status: {
+      good: 'Добро',
+      moderate: 'Умерено',
+      unhealthy: 'Нездравословно',
+      veryUnhealthy: 'Много нездравословно',
+      hazardous: 'Опасно'
+    }
+  },
   common: {
     header: 'Твоята София',
     home: 'Начало',

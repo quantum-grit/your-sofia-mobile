@@ -1,4 +1,16 @@
 export default {
+  airQuality: {
+    title: 'Air Quality',
+    mainPollutant: 'Main pollutant',
+    location: 'Location',
+    status: {
+      good: 'Good',
+      moderate: 'Moderate',
+      unhealthy: 'Unhealthy',
+      veryUnhealthy: 'Very Unhealthy',
+      hazardous: 'Hazardous'
+    }
+  },
   common: {
     header: 'Your Sofia',
     home: 'Home',
