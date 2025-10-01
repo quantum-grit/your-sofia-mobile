@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 import { 
   Home, 
   FileText, 
@@ -7,6 +7,7 @@ import {
   User,
   Settings 
 } from 'lucide-react-native';
+import { LanguageSwitch } from '../../components/LanguageSwitch';
 import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
@@ -21,6 +22,9 @@ export default function TabLayout() {
             source={require('../../assets/images/sofia-gerb.png')}
             style={{ width: 24, height: 24, marginLeft: 16, borderRadius: 12 }}
           />
+        ),
+        headerRight: () => (
+          <LanguageSwitch />
         ),
         tabBarStyle: {
           backgroundColor: '#ffffff',
