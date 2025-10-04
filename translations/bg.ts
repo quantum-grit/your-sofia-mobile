@@ -21,6 +21,9 @@ export default {
     newsForYou: 'Новини за теб',
     seeMap: 'Виж карта',
     seeList: 'Виж списък',
+    loading: 'Зареждане...',
+    retry: 'Опитай отново',
+    noNews: 'Няма налични новини',
     topics: {
       all: 'Всички новини',
       festivals: 'Фестивали',

@@ -25,8 +25,9 @@ import { AirQualityCard } from '../../components/AirQualityCard';
 import { TopicFilter } from '../../components/TopicFilter';
 import { NewsCard } from '../../components/NewsCard';
 import { NewsMap } from '../../components/NewsMap';
+import { useNews } from '../../hooks/useNews';
 import type { AirQualityData } from '../../types/airQuality';
-import type { NewsItem, NewsTopicType } from '../../types/news';
+import type { NewsTopicType } from '../../types/news';
 import { useState } from 'react';
 
 const { width } = Dimensions.get('window');
@@ -39,45 +40,6 @@ const mockAirQualityData: AirQualityData = {
   mainPollutant: 'PM2.5',
   status: 'Good'
 };
-
-// Mock news data (replace with real API data later)
-const mockNewsData: NewsItem[] = [
-  {
-    id: '1',
-    title: 'Sofia Film Fest 2025',
-    description: 'The 29th edition of Sofia Film Fest brings international cinema to the heart of Sofia.',
-    date: '5 Oct 2025',
-    topic: 'festivals',
-    image: 'https://example.com/sofia-film-fest.jpg',
-    location: {
-      latitude: 42.6954,
-      longitude: 23.3307  // NDK coordinates
-    }
-  },
-  {
-    id: '2',
-    title: 'Shishman Street Maintenance',
-    description: 'Temporary closure of Shishman Street for scheduled tram line maintenance.',
-    date: '3 Oct 2025',
-    topic: 'street-closure',
-    location: {
-      latitude: 42.6912,
-      longitude: 23.3233  // Graf Ignatiev Street coordinates
-    }
-  },
-  {
-    id: '3',
-    title: 'Meeting on Urban Development',
-    description: 'Discussion on the future of urban development in Sofia.',
-    date: '10 Oct 2025',
-    topic: 'city-events',
-    image: 'https://example.com/city-garden.jpg',
-    location: {
-      latitude: 42.6937,
-      longitude: 23.3263  // City Garden coordinates
-    }
-  }
-];
 
 const getQuickServices = (t: (key: string) => string) => [
   {
@@ -151,6 +113,9 @@ export default function HomeScreen() {
   const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all');
   const [isMapView, setIsMapView] = useState(false);
   
+  // Load news from Payload API
+  const { news, loading: newsLoading, error: newsError, refresh } = useNews(selectedTopic);
+  
   const [fontsLoaded] = useFonts({
     'Inter-Regular': Inter_400Regular,
     'Inter-SemiBold': Inter_600SemiBold,
@@ -163,10 +128,6 @@ export default function HomeScreen() {
 
   const quickServices = getQuickServices(t);
   const cityServices = getCityServices(t);
-
-  const filteredNews = mockNewsData.filter(
-    item => selectedTopic === 'all' || item.topic === selectedTopic
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -206,9 +167,23 @@ export default function HomeScreen() {
             t={t}
           />
           
-          {isMapView ? (
+          {newsLoading ? (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>{t('common.loading') || 'Loading...'}</Text>
+            </View>
+          ) : newsError ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{newsError}</Text>
+              <TouchableOpacity 
+                style={styles.retryButton}
+                onPress={refresh}
+              >
+                <Text style={styles.retryButtonText}>{t('common.retry') || 'Retry'}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : isMapView ? (
             <NewsMap 
-              news={filteredNews}
+              news={news}
               onMarkerPress={(item) => {
                 // You can implement marker press handling here
                 console.log('Marker pressed:', item);
@@ -216,9 +191,17 @@ export default function HomeScreen() {
             />
           ) : (
             <View style={styles.newsContainer}>
-              {filteredNews.map((item) => (
-                <NewsCard key={item.id} item={item} />
-              ))}
+              {news.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyText}>
+                    {t('common.noNews') || 'No news available'}
+                  </Text>
+                </View>
+              ) : (
+                news.map((item) => (
+                  <NewsCard key={item.id} item={item} />
+                ))
+              )}
             </View>
           )}
         </View>
@@ -440,6 +423,28 @@ const styles = StyleSheet.create({
   newsContainer: {
     marginTop: 16,
   },
+  loadingContainer: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#6B7280',
+    fontFamily: 'Inter-Regular',
+  },
+  errorContainer: {
+    padding: 20,
+    backgroundColor: '#FEE2E2',
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#DC2626',
+    fontFamily: 'Inter-Regular',
+    textAlign: 'center',
+  },
   serviceIconContainer: {
     width: 48,
     height: 48,
@@ -496,5 +501,29 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontFamily: 'Inter-Bold',
     marginTop: 2,
+  },
+  retryButton: {
+    backgroundColor: '#DC2626',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  retryButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ffffff',
+    fontFamily: 'Inter-SemiBold',
+  },
+  emptyContainer: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#9CA3AF',
+    fontFamily: 'Inter-Regular',
+    textAlign: 'center',
   },
 });
