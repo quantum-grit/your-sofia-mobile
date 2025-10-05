@@ -50,17 +50,21 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
           headerTitle: () => <TabHeader title={t('common.goodMorning')} showActionIcon={true} />,
         }}
       />
+      {/* HIDDEN - Services Tab */}
       <Tabs.Screen
         name="services"
         options={{
+          href: null, // Hide from tab bar
           title: t('common.cityService'),
           tabBarIcon: ({ color }) => <FileText size={24} color={color} />,
           headerTitle: () => <TabHeader title={t('common.cityService')} />,
         }}
       />
+      {/* HIDDEN - Payments Tab */}
       <Tabs.Screen
         name="payments"
         options={{
+          href: null, // Hide from tab bar
           title: t('common.quickServices'),
           tabBarIcon: ({ color }) => <CreditCard size={24} color={color} />,
           headerTitle: () => (

@@ -4,7 +4,8 @@ import {
   StyleSheet, 
   ScrollView, 
   TouchableOpacity,
-  SafeAreaView 
+  SafeAreaView,
+  Linking
 } from 'react-native';
 import { 
   User,
@@ -19,10 +20,11 @@ import {
   Edit3,
   Phone,
   Mail,
-  MapPin
+  MapPin,
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { commonStyles } from '../../styles/common';
+import { GitHubIcon } from '../../components/GitHubIcon';
 
 
 const getProfileSections = (t: (key: string) => string) => [
@@ -106,6 +108,17 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Notification Bar */}
+        <TouchableOpacity 
+          style={styles.notificationBar}
+          onPress={() => Linking.openURL('https://github.com')}
+        >
+          <Text style={styles.notificationText}>
+            Това е примерен статичен екран. Ако искате да го оживите елате в Гитхъб.
+          </Text>
+          <GitHubIcon size={24} color="#1E40AF" />
+        </TouchableOpacity>
+
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <View style={styles.avatarContainer}>
@@ -223,6 +236,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
+  },
+  notificationBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EFF6FF',
+    padding: 16,
+    margin: 16,
+    borderRadius: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#1E40AF',
+    gap: 12,
+  },
+  notificationText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1F2937',
+    lineHeight: 20,
+  },
+  githubIcon: {
+    flexShrink: 0,
   },
   header: {
     flexDirection: 'row',

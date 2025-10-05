@@ -225,8 +225,8 @@ export default function HomeScreen() {
           )}
         </View>
 
-        {/* Quick Services */}
-        <View style={styles.section}>
+        {/* Quick Services - HIDDEN */}
+        {/* <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('common.quickServices')}</Text>
           <View style={styles.quickServicesGrid}>
             {quickServices.map((service: Service) => {
@@ -252,10 +252,10 @@ export default function HomeScreen() {
               );
             })}
           </View>
-        </View>
+        </View> */}
 
-        {/* City Services */}
-        <View style={styles.section}>
+        {/* City Services - HIDDEN */}
+        {/* <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('common.cityService')}</Text>
           <View style={styles.servicesList}>
             {cityServices.map((service: Service) => {
@@ -280,10 +280,10 @@ export default function HomeScreen() {
               );
             })}
           </View>
-        </View>
+        </View> */}
 
-        {/* Emergency Contact */}
-        <View style={styles.emergencySection}>
+        {/* Emergency Contact - HIDDEN */}
+        {/* <View style={styles.emergencySection}>
           <View style={styles.emergencyContent}>
             <View style={styles.emergencyIcon}>
               <Phone size={24} color="#ffffff" />
@@ -293,7 +293,7 @@ export default function HomeScreen() {
               <Text style={styles.emergencyNumber}>Call 112</Text>
             </View>
           </View>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
