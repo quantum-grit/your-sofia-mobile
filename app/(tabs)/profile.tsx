@@ -152,7 +152,7 @@ export default function ProfileScreen() {
         {/* Notification Bar */}
         <TouchableOpacity 
           style={styles.notificationBar}
-          onPress={() => Linking.openURL('https://github.com/sofia-municipality/your-sofia')}
+          onPress={() => Linking.openURL('https://github.com/sofia-municipality')} //append your-sofia when created
         >
           <Text style={styles.notificationText}>
             Това е примерен статичен екран. Ако искате да го оживите елате в Гитхъб.
@@ -234,7 +234,7 @@ export default function ProfileScreen() {
                 {loadingStats ? '-' : signalStats.active}
               </Text>
               <Text style={styles.statLabel}>{t('profile.stats.signalsActive')}</Text>
-            </View>r
+            </View>
           </View>
         </View>
 
