@@ -28,7 +28,8 @@ export default {
       all: 'Всички новини',
       festivals: 'Фестивали',
       streetClosure: 'Затворени улици',
-      cityEvents: 'Градски събития'
+      cityEvents: 'Градски събития',
+      alerts: 'Сигнали'
     },
     emergencyServices: 'Спешни услуги',
     payments: 'Плащания',

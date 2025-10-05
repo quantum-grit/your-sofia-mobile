@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { PartyPopper, Route, Calendar } from 'lucide-react-native';
+import { PartyPopper, Route, Calendar, Bell } from 'lucide-react-native';
 import type { NewsTopicType, NewsFilterChip } from '../types/news';
 
 interface TopicFilterProps {
@@ -14,6 +14,7 @@ export function TopicFilter({ selectedTopic, onTopicChange, t }: TopicFilterProp
     { id: 'festivals', label: t('common.topics.festivals'), icon: PartyPopper },
     { id: 'street-closure', label: t('common.topics.streetClosure'), icon: Route },
     { id: 'city-events', label: t('common.topics.cityEvents'), icon: Calendar },
+    { id: 'alerts', label: t('common.topics.alerts'), icon: Bell },
   ];
 
   return (
@@ -33,7 +34,10 @@ export function TopicFilter({ selectedTopic, onTopicChange, t }: TopicFilterProp
               styles.chip,
               isSelected && styles.selectedChip,
             ]}
-            onPress={() => onTopicChange(topic.id)}
+            onPress={() => {
+              console.log('[TopicFilter] Topic changed to:', topic.id);
+              onTopicChange(topic.id);
+            }}
           >
             {Icon && (
               <View style={styles.icon}>

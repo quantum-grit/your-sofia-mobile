@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Dimensions 
 } from 'react-native';
+import { useRef } from 'react';
 import { 
   MapPin,
   Phone,
@@ -113,12 +114,30 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all');
   const [isMapView, setIsMapView] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const newsSectionRef = useRef<View>(null);
   
   // Load news from Payload API
   const { news, loading: newsLoading, error: newsError, refresh } = useNews(selectedTopic);
   
   // Setup push notifications
   const { unreadCount, clearUnreadCount } = useNotifications();
+
+  // Handle bell click - filter to alerts and scroll to news section
+  const handleBellPress = () => {
+    clearUnreadCount();
+    setSelectedTopic('alerts');
+    // Scroll to news section after a brief delay to allow state update
+    setTimeout(() => {
+      newsSectionRef.current?.measureLayout(
+        scrollViewRef.current as any,
+        (x, y) => {
+          scrollViewRef.current?.scrollTo({ y, animated: true });
+        },
+        () => {} // onFail callback
+      );
+    }, 100);
+  };
   
   const [fontsLoaded] = useFonts({
     'Inter-Regular': Inter_400Regular,
@@ -135,13 +154,13 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollViewRef} style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           <View>
             <Text style={styles.headerTitle}>{t('common.goodMorning')}</Text>
           </View>
-          <TouchableOpacity style={styles.headerButton} onPress={clearUnreadCount}>
+          <TouchableOpacity style={styles.headerButton} onPress={handleBellPress}>
             <Bell size={24} color="#6B7280" />
             {unreadCount > 0 && (
               <View style={styles.notificationBadge}>
@@ -159,7 +178,7 @@ export default function HomeScreen() {
         </View>
 
         {/* News For You */}
-        <View style={styles.section}>
+        <View ref={newsSectionRef} style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('common.newsForYou')}</Text>
             <TouchableOpacity 

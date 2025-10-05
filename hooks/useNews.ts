@@ -21,11 +21,19 @@ export function useNews(topic?: NewsTopicType) {
       setLoading(true);
       setError(null);
 
+      console.log('[useNews] Loading news with topic:', topic, 'locale:', i18n.language);
+
       const response = await fetchNews({
         locale: i18n.language as 'bg' | 'en',
         topic: topic === 'all' ? undefined : topic,
         limit: 20,
       });
+
+      console.log('[useNews] Received', response.docs.length, 'news items');
+      
+      if (response.docs.length > 0) {
+        console.log('[useNews] Topics in response:', response.docs.map(d => d.topic).join(', '));
+      }
 
       // Transform Payload response to app NewsItem format
       const transformedNews: NewsItem[] = response.docs.map((item: PayloadNewsItem) => {

@@ -25,7 +25,8 @@ export default {
       all: 'All News',
       festivals: 'Festivals',
       streetClosure: 'Street Closure',
-      cityEvents: 'City Events'
+      cityEvents: 'City Events',
+      alerts: 'Alerts'
     },
     emergencyServices: 'Emergency Services',
     profile: 'Profile',

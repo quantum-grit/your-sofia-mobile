@@ -56,19 +56,27 @@ export async function fetchNews(options?: {
 }): Promise<PayloadResponse<PayloadNewsItem>> {
   const { locale = 'bg', topic, limit = 10, page = 1 } = options || {};
 
+  // Build query parameters
   const params = new URLSearchParams({
     locale,
     limit: limit.toString(),
     page: page.toString(),
     depth: '1', // Populate image relationship
-    where: JSON.stringify({
-      status: { equals: 'published' },
-      ...(topic && topic !== 'all' ? { topic: { equals: topic } } : {}),
-    }),
     sort: '-publishedAt',
   });
 
-  const response = await fetch(`${API_URL}/api/news?${params}`);
+  // Add status filter
+  params.append('where[status][equals]', 'published');
+
+  // Add topic filter if specified
+  if (topic && topic !== 'all') {
+    params.append('where[topic][equals]', topic);
+  }
+
+  const url = `${API_URL}/api/news?${params}`;
+  console.log('[fetchNews] Request URL:', url);
+
+  const response = await fetch(url);
   
   if (!response.ok) {
     throw new Error(`Failed to fetch news: ${response.statusText}`);
