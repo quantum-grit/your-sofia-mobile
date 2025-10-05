@@ -45,7 +45,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow YourSofia to use your location."
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

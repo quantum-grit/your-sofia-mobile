@@ -21,13 +21,16 @@ import {
   Phone,
   Mail,
   MapPin,
+  Fingerprint,
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
 import { commonStyles } from '../../styles/common';
 import { GitHubIcon } from '../../components/GitHubIcon';
+import { getUniqueReporterId } from '../../lib/deviceId';
 
 
-const getProfileSections = (t: (key: string) => string) => [
+const getProfileSections = (t: (key: string) => string, deviceId: string) => [
   {
     id: 1,
     title: t('profile.accountSettings'),
@@ -49,6 +52,12 @@ const getProfileSections = (t: (key: string) => string) => [
         title: t('profile.security'),
         icon: Shield,
         description: t('profile.securitySettings')
+      },
+      {
+        id: 14,
+        title: t('profile.deviceId'),
+        icon: Fingerprint,
+        description: deviceId || t('profile.loading')
       }
     ]
   },
@@ -103,7 +112,15 @@ interface ProfileSection {
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
-  const profileSections = getProfileSections(t);
+  const [deviceId, setDeviceId] = useState<string>('');
+
+  useEffect(() => {
+    getUniqueReporterId().then(id => {
+      setDeviceId(id);
+    });
+  }, []);
+
+  const profileSections = getProfileSections(t, deviceId);
 
   return (
     <SafeAreaView style={styles.container}>

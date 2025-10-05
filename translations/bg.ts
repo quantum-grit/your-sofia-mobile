@@ -70,6 +70,7 @@ export default {
     manageNotifications: 'Управление на известията',
     security: 'Сигурност',
     securitySettings: 'Настройки за сигурност',
+    deviceId: 'Анонимен идентификатор',
     paymentMethods: 'Начини на плащане',
     managePayments: 'Управление на плащанията',
     serviceHistory: 'История на услугите',

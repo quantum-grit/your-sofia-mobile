@@ -70,6 +70,7 @@ export default {
     manageNotifications: 'Manage your notifications',
     security: 'Security',
     securitySettings: 'Password and security settings',
+    deviceId: 'Anonymous Identifier',
     paymentMethods: 'Payment Methods',
     managePayments: 'Manage your payment options',
     serviceHistory: 'Service History',

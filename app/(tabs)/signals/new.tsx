@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { getUniqueReporterId } from '../../../lib/deviceId';
 import { createSignal } from '../../../lib/payload';
 import type { CreateSignalInput } from '../../../types/signal';
 
@@ -28,6 +30,17 @@ export default function NewSignalScreen() {
 
   const [loading, setLoading] = useState(false);
   const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [deviceId, setDeviceId] = useState<string>('');
+
+  // Get device unique ID from secure storage
+  useEffect(() => {
+    getUniqueReporterId().then(id => {
+      setDeviceId(id);
+    }).catch(error => {
+      console.error('Failed to get reporter ID:', error);
+    });
+  }, []);
+
   const [formData, setFormData] = useState<Partial<CreateSignalInput>>({
     title: '',
     description: '',
@@ -77,10 +90,11 @@ export default function NewSignalScreen() {
     try {
       setLoading(true);
       
-      // Prepare submission data with selected states
+      // Prepare submission data with selected states and device ID
       const submitData = {
         ...formData,
         containerState: selectedStates,
+        reporterUniqueId: deviceId,
       };
       
       await createSignal(submitData as CreateSignalInput, i18n.language as 'bg' | 'en');

@@ -7,7 +7,7 @@ import {
   Plus,
   Edit3,
   MapPin,
-  AlertCircle,
+  AlertTriangle,
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { BellActionProvider } from '../../contexts/BellActionContext';
@@ -67,11 +67,11 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
         options={{
           title: t('common.signals'),
           tabBarLabel: t('common.signals'),
-          tabBarIcon: ({ color }) => <AlertCircle size={24} color={color} />,
+          tabBarIcon: ({ color }) => <AlertTriangle size={24} color={color} />,
           headerTitle: () => (
             <TabHeader 
               title={t('signals.title')} 
-              showActionIcon={true}
+              showActionIcon={false}
               ActionIcon={Plus}
             />
           ),

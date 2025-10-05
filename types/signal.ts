@@ -21,9 +21,7 @@ export interface Signal {
   }>;
   status: 'pending' | 'in-progress' | 'resolved' | 'rejected';
   adminNotes?: string;
-  reporterName?: string;
-  reporterEmail?: string;
-  reporterPhone?: string;
+  reporterUniqueId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,4 +33,5 @@ export interface CreateSignalInput {
   cityObject?: Signal['cityObject'];
   containerState?: Array<'full' | 'dirty' | 'damaged'>;
   location?: Signal['location'];
+  reporterUniqueId?: string;
 }
