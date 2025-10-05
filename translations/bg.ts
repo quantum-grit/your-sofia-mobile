@@ -14,6 +14,7 @@ export default {
   common: {
     header: 'Твоята София',
     home: 'Начало',
+    map: 'Карта',
     goodMorning: 'Добро утро!',
     cityServices: 'Това е твоята София!',
     quickServices: 'Бързи услуги',
@@ -39,6 +40,8 @@ export default {
     signOut: 'Изход',
     version: 'Твоята София v1.0.0',
     copyright: '© 2025 Столична община',
+    yourLocation: 'Вашето местоположение',
+    error: 'Грешка',
   },
   services: {
     payBills: 'Плащане на сметки',
@@ -105,5 +108,39 @@ export default {
   },
   cities: {
     sofia: 'София, България',
+  },
+  map: {
+    filters: {
+      all: 'Всички',
+      wasteContainers: 'Сметосъбиране',
+      news: 'Новини',
+      events: 'Събития',
+    },
+    permissions: {
+      title: 'Необходимо е разрешение за местоположение',
+      message: 'Моля, разрешете достъп до местоположението си, за да видите картата.',
+      button: 'Разреши достъп',
+    },
+    loading: 'Зареждане на картата...',
+  },
+  wasteContainers: {
+    name: 'Контейнер',
+    size: {
+      tiny: 'Мини',
+      small: 'Малък',
+      standard: 'Стандартен',
+      big: 'Голям',
+      industrial: 'Индустриален',
+    },
+    type: {
+      general: 'Общи отпадъци',
+      recyclables: 'Рециклируеми',
+      organic: 'Органични',
+      glass: 'Стъкло',
+      paper: 'Хартия',
+      plastic: 'Пластмаса',
+      metal: 'Метал',
+    },
+    notes: 'Бележки',
   },
 };

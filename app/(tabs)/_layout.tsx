@@ -6,6 +6,7 @@ import {
   User,
   Plus,
   Edit3,
+  MapPin,
 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { BellActionProvider } from '../../contexts/BellActionContext';
@@ -46,8 +47,18 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
         name="index"
         options={{
           title: t('common.home'),
+          tabBarLabel: t('common.home'),
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
           headerTitle: () => <TabHeader title={t('common.goodMorning')} showActionIcon={true} />,
+        }}
+      />
+      <Tabs.Screen
+        name="map"
+        options={{
+          title: t('common.map'),
+          tabBarLabel: t('common.map'),
+          tabBarIcon: ({ color }) => <MapPin size={24} color={color} />,
+          headerTitle: () => <TabHeader title={t('common.map')} />,
         }}
       />
       {/* HIDDEN - Services Tab */}

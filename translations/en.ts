@@ -14,6 +14,7 @@ export default {
   common: {
     header: 'Your Sofia',
     home: 'Home',
+    map: 'Map',
     goodMorning: 'Good morning!',
     cityServices: 'This is your Sofia!',
     quickServices: 'Quick Services',
@@ -35,6 +36,12 @@ export default {
     signOut: 'Sign Out',
     version: 'Your Sofia v1.0.0',
     copyright: '© 2025 Sofia Municipality',
+    yourLocation: 'Your Location',
+    error: 'Error',
+    loading: 'Loading...',
+    retry: 'Try again',
+    noNews: 'No news available',
+    payments: 'Payments',
   },
   services: {
     payBills: 'Pay Bills',
@@ -101,5 +108,39 @@ export default {
   },
   cities: {
     sofia: 'Sofia, Bulgaria',
+  },
+  map: {
+    filters: {
+      all: 'All',
+      wasteContainers: 'Waste Containers',
+      news: 'News',
+      events: 'Events',
+    },
+    permissions: {
+      title: 'Location Permission Required',
+      message: 'Please allow access to your location to view the map.',
+      button: 'Allow Access',
+    },
+    loading: 'Loading map...',
+  },
+  wasteContainers: {
+    name: 'Container',
+    size: {
+      tiny: 'Tiny',
+      small: 'Small',
+      standard: 'Standard',
+      big: 'Big',
+      industrial: 'Industrial',
+    },
+    type: {
+      general: 'General Waste',
+      recyclables: 'Recyclables',
+      organic: 'Organic',
+      glass: 'Glass',
+      paper: 'Paper',
+      plastic: 'Plastic',
+      metal: 'Metal',
+    },
+    notes: 'Notes',
   },
 };

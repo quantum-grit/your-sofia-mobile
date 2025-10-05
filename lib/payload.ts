@@ -4,6 +4,8 @@
  * Client for fetching content from Payload CMS
  */
 
+import type { WasteContainer } from '../types/wasteContainer';
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
 export interface PayloadNewsItem {
@@ -109,4 +111,80 @@ export function getMediaUrl(media: any): string | undefined {
   if (typeof media === 'string') return `${API_URL}${media}`;
   if (media.url) return `${API_URL}${media.url}`;
   return undefined;
+}
+
+/**
+ * Fetch waste containers from Payload CMS
+ */
+export async function fetchWasteContainers(options?: {
+  status?: 'active' | 'full' | 'maintenance' | 'inactive';
+  wasteType?: string;
+  limit?: number;
+  page?: number;
+}): Promise<PayloadResponse<WasteContainer>> {
+  const { status, wasteType, limit = 100, page = 1 } = options || {};
+
+  // Build query parameters
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+    page: page.toString(),
+    depth: '1', // Populate image relationship
+  });
+
+  // Add status filter - default to active containers
+  if (status) {
+    params.append('where[status][equals]', status);
+  }
+
+  // Add waste type filter if specified
+  if (wasteType) {
+    params.append('where[wasteType][equals]', wasteType);
+  }
+
+  const url = `${API_URL}/api/waste-containers?${params}`;
+  console.log('[fetchWasteContainers] Request URL:', url);
+
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch waste containers: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  
+  // Transform image URLs
+  if (data.docs) {
+    data.docs = data.docs.map((container: any) => ({
+      ...container,
+      image: container.image ? {
+        ...container.image,
+        url: getMediaUrl(container.image),
+      } : undefined,
+    }));
+  }
+
+  return data;
+}
+
+/**
+ * Fetch a single waste container by ID
+ */
+export async function fetchWasteContainerById(id: string): Promise<WasteContainer> {
+  const response = await fetch(`${API_URL}/api/waste-containers/${id}?depth=1`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch waste container: ${response.statusText}`);
+  }
+
+  const container = await response.json();
+  
+  // Transform image URL
+  if (container.image) {
+    container.image = {
+      ...container.image,
+      url: getMediaUrl(container.image),
+    };
+  }
+
+  return container;
 }
