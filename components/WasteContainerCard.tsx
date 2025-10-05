@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
 import type { WasteContainer } from '../types/wasteContainer';
-import { Trash2, MapPin, Calendar, User } from 'lucide-react-native';
+import { Trash2, MapPin, Calendar, User, AlertTriangle } from 'lucide-react-native';
 
 interface WasteContainerCardProps {
   container: WasteContainer;
@@ -11,6 +12,19 @@ interface WasteContainerCardProps {
 
 export function WasteContainerCard({ container, onClose }: WasteContainerCardProps) {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const handleReportIssue = () => {
+    // Navigate to signal creation form with prepopulated container data
+    router.push({
+      pathname: '/signals/new',
+      params: {
+        containerPublicNumber: container.publicNumber,
+        containerLocation: JSON.stringify(container.location),
+        prefilledCategory: 'waste-container',
+      },
+    } as any);
+  };
 
   const getCapacitySizeLabel = (size: string) => {
     const labels: Record<string, string> = {
@@ -49,18 +63,24 @@ export function WasteContainerCard({ container, onClose }: WasteContainerCardPro
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <View>
+        <View style={{flex: 1}}>
           <Text style={styles.containerNumber}>{t('wasteContainers.name')}: {container.publicNumber}</Text>
           <View style={styles.statusBadge}>
             <View style={[styles.statusDot, { backgroundColor: getStatusColor(container.status) }]} />
             <Text style={styles.statusText}>{container.status.toUpperCase()}</Text>
           </View>
         </View>
-        {onClose && (
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>×</Text>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity onPress={handleReportIssue} style={styles.reportButton}>
+            <AlertTriangle size={16} color="#ffffff" />
+            <Text style={styles.reportButtonText}>{t('wasteContainers.reportIssue')}</Text>
           </TouchableOpacity>
-        )}
+          {onClose && (
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>×</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {container.image?.url && (
@@ -150,6 +170,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#6B7280',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  reportButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EF4444',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  reportButtonText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '600',
   },
   closeButton: {
     width: 32,

@@ -5,6 +5,7 @@
  */
 
 import type { WasteContainer } from '../types/wasteContainer';
+import type { Signal, CreateSignalInput } from '../types/signal';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -187,4 +188,109 @@ export async function fetchWasteContainerById(id: string): Promise<WasteContaine
   }
 
   return container;
+}
+
+/**
+ * Fetch signals from Payload CMS
+ */
+export async function fetchSignals(options?: {
+  locale?: 'bg' | 'en';
+  status?: string;
+  category?: string;
+  limit?: number;
+  page?: number;
+}): Promise<PayloadResponse<Signal>> {
+  const { locale = 'bg', status, category, limit = 20, page = 1 } = options || {};
+
+  // Build query parameters
+  const params = new URLSearchParams({
+    locale,
+    limit: limit.toString(),
+    page: page.toString(),
+    depth: '1', // Populate image relationship
+    sort: '-createdAt',
+  });
+
+  // Add status filter if specified
+  if (status) {
+    params.append('where[status][equals]', status);
+  }
+
+  // Add category filter if specified
+  if (category) {
+    params.append('where[category][equals]', category);
+  }
+
+  const url = `${API_URL}/api/signals?${params}`;
+  console.log('[fetchSignals] Request URL:', url);
+
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch signals: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  
+  // Transform image URLs
+  if (data.docs) {
+    data.docs = data.docs.map((signal: any) => ({
+      ...signal,
+      images: signal.images?.map((img: any) => ({
+        ...img,
+        url: getMediaUrl(img),
+      })),
+    }));
+  }
+
+  return data;
+}
+
+/**
+ * Fetch a single signal by ID
+ */
+export async function fetchSignalById(
+  id: string,
+  locale: 'bg' | 'en' = 'bg',
+): Promise<Signal> {
+  const response = await fetch(`${API_URL}/api/signals/${id}?locale=${locale}&depth=1`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch signal: ${response.statusText}`);
+  }
+
+  const signal = await response.json();
+  
+  // Transform image URLs
+  if (signal.images) {
+    signal.images = signal.images.map((img: any) => ({
+      ...img,
+      url: getMediaUrl(img),
+    }));
+  }
+
+  return signal;
+}
+
+/**
+ * Create a new signal
+ */
+export async function createSignal(
+  signalData: CreateSignalInput,
+  locale: 'bg' | 'en' = 'bg',
+): Promise<Signal> {
+  const response = await fetch(`${API_URL}/api/signals?locale=${locale}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(signalData),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to create signal: ${response.statusText}`);
+  }
+
+  return response.json();
 }
