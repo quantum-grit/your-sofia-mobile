@@ -340,6 +340,35 @@ export async function checkExistingSignal(
 }
 
 /**
+ * Fetch signal statistics for a reporter
+ */
+export async function fetchSignalStats(
+  reporterUniqueId: string,
+  locale: 'bg' | 'en' = 'bg',
+): Promise<{ total: number; active: number }> {
+  try {
+    // Fetch all signals for this reporter
+    const response = await fetchSignals({
+      locale,
+      reporterUniqueId,
+      limit: 1000, // High limit to get all signals
+    });
+
+    const total = response.totalDocs;
+    
+    // Count active signals (not resolved or rejected)
+    const active = response.docs.filter(
+      signal => signal.status !== 'resolved' && signal.status !== 'rejected'
+    ).length;
+
+    return { total, active };
+  } catch (error) {
+    console.error('Error fetching signal stats:', error);
+    return { total: 0, active: 0 };
+  }
+}
+
+/**
  * Update an existing signal
  */
 export async function updateSignal(

@@ -28,6 +28,7 @@ import { useState, useEffect } from 'react';
 import { commonStyles } from '../../styles/common';
 import { GitHubIcon } from '../../components/GitHubIcon';
 import { getUniqueReporterId } from '../../lib/deviceId';
+import { fetchSignalStats } from '../../lib/payload';
 
 
 const getProfileSections = (t: (key: string) => string, deviceId: string) => [
@@ -111,14 +112,37 @@ interface ProfileSection {
 }
 
 export default function ProfileScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [deviceId, setDeviceId] = useState<string>('');
+  const [signalStats, setSignalStats] = useState<{ total: number; active: number }>({ total: 0, active: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     getUniqueReporterId().then(id => {
       setDeviceId(id);
+      // Fetch signal stats once we have the device ID
+      loadSignalStats(id);
     });
   }, []);
+
+  useEffect(() => {
+    // Reload stats when language changes
+    if (deviceId) {
+      loadSignalStats(deviceId);
+    }
+  }, [i18n.language]);
+
+  const loadSignalStats = async (reporterId: string) => {
+    try {
+      setLoadingStats(true);
+      const stats = await fetchSignalStats(reporterId, i18n.language as 'bg' | 'en');
+      setSignalStats(stats);
+    } catch (error) {
+      console.error('Error loading signal stats:', error);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
 
   const profileSections = getProfileSections(t, deviceId);
 
@@ -128,7 +152,7 @@ export default function ProfileScreen() {
         {/* Notification Bar */}
         <TouchableOpacity 
           style={styles.notificationBar}
-          onPress={() => Linking.openURL('https://github.com')}
+          onPress={() => Linking.openURL('https://github.com/sofia-municipality/your-sofia')}
         >
           <Text style={styles.notificationText}>
             Това е примерен статичен екран. Ако искате да го оживите елате в Гитхъб.
@@ -197,20 +221,20 @@ export default function ProfileScreen() {
 
         {/* Quick Stats */}
         <View style={styles.statsSection}>
-          <Text style={styles.sectionTitle}>{t('profile.stats.servicesUsed')}</Text>
+          <Text style={styles.sectionTitle}>{t('profile.stats.title')}</Text>
           <View style={styles.statsGrid}>
             <View style={styles.statCard}>
-              <Text style={styles.statNumber}>12</Text>
-              <Text style={styles.statLabel}>{t('profile.stats.servicesUsed')}</Text>
+              <Text style={styles.statNumber}>
+                {loadingStats ? '-' : signalStats.total}
+              </Text>
+              <Text style={styles.statLabel}>{t('profile.stats.signalsCreated')}</Text>
             </View>
             <View style={styles.statCard}>
-              <Text style={styles.statNumber}>5</Text>
-              <Text style={styles.statLabel}>{t('profile.stats.billsPaid')}</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>3</Text>
-              <Text style={styles.statLabel}>{t('profile.stats.activeRequests')}</Text>
-            </View>
+              <Text style={styles.statNumber}>
+                {loadingStats ? '-' : signalStats.active}
+              </Text>
+              <Text style={styles.statLabel}>{t('profile.stats.signalsActive')}</Text>
+            </View>r
           </View>
         </View>
 

@@ -81,9 +81,9 @@ export default {
     contactUs: 'Contact Us',
     reachSupport: 'Reach out to our support team',
     stats: {
-      servicesUsed: 'Services Used',
-      billsPaid: 'Bills Paid',
-      activeRequests: 'Active Requests',
+      title: 'Statistics',
+      signalsCreated: 'Submitted Signals',
+      signalsActive: 'Active Signals',
     },
     appSettings: 'App Settings',
     appPreferences: 'App Preferences',

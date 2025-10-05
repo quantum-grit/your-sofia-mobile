@@ -81,9 +81,9 @@ export default {
     contactUs: 'Свържи се с нас',
     reachSupport: 'Свържи се с екипа ни',
     stats: {
-      servicesUsed: 'Използвани услуги',
-      billsPaid: 'Платени сметки',
-      activeRequests: 'Активни заявки',
+      title: 'Статистика',
+      signalsCreated: 'Подадени сигнали',
+      signalsActive: 'Активни сигнали',
     },
     appSettings: 'Настройки на приложението',
     appPreferences: 'Настройки',
