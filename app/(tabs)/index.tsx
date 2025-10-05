@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   Dimensions 
 } from 'react-native';
-import { useRef } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { 
   MapPin,
   Phone,
@@ -28,6 +28,7 @@ import { NewsCard } from '../../components/NewsCard';
 import { NewsMap } from '../../components/NewsMap';
 import { useNews } from '../../hooks/useNews';
 import { useNotifications } from '../../hooks/useNotifications';
+import { useBellAction } from '../../contexts/BellActionContext';
 import type { AirQualityData } from '../../types/airQuality';
 import type { NewsTopicType } from '../../types/news';
 import { useState } from 'react';
@@ -116,6 +117,7 @@ export default function HomeScreen() {
   const [isMapView, setIsMapView] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const newsSectionRef = useRef<View>(null);
+  const { registerBellAction } = useBellAction();
   
   // Load news from Payload API
   const { news, loading: newsLoading, error: newsError, refresh } = useNews(selectedTopic);
@@ -124,8 +126,7 @@ export default function HomeScreen() {
   const { unreadCount, clearUnreadCount } = useNotifications();
 
   // Handle bell click - filter to alerts and scroll to news section
-  const handleBellPress = () => {
-    clearUnreadCount();
+  const handleBellPress = useCallback(() => {
     setSelectedTopic('alerts');
     // Scroll to news section after a brief delay to allow state update
     setTimeout(() => {
@@ -137,7 +138,12 @@ export default function HomeScreen() {
         () => {} // onFail callback
       );
     }, 100);
-  };
+  }, []);
+
+  // Register bell action when component mounts
+  useEffect(() => {
+    registerBellAction(handleBellPress);
+  }, [registerBellAction, handleBellPress]);
   
   const [fontsLoaded] = useFonts({
     'Inter-Regular': Inter_400Regular,
@@ -155,23 +161,6 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView ref={scrollViewRef} style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.headerTitle}>{t('common.goodMorning')}</Text>
-          </View>
-          <TouchableOpacity style={styles.headerButton} onPress={handleBellPress}>
-            <Bell size={24} color="#6B7280" />
-            {unreadCount > 0 && (
-              <View style={styles.notificationBadge}>
-                <Text style={styles.notificationBadgeText}>
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
-
         {/* Air Quality */}
         <View style={styles.section}>
           <AirQualityCard data={mockAirQualityData} />

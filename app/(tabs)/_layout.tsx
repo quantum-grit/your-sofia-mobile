@@ -1,31 +1,34 @@
 import { Tabs } from 'expo-router';
-import { Image, View } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { 
   Home, 
   FileText, 
   CreditCard, 
   User,
-  Settings 
+  Bell,
 } from 'lucide-react-native';
-import { LanguageSwitch } from '../../components/LanguageSwitch';
 import { useTranslation } from 'react-i18next';
+import { useNotifications } from '../../hooks/useNotifications';
+import { BellActionProvider, useBellAction } from '../../contexts/BellActionContext';
 
 export default function TabLayout() {
   const { t } = useTranslation();
 
   return (
+    <BellActionProvider>
+      <TabLayoutContent t={t} />
+    </BellActionProvider>
+  );
+}
+
+function TabLayoutContent({ t }: { t: (key: string) => string }) {
+  const { unreadCount } = useNotifications();
+  const { triggerBellAction } = useBellAction();
+
+  return (
     <Tabs
       screenOptions={{
         headerShown: true,
-        headerLeft: () => (
-          <Image 
-            source={require('../../assets/images/sofia-gerb.png')}
-            style={{ width: 24, height: 24, marginLeft: 16, borderRadius: 12 }}
-          />
-        ),
-        headerRight: () => (
-          <LanguageSwitch />
-        ),
         tabBarStyle: {
           backgroundColor: '#ffffff',
           borderTopWidth: 1,
@@ -46,7 +49,34 @@ export default function TabLayout() {
         options={{
           title: t('common.home'),
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
-          headerTitle: t('common.header'),
+          headerTitle: () => (
+            <Text style={styles.headerTitle}>{t('common.goodMorning')}</Text>
+          ),
+          headerRight: () => {
+            const { unreadCount, clearUnreadCount } = useNotifications();
+            const { triggerBellAction } = useBellAction();
+            
+            const handleBellPress = () => {
+              clearUnreadCount();
+              triggerBellAction();
+            };
+            
+            return (
+              <TouchableOpacity 
+                style={styles.headerButton} 
+                onPress={handleBellPress}
+              >
+                <Bell size={24} color="#6B7280" />
+                {unreadCount > 0 && (
+                  <View style={styles.notificationBadge}>
+                    <Text style={styles.notificationBadgeText}>
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          },
         }}
       />
       <Tabs.Screen
@@ -54,7 +84,6 @@ export default function TabLayout() {
         options={{
           title: t('common.cityService'),
           tabBarIcon: ({ color }) => <FileText size={24} color={color} />,
-          headerTitle: t('common.header'),
         }}
       />
       <Tabs.Screen
@@ -62,7 +91,6 @@ export default function TabLayout() {
         options={{
           title: t('common.quickServices'),
           tabBarIcon: ({ color }) => <CreditCard size={24} color={color} />,
-          headerTitle: t('common.header'),
         }}
       />
       <Tabs.Screen
@@ -70,9 +98,47 @@ export default function TabLayout() {
         options={{
           title: t('common.profile'),
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
-          headerTitle: t('common.header'),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    fontFamily: 'Inter-Bold',
+  },
+  headerButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    marginRight: 16,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#DC2626',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    borderWidth: 2,
+    borderColor: '#ffffff',
+  },
+  notificationBadgeText: {
+    color: '#ffffff',
+    fontSize: 10,
+    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
+  },
+});
