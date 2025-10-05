@@ -153,6 +153,12 @@ export default {
     noSignals: 'No signals',
     createSignal: 'Create Signal',
     signalDetails: 'Signal Details',
+    details: 'Details',
+    notFound: 'Signal not found',
+    adminNotes: 'Admin Notes',
+    cannotEdit: 'You can only edit signals created from this device.',
+    updateSuccess: 'Signal updated successfully!',
+    updateError: 'Error updating signal',
     form: {
       header: 'New Signal',
       about: 'About object',
@@ -167,6 +173,9 @@ export default {
       reporterPhone: 'Your phone (optional)',
       submit: 'Submit Signal',
       cancel: 'Cancel',
+    },
+    validation: {
+      titleRequired: 'Please enter a title',
     },
     categories: {
       'waste-container': 'Waste Container Issue',

@@ -153,6 +153,12 @@ export default {
     noSignals: 'Няма сигнали',
     createSignal: 'Създай сигнал',
     signalDetails: 'Детайли за сигнала',
+    details: 'Детайли',
+    notFound: 'Сигналът не е намерен',
+    adminNotes: 'Административни бележки',
+    cannotEdit: 'Можете да редактирате само сигнали, създадени от това устройство.',
+    updateSuccess: 'Сигналът е актуализиран успешно!',
+    updateError: 'Грешка при актуализиране на сигнала',
     form: {
       header: 'Нов сигнал',
       about: 'Относно обект',
@@ -167,6 +173,9 @@ export default {
       reporterPhone: 'Вашият телефон (по избор)',
       submit: 'Изпрати сигнал',
       cancel: 'Отказ',
+    },
+    validation: {
+      titleRequired: 'Моля, въведете заглавие',
     },
     categories: {
       'waste-container': 'Проблем с контейнер',

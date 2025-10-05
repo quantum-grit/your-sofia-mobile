@@ -294,3 +294,27 @@ export async function createSignal(
 
   return response.json();
 }
+
+/**
+ * Update an existing signal
+ */
+export async function updateSignal(
+  id: string,
+  signalData: Partial<CreateSignalInput>,
+  locale: 'bg' | 'en' = 'bg',
+): Promise<Signal> {
+  const response = await fetch(`${API_URL}/api/signals/${id}?locale=${locale}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(signalData),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to update signal: ${response.statusText}`);
+  }
+
+  return response.json();
+}

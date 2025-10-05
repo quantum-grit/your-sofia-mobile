@@ -89,7 +89,7 @@ export default function SignalsScreen() {
   const renderSignalItem = ({ item }: { item: Signal }) => (
     <TouchableOpacity
       style={styles.signalCard}
-      onPress={() => router.push(`/signals/${item.id}` as any)}
+      onPress={() => router.push(`/(tabs)/signals/${item.id}` as any)}
     >
       <View style={styles.signalHeader}>
         <View style={styles.statusBadge}>
