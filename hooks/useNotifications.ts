@@ -3,8 +3,9 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const PUSH_TOKEN_KEY = 'pushToken';
 const UNREAD_COUNT_KEY = 'unreadNotificationCount';
 
@@ -148,7 +149,7 @@ async function registerForPushNotificationsAsync() {
     }
     
     token = (await Notifications.getExpoPushTokenAsync({
-      projectId: '8c71d3db-2519-4b4d-a33f-4a5e3b2c2661', // From app.json extra.eas.projectId
+      projectId: Constants.expoConfig?.extra?.eas?.projectId,
     })).data;
   } else {
     console.log('Must use physical device for Push Notifications');
