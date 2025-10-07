@@ -1,8 +1,8 @@
 import { Tabs } from 'expo-router';
-import { 
-  Home, 
-  FileText, 
-  CreditCard, 
+import {
+  Home,
+  FileText,
+  CreditCard,
   User,
   Plus,
   Edit3,
@@ -43,14 +43,17 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
           fontSize: 12,
           fontWeight: '600',
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: t('common.home'),
           tabBarLabel: t('common.home'),
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
-          headerTitle: () => <TabHeader title={t('common.goodMorning')} showActionIcon={true} />,
+          headerTitle: () => (
+            <TabHeader title={t('common.goodMorning')} showActionIcon={true} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -69,8 +72,8 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
           tabBarLabel: t('common.signals'),
           tabBarIcon: ({ color }) => <AlertTriangle size={24} color={color} />,
           headerTitle: () => (
-            <TabHeader 
-              title={t('signals.title')} 
+            <TabHeader
+              title={t('signals.title')}
               showActionIcon={false}
               ActionIcon={Plus}
             />
@@ -95,8 +98,8 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
           title: t('common.quickServices'),
           tabBarIcon: ({ color }) => <CreditCard size={24} color={color} />,
           headerTitle: () => (
-            <TabHeader 
-              title={t('common.payments')} 
+            <TabHeader
+              title={t('common.payments')}
               showActionIcon={true}
               ActionIcon={Plus}
             />
@@ -109,8 +112,8 @@ function TabLayoutContent({ t }: { t: (key: string) => string }) {
           title: t('common.profile'),
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
           headerTitle: () => (
-            <TabHeader 
-              title={t('common.profile')} 
+            <TabHeader
+              title={t('common.profile')}
               showActionIcon={true}
               ActionIcon={Edit3}
             />

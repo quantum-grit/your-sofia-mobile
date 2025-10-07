@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react'
 import {
   View,
   Text,
@@ -8,181 +8,172 @@ import {
   ActivityIndicator,
   Alert,
   TextInput,
-} from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { 
-  ArrowLeft, 
-  Edit3, 
-  Save, 
+} from 'react-native'
+import {useTranslation} from 'react-i18next'
+import {useRouter, useLocalSearchParams} from 'expo-router'
+import {SafeAreaView} from 'react-native-safe-area-context'
+import {
+  ArrowLeft,
+  Edit3,
+  Save,
   X,
   MapPin,
   Calendar,
   Tag,
   FileText,
   AlertCircle,
-} from 'lucide-react-native';
-import { fetchSignalById, updateSignal } from '../../../lib/payload';
-import { getUniqueReporterId } from '../../../lib/deviceId';
-import type { Signal } from '../../../types/signal';
+} from 'lucide-react-native'
+import {fetchSignalById, updateSignal} from '../../../lib/payload'
+import {getUniqueReporterId} from '../../../lib/deviceId'
+import type {Signal} from '../../../types/signal'
 
 export default function SignalDetailsScreen() {
-  const { t, i18n } = useTranslation();
-  const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
-  
-  const [signal, setSignal] = useState<Signal | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [canEdit, setCanEdit] = useState(false);
-  const [deviceId, setDeviceId] = useState<string>('');
+  const {t, i18n} = useTranslation()
+  const router = useRouter()
+  const {id} = useLocalSearchParams<{id: string}>()
+
+  const [signal, setSignal] = useState<Signal | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [canEdit, setCanEdit] = useState(false)
+  const [deviceId, setDeviceId] = useState<string>('')
 
   // Edit form state
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedDescription, setEditedDescription] = useState('');
-  const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [editedTitle, setEditedTitle] = useState('')
+  const [editedDescription, setEditedDescription] = useState('')
+  const [selectedStates, setSelectedStates] = useState<string[]>([])
 
   useEffect(() => {
-    loadSignal();
-    loadDeviceId();
-  }, [id, i18n.language]);
+    loadSignal()
+    loadDeviceId()
+  }, [id, i18n.language])
 
   const loadDeviceId = async () => {
-    const id = await getUniqueReporterId();
-    setDeviceId(id);
-  };
+    const id = await getUniqueReporterId()
+    setDeviceId(id)
+  }
 
   const loadSignal = async () => {
-    if (!id) return;
-    
+    if (!id) return
+
     try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchSignalById(id, i18n.language as 'bg' | 'en');
-      setSignal(data);
-      
+      setLoading(true)
+      setError(null)
+      const data = await fetchSignalById(id, i18n.language as 'bg' | 'en')
+      setSignal(data)
+
       // Initialize edit form
-      setEditedTitle(data.title || '');
-      setEditedDescription(data.description || '');
-      setSelectedStates(data.containerState || []);
+      setEditedTitle(data.title || '')
+      setEditedDescription(data.description || '')
+      setSelectedStates(data.containerState || [])
     } catch (err) {
-      console.error('Error loading signal:', err);
-      setError(err instanceof Error ? err.message : t('signals.error'));
+      console.error('Error loading signal:', err)
+      setError(err instanceof Error ? err.message : t('signals.error'))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Check if user can edit this signal
   useEffect(() => {
     if (signal && deviceId) {
-      const canUserEdit = signal.reporterUniqueId === deviceId;
-      setCanEdit(canUserEdit);
+      const canUserEdit = signal.reporterUniqueId === deviceId
+      setCanEdit(canUserEdit)
     }
-  }, [signal, deviceId]);
+  }, [signal, deviceId])
 
   const handleEdit = () => {
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const handleCancelEdit = () => {
-    if (!signal) return;
-    
+    if (!signal) return
+
     // Reset form to original values
-    setEditedTitle(signal.title || '');
-    setEditedDescription(signal.description || '');
-    setSelectedStates(signal.containerState || []);
-    setIsEditing(false);
-  };
+    setEditedTitle(signal.title || '')
+    setEditedDescription(signal.description || '')
+    setSelectedStates(signal.containerState || [])
+    setIsEditing(false)
+  }
 
   const toggleState = (state: string) => {
-    setSelectedStates(prev =>
-      prev.includes(state)
-        ? prev.filter(s => s !== state)
-        : [...prev, state]
-    );
-  };
+    setSelectedStates((prev) =>
+      prev.includes(state) ? prev.filter((s) => s !== state) : [...prev, state]
+    )
+  }
 
   const getStateColor = (state: string): string => {
     switch (state) {
       case 'full':
-        return '#DC2626'; // red
+        return '#DC2626' // red
       case 'dirty':
-        return '#92400E'; // brown
+        return '#92400E' // brown
       case 'damaged':
-        return '#1F2937'; // black
+        return '#1F2937' // black
       default:
-        return '#6B7280'; // gray
+        return '#6B7280' // gray
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!signal || !deviceId) return;
+    if (!signal || !deviceId) return
 
     // Validate
     if (!editedTitle.trim()) {
-      Alert.alert(t('signals.error'), t('signals.validation.titleRequired'));
-      return;
+      Alert.alert(t('signals.error'), t('signals.validation.titleRequired'))
+      return
     }
 
     try {
-      setSaving(true);
-      
+      setSaving(true)
+
       const updateData = {
         title: editedTitle.trim(),
         description: editedDescription.trim(),
-        containerState: selectedStates as Array<'full' | 'dirty' | 'damaged'>,
+        containerState: selectedStates as ('full' | 'dirty' | 'damaged')[],
         reporterUniqueId: deviceId, // Send for server-side verification
-      };
+      }
 
-      const response = await updateSignal(
-        signal.id,
-        updateData,
-        i18n.language as 'bg' | 'en'
-      );
+      const response = await updateSignal(signal.id, updateData, i18n.language as 'bg' | 'en')
 
       console.log('[Signal Update] Response:', {
-        response
-      });
+        response,
+      })
 
       // Payload CMS update returns { doc: Signal, message: string }
       // Extract the doc property which contains the actual signal
-      const updatedSignal = (response as any).doc;
+      const updatedSignal = (response as any).doc
 
       // Ensure reporterUniqueId is preserved in the updated signal
       // (in case the API response doesn't include it)
-      setSignal(updatedSignal);
-      setIsEditing(false);
-      Alert.alert(t('signals.success'), t('signals.updateSuccess'));
+      setSignal(updatedSignal)
+      setIsEditing(false)
+      Alert.alert(t('signals.success'), t('signals.updateSuccess'))
     } catch (err) {
-      console.error('Error updating signal:', err);
-      Alert.alert(
-        t('signals.error'),
-        err instanceof Error ? err.message : t('signals.updateError')
-      );
+      console.error('Error updating signal:', err)
+      Alert.alert(t('signals.error'), err instanceof Error ? err.message : t('signals.updateError'))
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const getStatusIcon = (status: Signal['status']) => {
-    const iconProps = { size: 20 };
+    const iconProps = {size: 20}
     switch (status) {
       case 'pending':
-        return <AlertCircle {...iconProps} color="#F59E0B" />;
+        return <AlertCircle {...iconProps} color="#F59E0B" />
       case 'in-progress':
-        return <AlertCircle {...iconProps} color="#3B82F6" />;
+        return <AlertCircle {...iconProps} color="#3B82F6" />
       case 'resolved':
-        return <AlertCircle {...iconProps} color="#10B981" />;
+        return <AlertCircle {...iconProps} color="#10B981" />
       case 'rejected':
-        return <AlertCircle {...iconProps} color="#EF4444" />;
+        return <AlertCircle {...iconProps} color="#EF4444" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const getStatusColor = (status: Signal['status']) => {
     const colors = {
@@ -190,9 +181,9 @@ export default function SignalDetailsScreen() {
       'in-progress': '#3B82F6',
       resolved: '#10B981',
       rejected: '#EF4444',
-    };
-    return colors[status] || '#6B7280';
-  };
+    }
+    return colors[status] || '#6B7280'
+  }
 
   if (loading) {
     return (
@@ -202,7 +193,7 @@ export default function SignalDetailsScreen() {
           <Text style={styles.loadingText}>{t('common.loading')}</Text>
         </View>
       </SafeAreaView>
-    );
+    )
   }
 
   if (error || !signal) {
@@ -220,7 +211,7 @@ export default function SignalDetailsScreen() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    );
+    )
   }
 
   return (
@@ -230,7 +221,9 @@ export default function SignalDetailsScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <ArrowLeft size={24} color="#1F2937" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('signals.form.headerView')} #{signal.id}</Text>
+        <Text style={styles.headerTitle}>
+          {t('signals.form.headerView')} #{signal.id}
+        </Text>
         <View style={styles.headerActions}>
           {isEditing ? (
             <>
@@ -264,9 +257,11 @@ export default function SignalDetailsScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Status Badge */}
         <View style={styles.statusContainer}>
-          <View style={[styles.statusBadge, { backgroundColor: `${getStatusColor(signal.status)}20` }]}>
+          <View
+            style={[styles.statusBadge, {backgroundColor: `${getStatusColor(signal.status)}20`}]}
+          >
             {getStatusIcon(signal.status)}
-            <Text style={[styles.statusText, { color: getStatusColor(signal.status) }]}>
+            <Text style={[styles.statusText, {color: getStatusColor(signal.status)}]}>
               {t(`signals.status.${signal.status}`)}
             </Text>
           </View>
@@ -416,14 +411,12 @@ export default function SignalDetailsScreen() {
         {/* Edit Permission Info */}
         {!canEdit && !isEditing && (
           <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
-              {t('signals.cannotEdit')}
-            </Text>
+            <Text style={styles.infoText}>{t('signals.cannotEdit')}</Text>
           </View>
         )}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -622,4 +615,4 @@ const styles = StyleSheet.create({
     color: '#92400E',
     lineHeight: 20,
   },
-});
+})

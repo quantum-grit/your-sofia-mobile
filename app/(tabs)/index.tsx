@@ -1,14 +1,14 @@
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  ScrollView, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions 
-} from 'react-native';
-import { useRef, useEffect, useCallback } from 'react';
-import { 
+  Dimensions,
+} from 'react-native'
+import {useRef, useEffect, useCallback, useState} from 'react'
+import {
   MapPin,
   Phone,
   Bell,
@@ -17,23 +17,27 @@ import {
   FileCheck,
   Zap,
   Heart,
-  ChevronRight
-} from 'lucide-react-native';
-import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
-import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
-import { AirQualityCard } from '../../components/AirQualityCard';
-import { TopicFilter } from '../../components/TopicFilter';
-import { NewsCard } from '../../components/NewsCard';
-import { NewsMap } from '../../components/NewsMap';
-import { useNews } from '../../hooks/useNews';
-import { useNotifications } from '../../hooks/useNotifications';
-import { useBellAction } from '../../contexts/BellActionContext';
-import type { AirQualityData } from '../../types/airQuality';
-import type { NewsTopicType } from '../../types/news';
-import { useState } from 'react';
+  ChevronRight,
+} from 'lucide-react-native'
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter'
+import {useRouter} from 'expo-router'
+import {useTranslation} from 'react-i18next'
+import {AirQualityCard} from '../../components/AirQualityCard'
+import {TopicFilter} from '../../components/TopicFilter'
+import {NewsCard} from '../../components/NewsCard'
+import {NewsMap} from '../../components/NewsMap'
+import {useNews} from '../../hooks/useNews'
+import {useNotifications} from '../../hooks/useNotifications'
+import {useBellAction} from '../../contexts/BellActionContext'
+import type {AirQualityData} from '../../types/airQuality'
+import type {NewsTopicType} from '../../types/news'
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window')
 
 // Mock data for air quality (replace with real API data later)
 const mockAirQualityData: AirQualityData = {
@@ -41,8 +45,8 @@ const mockAirQualityData: AirQualityData = {
   location: 'София - Център',
   timestamp: new Date().toISOString(),
   mainPollutant: 'PM2.5',
-  status: 'Good'
-};
+  status: 'Good',
+}
 
 const getQuickServices = (t: (key: string) => string) => [
   {
@@ -50,117 +54,121 @@ const getQuickServices = (t: (key: string) => string) => [
     title: t('services.payBills'),
     icon: Zap,
     color: '#059669',
-    description: t('services.utilitiesAndTaxes')
+    description: t('services.utilitiesAndTaxes'),
   },
   {
     id: 2,
     title: t('services.parking'),
     icon: Car,
     color: '#268adcff',
-    description: t('services.findAndPay')
+    description: t('services.findAndPay'),
   },
   {
     id: 3,
     title: t('services.documents'),
     icon: FileCheck,
     color: '#ac5538ff',
-    description: t('services.certificates')
+    description: t('services.certificates'),
   },
   {
     id: 4,
     title: t('services.emergency'),
     icon: Phone,
     color: '#e25454ff',
-    description: t('services.contactHelp')
-  }
-];
+    description: t('services.contactHelp'),
+  },
+]
 
 const getCityServices = (t: (key: string) => string) => [
   {
     id: 1,
     title: t('services.buildingPermits'),
     icon: Building2,
-    description: t('services.applyConstruction')
+    description: t('services.applyConstruction'),
   },
   {
     id: 2,
     title: t('services.healthcareServices'),
     icon: Heart,
-    description: t('services.findHospitals')
+    description: t('services.findHospitals'),
   },
   {
     id: 3,
     title: t('services.cityUpdates'),
     icon: Bell,
-    description: t('services.latestNews')
+    description: t('services.latestNews'),
   },
   {
     id: 4,
     title: t('services.findLocations'),
     icon: MapPin,
-    description: t('services.municipalOffices')
-  }
-];
+    description: t('services.municipalOffices'),
+  },
+]
 
 interface Service {
-  id: number;
-  title: string;
-  icon: any;
-  color?: string;
-  description: string;
+  id: number
+  title: string
+  icon: any
+  color?: string
+  description: string
 }
 
 export default function HomeScreen() {
-  const router = useRouter();
-  const { t } = useTranslation();
-  const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all');
-  const [isMapView, setIsMapView] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
-  const newsSectionRef = useRef<View>(null);
-  const { registerBellAction } = useBellAction();
-  
+  const router = useRouter()
+  const {t} = useTranslation()
+  const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all')
+  const [isMapView, setIsMapView] = useState(false)
+  const scrollViewRef = useRef<ScrollView>(null)
+  const newsSectionRef = useRef<View>(null)
+  const {registerBellAction} = useBellAction()
+
   // Load news from Payload API
-  const { news, loading: newsLoading, error: newsError, refresh } = useNews(selectedTopic);
-  
+  const {news, loading: newsLoading, error: newsError, refresh} = useNews(selectedTopic)
+
   // Setup push notifications
-  const { unreadCount, clearUnreadCount } = useNotifications();
+  const {unreadCount, clearUnreadCount} = useNotifications()
 
   // Handle bell click - filter to alerts and scroll to news section
   const handleBellPress = useCallback(() => {
-    setSelectedTopic('alerts');
+    setSelectedTopic('alerts')
     // Scroll to news section after a brief delay to allow state update
     setTimeout(() => {
       newsSectionRef.current?.measureLayout(
         scrollViewRef.current as any,
         (x, y) => {
-          scrollViewRef.current?.scrollTo({ y, animated: true });
+          scrollViewRef.current?.scrollTo({y, animated: true})
         },
         () => {} // onFail callback
-      );
-    }, 100);
-  }, []);
+      )
+    }, 100)
+  }, [])
 
   // Register bell action when component mounts
   useEffect(() => {
-    registerBellAction(handleBellPress);
-  }, [registerBellAction, handleBellPress]);
-  
+    registerBellAction(handleBellPress)
+  }, [registerBellAction, handleBellPress])
+
   const [fontsLoaded] = useFonts({
     'Inter-Regular': Inter_400Regular,
     'Inter-SemiBold': Inter_600SemiBold,
     'Inter-Bold': Inter_700Bold,
-  });
+  })
 
   if (!fontsLoaded) {
-    return null;
+    return null
   }
 
-  const quickServices = getQuickServices(t);
-  const cityServices = getCityServices(t);
+  const quickServices = getQuickServices(t)
+  const cityServices = getCityServices(t)
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView ref={scrollViewRef} style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Air Quality */}
         <View style={styles.section}>
           <AirQualityCard data={mockAirQualityData} />
@@ -170,7 +178,7 @@ export default function HomeScreen() {
         <View ref={newsSectionRef} style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('common.newsForYou')}</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.viewToggleButton}
               onPress={() => setIsMapView(!isMapView)}
             >
@@ -179,13 +187,9 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-          
-          <TopicFilter
-            selectedTopic={selectedTopic}
-            onTopicChange={setSelectedTopic}
-            t={t}
-          />
-          
+
+          <TopicFilter selectedTopic={selectedTopic} onTopicChange={setSelectedTopic} t={t} />
+
           {newsLoading ? (
             <View style={styles.loadingContainer}>
               <Text style={styles.loadingText}>{t('common.loading') || 'Loading...'}</Text>
@@ -193,33 +197,26 @@ export default function HomeScreen() {
           ) : newsError ? (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{newsError}</Text>
-              <TouchableOpacity 
-                style={styles.retryButton}
-                onPress={refresh}
-              >
+              <TouchableOpacity style={styles.retryButton} onPress={refresh}>
                 <Text style={styles.retryButtonText}>{t('common.retry') || 'Retry'}</Text>
               </TouchableOpacity>
             </View>
           ) : isMapView ? (
-            <NewsMap 
+            <NewsMap
               news={news}
               onMarkerPress={(item) => {
                 // You can implement marker press handling here
-                console.log('Marker pressed:', item);
+                console.log('Marker pressed:', item)
               }}
             />
           ) : (
             <View style={styles.newsContainer}>
               {news.length === 0 ? (
                 <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>
-                    {t('common.noNews') || 'No news available'}
-                  </Text>
+                  <Text style={styles.emptyText}>{t('common.noNews') || 'No news available'}</Text>
                 </View>
               ) : (
-                news.map((item) => (
-                  <NewsCard key={item.id} item={item} />
-                ))
+                news.map((item) => <NewsCard key={item.id} item={item} />)
               )}
             </View>
           )}
@@ -296,7 +293,7 @@ export default function HomeScreen() {
         </View> */}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -566,4 +563,4 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Regular',
     textAlign: 'center',
   },
-});
+})

@@ -1,12 +1,5 @@
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  ScrollView, 
-  TouchableOpacity,
-  SafeAreaView 
-} from 'react-native';
-import { 
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView} from 'react-native'
+import {
   Building2,
   FileCheck,
   Heart,
@@ -18,23 +11,23 @@ import {
   MapPin,
   Users,
   ChevronRight,
-  Search
-} from 'lucide-react-native';
-import { useTranslation } from 'react-i18next';
-import { commonStyles } from '../../styles/common';
+  Search,
+} from 'lucide-react-native'
+import {useTranslation} from 'react-i18next'
+import {commonStyles} from '../../styles/common'
 
 interface Service {
-  id: number;
-  title: string;
-  icon: any;
-  description: string;
-  status: string;
+  id: number
+  title: string
+  icon: any
+  description: string
+  status: string
 }
 
 interface ServiceCategory {
-  id: number;
-  title: string;
-  services: Service[];
+  id: number
+  title: string
+  services: Service[]
 }
 
 const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => [
@@ -47,16 +40,16 @@ const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => 
         title: t('permits.buildingPermits.title'),
         icon: Building2,
         description: t('permits.buildingPermits.description'),
-        status: t('status.available')
+        status: t('status.available'),
       },
       {
         id: 12,
         title: t('permits.businessLicense.title'),
         icon: Briefcase,
         description: t('permits.businessLicense.description'),
-        status: t('status.available')
-      }
-    ]
+        status: t('status.available'),
+      },
+    ],
   },
   {
     id: 2,
@@ -67,16 +60,16 @@ const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => 
         title: t('certificates.birth.title'),
         icon: FileCheck,
         description: t('certificates.birth.description'),
-        status: t('status.available')
+        status: t('status.available'),
       },
       {
         id: 22,
         title: t('certificates.marriage.title'),
         icon: Users,
         description: t('certificates.marriage.description'),
-        status: t('status.available')
-      }
-    ]
+        status: t('status.available'),
+      },
+    ],
   },
   {
     id: 3,
@@ -87,16 +80,16 @@ const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => 
         title: t('transportation.parking.title'),
         icon: Car,
         description: t('transportation.parking.description'),
-        status: t('status.available')
+        status: t('status.available'),
       },
       {
         id: 32,
         title: t('transportation.publicTransport.title'),
         icon: MapPin,
         description: t('transportation.publicTransport.description'),
-        status: t('status.available')
-      }
-    ]
+        status: t('status.available'),
+      },
+    ],
   },
   {
     id: 4,
@@ -107,16 +100,16 @@ const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => 
         title: t('health.registration.title'),
         icon: Heart,
         description: t('health.registration.description'),
-        status: t('status.available')
+        status: t('status.available'),
       },
       {
         id: 42,
         title: t('health.socialBenefits.title'),
         icon: Users,
         description: t('health.socialBenefits.description'),
-        status: t('status.available')
-      }
-    ]
+        status: t('status.available'),
+      },
+    ],
   },
   {
     id: 5,
@@ -127,9 +120,9 @@ const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => 
         title: t('education.enrollment.title'),
         icon: GraduationCap,
         description: t('education.enrollment.description'),
-        status: t('status.available')
-      }
-    ]
+        status: t('status.available'),
+      },
+    ],
   },
   {
     id: 6,
@@ -140,23 +133,23 @@ const getServiceCategories = (t: (key: string) => string): ServiceCategory[] => 
         title: t('municipal.propertyReg.title'),
         icon: Home,
         description: t('municipal.propertyReg.description'),
-        status: t('status.available')
+        status: t('status.available'),
       },
       {
         id: 62,
         title: t('municipal.waste.title'),
         icon: Trash2,
         description: t('municipal.waste.description'),
-        status: t('status.available')
-      }
-    ]
-  }
-];
+        status: t('status.available'),
+      },
+    ],
+  },
+]
 
 export default function ServicesScreen() {
-  const { t: t_services } = useTranslation('services');
-  const { t } = useTranslation();
-  const serviceCategories = getServiceCategories(t_services);
+  const {t: t_services} = useTranslation('services')
+  const {t} = useTranslation()
+  const serviceCategories = getServiceCategories(t_services)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -175,7 +168,7 @@ export default function ServicesScreen() {
             <Text style={styles.sectionTitle}>{category.title}</Text>
             <View style={styles.servicesList}>
               {category.services.map((service: Service) => {
-                const IconComponent = service.icon;
+                const IconComponent = service.icon
                 return (
                   <TouchableOpacity key={service.id} style={styles.serviceCard}>
                     <View style={styles.serviceCardHeader}>
@@ -186,7 +179,7 @@ export default function ServicesScreen() {
                     </View>
                     <Text style={styles.serviceDescription}>{service.description}</Text>
                   </TouchableOpacity>
-                );
+                )
               })}
             </View>
           </View>
@@ -195,16 +188,14 @@ export default function ServicesScreen() {
         {/* Support Section */}
         <View style={styles.supportSection}>
           <Text style={styles.supportTitle}>{t_services('support.title')}</Text>
-          <Text style={styles.supportDescription}>
-            {t_services('support.description')}
-          </Text>
+          <Text style={styles.supportDescription}>{t_services('support.description')}</Text>
           <TouchableOpacity style={styles.supportButton}>
             <Text style={styles.supportButtonText}>{t_services('support.button')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -336,4 +327,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
-});
+})

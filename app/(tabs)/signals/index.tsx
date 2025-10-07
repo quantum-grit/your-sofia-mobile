@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react'
 import {
   View,
   Text,
@@ -7,74 +7,74 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-} from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useRouter } from 'expo-router';
-import { useBellAction } from '../../../contexts/BellActionContext';
-import { fetchSignals } from '../../../lib/payload';
-import type { Signal } from '../../../types/signal';
-import { AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react-native';
+} from 'react-native'
+import {useTranslation} from 'react-i18next'
+import {useRouter} from 'expo-router'
+import {useBellAction} from '../../../contexts/BellActionContext'
+import {fetchSignals} from '../../../lib/payload'
+import type {Signal} from '../../../types/signal'
+import {AlertCircle, Clock, CheckCircle, XCircle} from 'lucide-react-native'
 
 export default function SignalsScreen() {
-  const { t, i18n } = useTranslation();
-  const router = useRouter();
-  const { registerBellAction } = useBellAction();
-  const [signals, setSignals] = useState<Signal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {t, i18n} = useTranslation()
+  const router = useRouter()
+  const {registerBellAction} = useBellAction()
+  const [signals, setSignals] = useState<Signal[]>([])
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleCreateSignal = useCallback(() => {
-    router.push('/(tabs)/signals/new' as any);
-  }, [router]);
+    router.push('/(tabs)/signals/new' as any)
+  }, [router])
 
   // Register the Plus button action
   useEffect(() => {
-    registerBellAction(handleCreateSignal);
-  }, [registerBellAction, handleCreateSignal]);
+    registerBellAction(handleCreateSignal)
+  }, [registerBellAction, handleCreateSignal])
 
   const loadSignals = async (isRefreshing = false) => {
     try {
-      if (!isRefreshing) setLoading(true);
-      setError(null);
+      if (!isRefreshing) setLoading(true)
+      setError(null)
       const response = await fetchSignals({
         locale: i18n.language as 'bg' | 'en',
         limit: 50,
-      });
-      setSignals(response.docs);
+      })
+      setSignals(response.docs)
     } catch (err) {
-      console.error('Error loading signals:', err);
-      setError(err instanceof Error ? err.message : t('signals.error'));
+      console.error('Error loading signals:', err)
+      setError(err instanceof Error ? err.message : t('signals.error'))
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      setLoading(false)
+      setRefreshing(false)
     }
-  };
+  }
 
   useEffect(() => {
-    loadSignals();
-  }, [i18n.language]);
+    loadSignals()
+  }, [i18n.language])
 
   const onRefresh = () => {
-    setRefreshing(true);
-    loadSignals(true);
-  };
+    setRefreshing(true)
+    loadSignals(true)
+  }
 
   const getStatusIcon = (status: Signal['status']) => {
-    const iconProps = { size: 18 };
+    const iconProps = {size: 18}
     switch (status) {
       case 'pending':
-        return <Clock {...iconProps} color="#F59E0B" />;
+        return <Clock {...iconProps} color="#F59E0B" />
       case 'in-progress':
-        return <AlertCircle {...iconProps} color="#3B82F6" />;
+        return <AlertCircle {...iconProps} color="#3B82F6" />
       case 'resolved':
-        return <CheckCircle {...iconProps} color="#10B981" />;
+        return <CheckCircle {...iconProps} color="#10B981" />
       case 'rejected':
-        return <XCircle {...iconProps} color="#EF4444" />;
+        return <XCircle {...iconProps} color="#EF4444" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const getStatusColor = (status: Signal['status']) => {
     const colors = {
@@ -82,11 +82,11 @@ export default function SignalsScreen() {
       'in-progress': '#3B82F6',
       resolved: '#10B981',
       rejected: '#EF4444',
-    };
-    return colors[status] || '#6B7280';
-  };
+    }
+    return colors[status] || '#6B7280'
+  }
 
-  const renderSignalItem = ({ item }: { item: Signal }) => (
+  const renderSignalItem = ({item}: {item: Signal}) => (
     <TouchableOpacity
       style={styles.signalCard}
       onPress={() => router.push(`/(tabs)/signals/${item.id}` as any)}
@@ -94,23 +94,19 @@ export default function SignalsScreen() {
       <View style={styles.signalHeader}>
         <View style={styles.statusBadge}>
           {getStatusIcon(item.status)}
-          <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}>
+          <Text style={[styles.statusText, {color: getStatusColor(item.status)}]}>
             {t(`signals.status.${item.status}`)}
           </Text>
         </View>
-        <Text style={styles.categoryBadge}>
-          {t(`signals.categories.${item.category}`)}
-        </Text>
+        <Text style={styles.categoryBadge}>{t(`signals.categories.${item.category}`)}</Text>
       </View>
-      
+
       <Text style={styles.signalTitle}>{item.title}</Text>
       <Text style={styles.signalDescription} numberOfLines={2}>
         {item.description}
       </Text>
 
-      {item.cityObject?.name && (
-        <Text style={styles.signalObject}>📍 {item.cityObject.name}</Text>
-      )}
+      {item.cityObject?.name && <Text style={styles.signalObject}>📍 {item.cityObject.name}</Text>}
 
       <Text style={styles.signalDate}>
         {new Date(item.createdAt).toLocaleDateString(i18n.language, {
@@ -122,7 +118,7 @@ export default function SignalsScreen() {
         })}
       </Text>
     </TouchableOpacity>
-  );
+  )
 
   if (loading && !refreshing) {
     return (
@@ -130,7 +126,7 @@ export default function SignalsScreen() {
         <ActivityIndicator size="large" color="#1E40AF" />
         <Text style={styles.loadingText}>{t('common.loading')}</Text>
       </View>
-    );
+    )
   }
 
   if (error) {
@@ -141,7 +137,7 @@ export default function SignalsScreen() {
           <Text style={styles.retryButtonText}>{t('common.retry')}</Text>
         </TouchableOpacity>
       </View>
-    );
+    )
   }
 
   return (
@@ -157,15 +153,11 @@ export default function SignalsScreen() {
           </View>
         }
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="#1E40AF"
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#1E40AF" />
         }
       />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -211,7 +203,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
@@ -270,4 +262,4 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     textAlign: 'center',
   },
-});
+})

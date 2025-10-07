@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { PartyPopper, Route, Calendar, Bell } from 'lucide-react-native';
 import type { NewsTopicType, NewsFilterChip } from '../types/news';
 
@@ -8,11 +14,19 @@ interface TopicFilterProps {
   t: (key: string) => string;
 }
 
-export function TopicFilter({ selectedTopic, onTopicChange, t }: TopicFilterProps) {
+export function TopicFilter({
+  selectedTopic,
+  onTopicChange,
+  t,
+}: TopicFilterProps) {
   const topics: NewsFilterChip[] = [
     { id: 'all', label: t('common.topics.all') },
     { id: 'festivals', label: t('common.topics.festivals'), icon: PartyPopper },
-    { id: 'street-closure', label: t('common.topics.streetClosure'), icon: Route },
+    {
+      id: 'street-closure',
+      label: t('common.topics.streetClosure'),
+      icon: Route,
+    },
     { id: 'city-events', label: t('common.topics.cityEvents'), icon: Calendar },
     { id: 'alerts', label: t('common.topics.alerts'), icon: Bell },
   ];
@@ -30,10 +44,7 @@ export function TopicFilter({ selectedTopic, onTopicChange, t }: TopicFilterProp
         return (
           <TouchableOpacity
             key={topic.id}
-            style={[
-              styles.chip,
-              isSelected && styles.selectedChip,
-            ]}
+            style={[styles.chip, isSelected && styles.selectedChip]}
             onPress={() => {
               console.log('[TopicFilter] Topic changed to:', topic.id);
               onTopicChange(topic.id);
@@ -41,16 +52,10 @@ export function TopicFilter({ selectedTopic, onTopicChange, t }: TopicFilterProp
           >
             {Icon && (
               <View style={styles.icon}>
-                <Icon
-                  size={16}
-                  color={isSelected ? '#FFFFFF' : '#6B7280'}
-                />
+                <Icon size={16} color={isSelected ? '#FFFFFF' : '#6B7280'} />
               </View>
             )}
-            <Text style={[
-              styles.label,
-              isSelected && styles.selectedLabel
-            ]}>
+            <Text style={[styles.label, isSelected && styles.selectedLabel]}>
               {topic.label}
             </Text>
           </TouchableOpacity>

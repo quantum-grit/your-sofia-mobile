@@ -1,13 +1,13 @@
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  ScrollView, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  Linking
-} from 'react-native';
-import { 
+  Linking,
+} from 'react-native'
+import {
   User,
   Settings,
   Bell,
@@ -22,15 +22,14 @@ import {
   Mail,
   MapPin,
   Fingerprint,
-  AlertCircle
-} from 'lucide-react-native';
-import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
-import { commonStyles } from '../../styles/common';
-import { GitHubIcon } from '../../components/GitHubIcon';
-import { getUniqueReporterId } from '../../lib/deviceId';
-import { fetchSignalStats } from '../../lib/payload';
-
+  AlertCircle,
+} from 'lucide-react-native'
+import {useTranslation} from 'react-i18next'
+import {useState, useEffect} from 'react'
+import {commonStyles} from '../../styles/common'
+import {GitHubIcon} from '../../components/GitHubIcon'
+import {getUniqueReporterId} from '../../lib/deviceId'
+import {fetchSignalStats} from '../../lib/payload'
 
 const getProfileSections = (t: (key: string) => string) => [
   {
@@ -41,21 +40,21 @@ const getProfileSections = (t: (key: string) => string) => [
         id: 11,
         title: t('profile.personalInfo'),
         icon: User,
-        description: t('profile.updateProfile')
+        description: t('profile.updateProfile'),
       },
       {
         id: 12,
         title: t('profile.notificationSettings'),
         icon: Bell,
-        description: t('profile.manageNotifications')
+        description: t('profile.manageNotifications'),
       },
       {
         id: 13,
         title: t('profile.security'),
         icon: Shield,
-        description: t('profile.securitySettings')
-      }
-    ]
+        description: t('profile.securitySettings'),
+      },
+    ],
   },
   {
     id: 2,
@@ -65,15 +64,15 @@ const getProfileSections = (t: (key: string) => string) => [
         id: 21,
         title: t('profile.paymentMethods'),
         icon: CreditCard,
-        description: t('profile.managePayments')
+        description: t('profile.managePayments'),
       },
       {
         id: 22,
         title: t('profile.serviceHistory'),
         icon: FileText,
-        description: t('profile.viewRequests')
-      }
-    ]
+        description: t('profile.viewRequests'),
+      },
+    ],
   },
   {
     id: 3,
@@ -83,84 +82,81 @@ const getProfileSections = (t: (key: string) => string) => [
         id: 31,
         title: t('profile.helpCenter'),
         icon: HelpCircle,
-        description: t('profile.getHelp')
+        description: t('profile.getHelp'),
       },
       {
         id: 32,
         title: t('profile.contactUs'),
         icon: Phone,
-        description: t('profile.reachSupport')
-      }
-    ]
-  }
-];
+        description: t('profile.reachSupport'),
+      },
+    ],
+  },
+]
 
 interface ProfileSection {
-  id: number;
-  title: string;
+  id: number
+  title: string
   items: {
-    id: number;
-    title: string;
-    icon: any;
-    description: string;
-  }[];
+    id: number
+    title: string
+    icon: any
+    description: string
+  }[]
 }
 
 export default function ProfileScreen() {
-  const { t, i18n } = useTranslation();
-  const [deviceId, setDeviceId] = useState<string>('');
-  const [signalStats, setSignalStats] = useState<{ total: number; active: number }>({ total: 0, active: 0 });
-  const [loadingStats, setLoadingStats] = useState(true);
+  const {t, i18n} = useTranslation()
+  const [deviceId, setDeviceId] = useState<string>('')
+  const [signalStats, setSignalStats] = useState<{
+    total: number
+    active: number
+  }>({total: 0, active: 0})
+  const [loadingStats, setLoadingStats] = useState(true)
 
   useEffect(() => {
-    getUniqueReporterId().then(id => {
-      setDeviceId(id);
+    getUniqueReporterId().then((id) => {
+      setDeviceId(id)
       // Fetch signal stats once we have the device ID
-      loadSignalStats(id);
-    });
-  }, []);
+      loadSignalStats(id)
+    })
+  }, [])
 
   useEffect(() => {
     // Reload stats when language changes
     if (deviceId) {
-      loadSignalStats(deviceId);
+      loadSignalStats(deviceId)
     }
-  }, [i18n.language]);
+  }, [i18n.language])
 
   const loadSignalStats = async (reporterId: string) => {
     try {
-      setLoadingStats(true);
-      const stats = await fetchSignalStats(reporterId, i18n.language as 'bg' | 'en');
-      setSignalStats(stats);
+      setLoadingStats(true)
+      const stats = await fetchSignalStats(reporterId, i18n.language as 'bg' | 'en')
+      setSignalStats(stats)
     } catch (error) {
-      console.error('Error loading signal stats:', error);
+      console.error('Error loading signal stats:', error)
     } finally {
-      setLoadingStats(false);
+      setLoadingStats(false)
     }
-  };
+  }
 
-  const profileSections = getProfileSections(t);
+  const profileSections = getProfileSections(t)
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Notification Bar */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.notificationBar}
           onPress={() => Linking.openURL('https://github.com/sofia-municipality')} //append your-sofia when created
         >
-          <Text style={styles.notificationText}>
-            {t('profile.staticScreenNotice')}
-          </Text>
+          <Text style={styles.notificationText}>{t('profile.staticScreenNotice')}</Text>
           <GitHubIcon size={24} color="#1E40AF" />
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.notificationBar}
-        >
-          <Text style={styles.notificationText}>
-            {t('profile.anonymity')}
-          </Text>
+        <TouchableOpacity style={styles.notificationBar}>
+          <Text style={styles.notificationText}>{t('profile.anonymity')}</Text>
           <AlertCircle size={24} color="#1E40AF" />
         </TouchableOpacity>
 
@@ -204,12 +200,9 @@ export default function ProfileScreen() {
             <Text style={styles.sectionTitle}>{section.title}</Text>
             <View style={styles.sectionItems}>
               {section.items.map((item) => {
-                const IconComponent = item.icon;
+                const IconComponent = item.icon
                 return (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={styles.menuItem}
-                  >
+                  <TouchableOpacity key={item.id} style={styles.menuItem}>
                     <View style={styles.menuItemContent}>
                       <View style={styles.menuItemIcon}>
                         <IconComponent size={20} color="#1E40AF" />
@@ -221,7 +214,7 @@ export default function ProfileScreen() {
                     </View>
                     <ChevronRight size={20} color="#9CA3AF" />
                   </TouchableOpacity>
-                );
+                )
               })}
             </View>
           </View>
@@ -232,15 +225,11 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>{t('profile.stats.title')}</Text>
           <View style={styles.statsGrid}>
             <View style={styles.statCard}>
-              <Text style={styles.statNumber}>
-                {loadingStats ? '-' : signalStats.total}
-              </Text>
+              <Text style={styles.statNumber}>{loadingStats ? '-' : signalStats.total}</Text>
               <Text style={styles.statLabel}>{t('profile.stats.signalsCreated')}</Text>
             </View>
             <View style={styles.statCard}>
-              <Text style={styles.statNumber}>
-                {loadingStats ? '-' : signalStats.active}
-              </Text>
+              <Text style={styles.statNumber}>{loadingStats ? '-' : signalStats.active}</Text>
               <Text style={styles.statLabel}>{t('profile.stats.signalsActive')}</Text>
             </View>
           </View>
@@ -278,7 +267,7 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -516,4 +505,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
   },
-});
+})

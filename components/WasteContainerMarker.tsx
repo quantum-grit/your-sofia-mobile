@@ -7,7 +7,10 @@ interface WasteContainerMarkerProps {
   size?: number;
 }
 
-export function WasteContainerMarker({ color, size = 32  }: WasteContainerMarkerProps) {
+export function WasteContainerMarker({
+  color,
+  size = 32,
+}: WasteContainerMarkerProps) {
   return (
     <View style={[styles.container, { width: size, height: size }]}>
       <View style={[styles.iconContainer, { backgroundColor: color }]}>

@@ -11,7 +11,7 @@ interface Props {
 export function AirQualityCard({ data }: Props) {
   const { t } = useTranslation();
 
-    const getStatusColor = (aqi: number) => {
+  const getStatusColor = (aqi: number) => {
     if (aqi <= 50) return '#22C55E'; // green-500
     if (aqi <= 100) return '#EAB308'; // yellow-500
     if (aqi <= 150) return '#F97316'; // orange-500
@@ -29,17 +29,22 @@ export function AirQualityCard({ data }: Props) {
 
   const getTranslatedStatus = (status: AirQualityData['status']) => {
     const statusMap: Record<AirQualityData['status'], string> = {
-      'Good': t('airQuality.status.good'),
-      'Moderate': t('airQuality.status.moderate'),
-      'Unhealthy': t('airQuality.status.unhealthy'),
+      Good: t('airQuality.status.good'),
+      Moderate: t('airQuality.status.moderate'),
+      Unhealthy: t('airQuality.status.unhealthy'),
       'Very Unhealthy': t('airQuality.status.veryUnhealthy'),
-      'Hazardous': t('airQuality.status.hazardous')
+      Hazardous: t('airQuality.status.hazardous'),
     };
     return statusMap[status];
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: getStatusBgColor(data.aqi) }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: getStatusBgColor(data.aqi) },
+      ]}
+    >
       <View style={styles.iconContainer}>
         <Wind size={20} color={getStatusColor(data.aqi)} />
       </View>

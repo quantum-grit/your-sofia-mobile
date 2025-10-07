@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react'
 import {
   View,
   Text,
@@ -9,104 +9,106 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
-} from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { getUniqueReporterId } from '../../../lib/deviceId';
-import { createSignal, checkExistingSignal } from '../../../lib/payload';
-import type { CreateSignalInput } from '../../../types/signal';
+} from 'react-native'
+import {useTranslation} from 'react-i18next'
+import {useRouter, useLocalSearchParams} from 'expo-router'
+import {getUniqueReporterId} from '../../../lib/deviceId'
+import {createSignal, checkExistingSignal} from '../../../lib/payload'
+import type {CreateSignalInput} from '../../../types/signal'
 
 export default function NewSignalScreen() {
-  const { t, i18n } = useTranslation();
-  const router = useRouter();
-  const params = useLocalSearchParams();
-  
-  // Prepopulated data from container
-  const containerPublicNumber = params.containerPublicNumber as string | undefined;
-  const containerLocation = params.containerLocation 
-    ? JSON.parse(params.containerLocation as string)
-    : undefined;
-  const prefilledCategory = (params.prefilledCategory as string) || 'other';
+  const {t, i18n} = useTranslation()
+  const router = useRouter()
+  const params = useLocalSearchParams()
 
-  const [loading, setLoading] = useState(false);
-  const [selectedStates, setSelectedStates] = useState<string[]>([]);
-  const [deviceId, setDeviceId] = useState<string>('');
+  // Prepopulated data from container
+  const containerPublicNumber = params.containerPublicNumber as string | undefined
+  const containerLocation = params.containerLocation
+    ? JSON.parse(params.containerLocation as string)
+    : undefined
+  const prefilledCategory = (params.prefilledCategory as string) || 'other'
+
+  const [loading, setLoading] = useState(false)
+  const [selectedStates, setSelectedStates] = useState<string[]>([])
+  const [deviceId, setDeviceId] = useState<string>('')
 
   // Get device unique ID from secure storage
   useEffect(() => {
-    getUniqueReporterId().then(id => {
-      setDeviceId(id);
-    }).catch(error => {
-      console.error('Failed to get reporter ID:', error);
-    });
-  }, []);
+    getUniqueReporterId()
+      .then((id) => {
+        setDeviceId(id)
+      })
+      .catch((error) => {
+        console.error('Failed to get reporter ID:', error)
+      })
+  }, [])
 
   const [formData, setFormData] = useState<Partial<CreateSignalInput>>({
     title: '',
     description: '',
     category: prefilledCategory as any,
     containerState: undefined,
-    cityObject: containerPublicNumber ? {
-      type: 'waste-container',
-      referenceId: containerPublicNumber,
-      name: containerPublicNumber,
-    } : undefined,
+    cityObject: containerPublicNumber
+      ? {
+          type: 'waste-container',
+          referenceId: containerPublicNumber,
+          name: containerPublicNumber,
+        }
+      : undefined,
     location: containerLocation,
-  });
+  })
 
   const toggleState = (state: string) => {
-    setSelectedStates(prev => 
-      prev.includes(state) 
-        ? prev.filter(s => s !== state)
-        : [...prev, state]
-    );
-  };
+    setSelectedStates((prev) =>
+      prev.includes(state) ? prev.filter((s) => s !== state) : [...prev, state]
+    )
+  }
 
   // Auto-generate title from container number and selected states
   useEffect(() => {
     if (containerPublicNumber && selectedStates.length > 0) {
       const statesText = selectedStates
-        .map(state => t(`signals.containerStates.${state}`))
-        .join(', ');
-      const autoTitle = `${containerPublicNumber} - ${statesText}`;
-      setFormData(prev => ({ ...prev, title: autoTitle }));
+        .map((state) => t(`signals.containerStates.${state}`))
+        .join(', ')
+      const autoTitle = `${containerPublicNumber} - ${statesText}`
+      setFormData((prev) => ({...prev, title: autoTitle}))
     } else if (containerPublicNumber) {
-      setFormData(prev => ({ ...prev, title: containerPublicNumber }));
+      setFormData((prev) => ({...prev, title: containerPublicNumber}))
     }
-  }, [containerPublicNumber, selectedStates, t]);
+  }, [containerPublicNumber, selectedStates, t])
 
   const handleSubmit = async () => {
     // Validation
     if (!formData.title) {
-      Alert.alert(t('common.error'), 'Моля, попълнете заглавие');
-      return;
+      Alert.alert(t('common.error'), 'Моля, попълнете заглавие')
+      return
     }
 
     if (formData.category === 'waste-container' && selectedStates.length === 0) {
-      Alert.alert(t('common.error'), 'Моля, изберете състояние на контейнера');
-      return;
+      Alert.alert(t('common.error'), 'Моля, изберете състояние на контейнера')
+      return
     }
 
     try {
-      setLoading(true);
-      
+      setLoading(true)
+
       // Check for existing signal if this is a waste container signal
       if (formData.category === 'waste-container' && containerPublicNumber && deviceId) {
-        const { exists, signal: existingSignal } = await checkExistingSignal(
+        const {exists, signal: existingSignal} = await checkExistingSignal(
           deviceId,
           containerPublicNumber,
           i18n.language as 'bg' | 'en'
-        );
+        )
 
         if (exists && existingSignal) {
           Alert.alert(
             t('signals.duplicateTitle'),
-            t('signals.duplicateMessage', { id: existingSignal.id }),
+            t('signals.duplicateMessage', {id: existingSignal.id}),
             [
               {
                 text: t('signals.viewExisting'),
                 onPress: () => {
-                  router.push(`/(tabs)/signals/${existingSignal.id}` as any);
+                  router.push(`/(tabs)/signals/${existingSignal.id}` as any)
                 },
               },
               {
@@ -114,66 +116,71 @@ export default function NewSignalScreen() {
                 style: 'cancel',
               },
             ]
-          );
-          setLoading(false);
-          return;
+          )
+          setLoading(false)
+          return
         }
       }
-      
+
       // Prepare submission data with selected states and device ID
       const submitData = {
         ...formData,
         containerState: selectedStates,
         reporterUniqueId: deviceId,
-      };
-      
-      await createSignal(submitData as CreateSignalInput, i18n.language as 'bg' | 'en');
+      }
+
+      await createSignal(submitData as CreateSignalInput, i18n.language as 'bg' | 'en')
       Alert.alert(t('signals.success'), '', [
         {
           text: 'OK',
           onPress: () => router.push('/signals'),
         },
-      ]);
+      ])
     } catch (error) {
-      console.error('Error creating signal:', error);
-      
+      console.error('Error creating signal:', error)
+
       // Check if it's a duplicate signal error from backend
-      if (error instanceof Error && error.message.includes('Signal for same object already exists')) {
+      if (
+        error instanceof Error &&
+        error.message.includes('Signal for same object already exists')
+      ) {
         // Extract signal ID from error message
-        const match = error.message.match(/Signal ID: (\d+)/);
-        const signalId = match ? match[1] : null;
-        
+        const match = error.message.match(/Signal ID: (\d+)/)
+        const signalId = match ? match[1] : null
+
         Alert.alert(
           t('signals.duplicateTitle'),
-          signalId 
-            ? t('signals.duplicateMessage', { id: signalId })
-            : error.message,
+          signalId ? t('signals.duplicateMessage', {id: signalId}) : error.message,
           [
-            ...(signalId ? [{
-              text: t('signals.viewExisting'),
-              onPress: () => {
-                router.push(`/(tabs)/signals/${signalId}` as any);
-              },
-            }] : []),
+            ...(signalId
+              ? [
+                  {
+                    text: t('signals.viewExisting'),
+                    onPress: () => {
+                      router.push(`/(tabs)/signals/${signalId}` as any)
+                    },
+                  },
+                ]
+              : []),
             {
               text: t('common.cancel'),
               style: 'cancel',
             },
           ]
-        );
+        )
       } else {
-        Alert.alert(t('signals.error'), error instanceof Error ? error.message : 'Unknown error');
+        Alert.alert(t('signals.error'), error instanceof Error ? error.message : 'Unknown error')
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.label}>
-          <Text style={styles.label}>{t('signals.form.about')}</Text>
-        </View>
+        <Text style={styles.label}>{t('signals.form.about')}</Text>
+      </View>
       {containerPublicNumber && (
         <View style={[styles.section, styles.infoBox]}>
           <Text style={styles.infoLabel}>📦 Контейнер: {containerPublicNumber}</Text>
@@ -191,44 +198,42 @@ export default function NewSignalScreen() {
               const getStateColor = (state: string) => {
                 switch (state) {
                   case 'full':
-                    return '#DC2626'; // Red
+                    return '#DC2626' // Red
                   case 'dirty':
-                    return '#92400E'; // Brown
+                    return '#92400E' // Brown
                   case 'damaged':
-                    return '#1F2937'; // Black/Dark Gray
+                    return '#1F2937' // Black/Dark Gray
                   default:
-                    return '#1E40AF'; // Default Blue
+                    return '#1E40AF' // Default Blue
                 }
-              };
+              }
 
-              const stateColor = getStateColor(state);
-              const isActive = selectedStates.includes(state);
+              const stateColor = getStateColor(state)
+              const isActive = selectedStates.includes(state)
 
               return (
                 <TouchableOpacity
                   key={state}
                   style={[
                     styles.stateTag,
-                    isActive && { backgroundColor: stateColor, borderColor: stateColor },
+                    isActive && {
+                      backgroundColor: stateColor,
+                      borderColor: stateColor,
+                    },
                   ]}
                   onPress={() => toggleState(state)}
                   disabled={loading}
                 >
-                  <Text
-                    style={[
-                      styles.stateTagText,
-                      isActive && styles.stateTagTextActive,
-                    ]}
-                  >
+                  <Text style={[styles.stateTagText, isActive && styles.stateTagTextActive]}>
                     {t(`signals.containerStates.${state}`)}
                   </Text>
                 </TouchableOpacity>
-              );
+              )
             })}
           </View>
         </View>
       )}
-      
+
       {/* Auto-generated title preview */}
       {formData.title && (
         <View style={styles.section}>
@@ -243,7 +248,7 @@ export default function NewSignalScreen() {
           style={[styles.input, styles.textArea]}
           placeholder={t('signals.form.descriptionPlaceholder')}
           value={formData.description}
-          onChangeText={(text) => setFormData({ ...formData, description: text })}
+          onChangeText={(text) => setFormData({...formData, description: text})}
           multiline
           numberOfLines={4}
           textAlignVertical="top"
@@ -285,7 +290,7 @@ export default function NewSignalScreen() {
         >
           <Text style={styles.cancelButtonText}>{t('signals.form.cancel')}</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[styles.button, styles.submitButton]}
           onPress={handleSubmit}
@@ -299,7 +304,7 @@ export default function NewSignalScreen() {
         </TouchableOpacity>
       </View>
     </ScrollView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -504,4 +509,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#ffffff',
   },
-});
+})

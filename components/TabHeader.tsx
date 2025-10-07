@@ -10,11 +10,11 @@ interface TabHeaderProps {
   onActionPress?: () => void;
 }
 
-export function TabHeader({ 
-  title, 
-  showActionIcon = false, 
+export function TabHeader({
+  title,
+  showActionIcon = false,
   ActionIcon = Bell,
-  onActionPress 
+  onActionPress,
 }: TabHeaderProps) {
   const { unreadCount, clearUnreadCount } = useNotifications();
   const { triggerBellAction } = useBellAction();
@@ -35,7 +35,10 @@ export function TabHeader({
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       {showActionIcon && (
-        <TouchableOpacity style={styles.actionButton} onPress={handleActionPress}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleActionPress}
+        >
           <Icon size={24} color="#6B7280" />
           {ActionIcon === Bell && unreadCount > 0 && (
             <View style={styles.notificationBadge}>

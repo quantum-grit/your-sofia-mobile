@@ -1,13 +1,13 @@
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  ScrollView, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  TextInput 
-} from 'react-native';
-import { 
+  TextInput,
+} from 'react-native'
+import {
   CreditCard,
   Zap,
   Home,
@@ -18,27 +18,27 @@ import {
   ChevronRight,
   Search,
   Plus,
-  Clock
-} from 'lucide-react-native';
-import { useTranslation } from 'react-i18next';
-import { commonStyles } from '../../styles/common';
+  Clock,
+} from 'lucide-react-native'
+import {useTranslation} from 'react-i18next'
+import {commonStyles} from '../../styles/common'
 
 interface Bill {
-  id: number;
-  title: string;
-  icon: any;
-  color: string;
-  amount: string;
-  dueDate: string;
-  status: 'pending' | 'overdue';
+  id: number
+  title: string
+  icon: any
+  color: string
+  amount: string
+  dueDate: string
+  status: 'pending' | 'overdue'
 }
 
 interface Payment {
-  id: number;
-  title: string;
-  amount: string;
-  date: string;
-  status: string;
+  id: number
+  title: string
+  amount: string
+  date: string
+  status: string
 }
 
 const getBillCategories = (t: (key: string) => string): Bill[] => [
@@ -49,7 +49,7 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     color: '#F59E0B',
     amount: '124.50',
     dueDate: t('payments.common.due') + ' Jan 15',
-    status: 'pending'
+    status: 'pending',
   },
   {
     id: 2,
@@ -58,7 +58,7 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     color: '#3B82F6',
     amount: '89.20',
     dueDate: t('payments.common.due') + ' Jan 20',
-    status: 'pending'
+    status: 'pending',
   },
   {
     id: 3,
@@ -67,7 +67,7 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     color: '#059669',
     amount: '450.00',
     dueDate: t('payments.common.due') + ' Feb 1',
-    status: 'pending'
+    status: 'pending',
   },
   {
     id: 4,
@@ -76,9 +76,9 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     color: '#DC2626',
     amount: '25.00',
     dueDate: t('payments.status.overdue'),
-    status: 'overdue'
-  }
-];
+    status: 'overdue',
+  },
+]
 
 const getRecentPayments = (t: (key: string) => string): Payment[] => [
   {
@@ -86,28 +86,28 @@ const getRecentPayments = (t: (key: string) => string): Payment[] => [
     title: t('payments.bills.electricity'),
     amount: '98.30',
     date: 'Dec 15, 2024',
-    status: t('payments.status.paid')
+    status: t('payments.status.paid'),
   },
   {
     id: 2,
     title: t('payments.bills.waterSewer'),
     amount: '76.45',
     date: 'Dec 10, 2024',
-    status: t('payments.status.paid')
+    status: t('payments.status.paid'),
   },
   {
     id: 3,
     title: t('payments.bills.waterSewer'),
     amount: '35.00',
     date: 'Dec 5, 2024',
-    status: t('payments.status.paid')
-  }
-];
+    status: t('payments.status.paid'),
+  },
+]
 
 export default function PaymentsScreen() {
-  const { t } = useTranslation();
-  const billCategories = getBillCategories(t);
-  const recentPayments = getRecentPayments(t);
+  const {t} = useTranslation()
+  const billCategories = getBillCategories(t)
+  const recentPayments = getRecentPayments(t)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -130,28 +130,27 @@ export default function PaymentsScreen() {
             <Text style={styles.sectionTitle}>Предстоящи плащания</Text>
             <Text style={styles.totalAmount}>Общо: 688.70 лв</Text>
           </View>
-          
+
           <View style={styles.billsList}>
             {billCategories.map((bill: Bill) => {
-              const IconComponent = bill.icon;
+              const IconComponent = bill.icon
               return (
                 <TouchableOpacity
                   key={bill.id}
-                  style={[
-                    styles.billCard,
-                    bill.status === 'overdue' && styles.overdueBill
-                  ]}
+                  style={[styles.billCard, bill.status === 'overdue' && styles.overdueBill]}
                 >
                   <View style={styles.billContent}>
-                    <View style={[styles.billIcon, { backgroundColor: bill.color }]}>
+                    <View style={[styles.billIcon, {backgroundColor: bill.color}]}>
                       <IconComponent size={24} color="#ffffff" />
                     </View>
                     <View style={styles.billInfo}>
                       <Text style={styles.billTitle}>{bill.title}</Text>
-                      <Text style={[
-                        styles.billDueDate,
-                        bill.status === 'overdue' && styles.overdueDueDate
-                      ]}>
+                      <Text
+                        style={[
+                          styles.billDueDate,
+                          bill.status === 'overdue' && styles.overdueDueDate,
+                        ]}
+                      >
                         {bill.dueDate}
                       </Text>
                     </View>
@@ -161,7 +160,7 @@ export default function PaymentsScreen() {
                     </View>
                   </View>
                 </TouchableOpacity>
-              );
+              )
             })}
           </View>
 
@@ -194,7 +193,7 @@ export default function PaymentsScreen() {
               <Text style={styles.viewAllText}>Виж всички</Text>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.recentPaymentsList}>
             {recentPayments.map((payment: Payment) => (
               <View key={payment.id} style={styles.paymentHistoryCard}>
@@ -235,7 +234,7 @@ export default function PaymentsScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -516,4 +515,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
   },
-});
+})

@@ -14,29 +14,36 @@ export default function RootLayout() {
 
   // Initialize unique reporter ID on app start
   useEffect(() => {
-    initializeReporterId().then(id => {
-      console.log('Unique Reporter ID initialized:', id);
-    }).catch(error => {
-      console.error('Failed to initialize reporter ID:', error);
-    });
+    initializeReporterId()
+      .then((id) => {
+        console.log('Unique Reporter ID initialized:', id);
+      })
+      .catch((error) => {
+        console.error('Failed to initialize reporter ID:', error);
+      });
   }, []);
 
   return (
     <>
-      <Stack screenOptions={{ 
-        headerShown: true,
-        headerTitle: t('common.header'),
-        headerShadowVisible: true,
-        headerLeft: () => (
-          <Image 
-            source={require('../assets/images/sofia-gerb.png')}
-            style={{ width: 24, height: 24, marginLeft: 16, borderRadius: 12 }}
-          />
-        ),
-        headerRight: () => (
-          <LanguageSwitch />
-        ),
-      }}>
+      <Stack
+        screenOptions={{
+          headerShown: true,
+          headerTitle: t('common.header'),
+          headerShadowVisible: true,
+          headerLeft: () => (
+            <Image
+              source={require('../assets/images/sofia-gerb.png')}
+              style={{
+                width: 24,
+                height: 24,
+                marginLeft: 16,
+                borderRadius: 12,
+              }}
+            />
+          ),
+          headerRight: () => <LanguageSwitch />,
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: true }} />
         <Stack.Screen name="+not-found" />
       </Stack>

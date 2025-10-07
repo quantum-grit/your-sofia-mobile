@@ -3,14 +3,23 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import type { WasteContainer } from '../types/wasteContainer';
-import { Trash2, MapPin, Calendar, User, AlertTriangle } from 'lucide-react-native';
+import {
+  Trash2,
+  MapPin,
+  Calendar,
+  User,
+  AlertTriangle,
+} from 'lucide-react-native';
 
 interface WasteContainerCardProps {
   container: WasteContainer;
   onClose?: () => void;
 }
 
-export function WasteContainerCard({ container, onClose }: WasteContainerCardProps) {
+export function WasteContainerCard({
+  container,
+  onClose,
+}: WasteContainerCardProps) {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -19,7 +28,7 @@ export function WasteContainerCard({ container, onClose }: WasteContainerCardPro
     if (onClose) {
       onClose();
     }
-    
+
     // Navigate to signal creation form with prepopulated container data
     router.push({
       pathname: '/(tabs)/signals/new',
@@ -68,17 +77,31 @@ export function WasteContainerCard({ container, onClose }: WasteContainerCardPro
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <View style={{flex: 1}}>
-          <Text style={styles.containerNumber}>{t('wasteContainers.name')}: {container.publicNumber}</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.containerNumber}>
+            {t('wasteContainers.name')}: {container.publicNumber}
+          </Text>
           <View style={styles.statusBadge}>
-            <View style={[styles.statusDot, { backgroundColor: getStatusColor(container.status) }]} />
-            <Text style={styles.statusText}>{container.status.toUpperCase()}</Text>
+            <View
+              style={[
+                styles.statusDot,
+                { backgroundColor: getStatusColor(container.status) },
+              ]}
+            />
+            <Text style={styles.statusText}>
+              {container.status.toUpperCase()}
+            </Text>
           </View>
         </View>
         <View style={styles.headerButtons}>
-          <TouchableOpacity onPress={handleReportIssue} style={styles.reportButton}>
+          <TouchableOpacity
+            onPress={handleReportIssue}
+            style={styles.reportButton}
+          >
             <AlertTriangle size={16} color="#ffffff" />
-            <Text style={styles.reportButtonText}>{t('wasteContainers.reportIssue')}</Text>
+            <Text style={styles.reportButtonText}>
+              {t('wasteContainers.reportIssue')}
+            </Text>
           </TouchableOpacity>
           {onClose && (
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -100,7 +123,9 @@ export function WasteContainerCard({ container, onClose }: WasteContainerCardPro
         <View style={styles.infoRow}>
           <Trash2 size={16} color="#6B7280" />
           <Text style={styles.infoText}>
-            {getWasteTypeLabel(container.wasteType)} • {getCapacitySizeLabel(container.capacitySize)} ({container.capacityVolume}m³)
+            {getWasteTypeLabel(container.wasteType)} •{' '}
+            {getCapacitySizeLabel(container.capacitySize)} (
+            {container.capacityVolume}m³)
           </Text>
         </View>
 
@@ -127,7 +152,9 @@ export function WasteContainerCard({ container, onClose }: WasteContainerCardPro
 
         {container.notes && (
           <View style={styles.notesContainer}>
-            <Text style={styles.notesLabel}>{t('wasteContainers.notes') || 'Notes'}:</Text>
+            <Text style={styles.notesLabel}>
+              {t('wasteContainers.notes') || 'Notes'}:
+            </Text>
             <Text style={styles.notesText}>{container.notes}</Text>
           </View>
         )}

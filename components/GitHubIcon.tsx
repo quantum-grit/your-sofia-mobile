@@ -9,12 +9,7 @@ interface GitHubIconProps {
 
 export function GitHubIcon({ size = 24, color = '#000000' }: GitHubIconProps) {
   return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill={color}
-    >
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
       <Path d={siGithub.path} />
     </Svg>
   );

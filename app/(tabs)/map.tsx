@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react'
 import {
   View,
   Text,
@@ -8,96 +8,93 @@ import {
   Alert,
   ActivityIndicator,
   Modal,
-} from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT, Callout } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { useTranslation } from 'react-i18next';
-import { useWasteContainers } from '../../hooks/useWasteContainers';
-import { WasteContainerCard } from '../../components/WasteContainerCard';
-import { WasteContainerMarker } from '../../components/WasteContainerMarker';
-import type { WasteContainer } from '../../types/wasteContainer';
+} from 'react-native'
+import MapView, {Marker, PROVIDER_DEFAULT, Callout} from 'react-native-maps'
+import * as Location from 'expo-location'
+import {useTranslation} from 'react-i18next'
+import {useWasteContainers} from '../../hooks/useWasteContainers'
+import {WasteContainerCard} from '../../components/WasteContainerCard'
+import {WasteContainerMarker} from '../../components/WasteContainerMarker'
+import type {WasteContainer} from '../../types/wasteContainer'
 
-type MapFilter = 'all' | 'wasteContainers' | 'news' | 'events';
+type MapFilter = 'all' | 'wasteContainers' | 'news' | 'events'
 
 export default function MapScreen() {
-  const { t } = useTranslation();
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  const [permissionStatus, setPermissionStatus] = useState<Location.PermissionStatus | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedFilter, setSelectedFilter] = useState<MapFilter>('all');
-  const [selectedContainer, setSelectedContainer] = useState<WasteContainer | null>(null);
-  const [showContainerCard, setShowContainerCard] = useState(false);
+  const {t} = useTranslation()
+  const [location, setLocation] = useState<Location.LocationObject | null>(null)
+  const [permissionStatus, setPermissionStatus] = useState<Location.PermissionStatus | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedFilter, setSelectedFilter] = useState<MapFilter>('all')
+  const [selectedContainer, setSelectedContainer] = useState<WasteContainer | null>(null)
+  const [showContainerCard, setShowContainerCard] = useState(false)
 
   // Fetch waste containers
-  const { containers, loading: containersLoading } = useWasteContainers();
+  const {containers, loading: containersLoading} = useWasteContainers()
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       // Request location permissions
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      setPermissionStatus(status);
+      const {status} = await Location.requestForegroundPermissionsAsync()
+      setPermissionStatus(status)
 
       if (status !== 'granted') {
-        setLoading(false);
-        return;
+        setLoading(false)
+        return
       }
 
       // Get current location
       try {
         const currentLocation = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
-        });
-        setLocation(currentLocation);
+        })
+        setLocation(currentLocation)
       } catch (error) {
-        console.error('Error getting location:', error);
-        Alert.alert(
-          t('common.error'),
-          'Не можахме да получим текущото ви местоположение.'
-        );
+        console.error('Error getting location:', error)
+        Alert.alert(t('common.error'), 'Не можахме да получим текущото ви местоположение.')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, [t]);
+    })()
+  }, [t])
 
   const requestPermission = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    setPermissionStatus(status);
+    const {status} = await Location.requestForegroundPermissionsAsync()
+    setPermissionStatus(status)
     if (status === 'granted') {
-      setLoading(true);
+      setLoading(true)
       try {
         const currentLocation = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
-        });
-        setLocation(currentLocation);
+        })
+        setLocation(currentLocation)
       } catch (error) {
-        console.error('Error getting location:', error);
+        console.error('Error getting location:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-  };
+  }
 
-  const filters: { key: MapFilter; label: string }[] = [
-    { key: 'all', label: t('map.filters.all') },
-    { key: 'wasteContainers', label: t('map.filters.wasteContainers') },
-    { key: 'news', label: t('map.filters.news') },
-    { key: 'events', label: t('map.filters.events') },
-  ];
+  const filters: {key: MapFilter; label: string}[] = [
+    {key: 'all', label: t('map.filters.all')},
+    {key: 'wasteContainers', label: t('map.filters.wasteContainers')},
+    {key: 'news', label: t('map.filters.news')},
+    {key: 'events', label: t('map.filters.events')},
+  ]
 
   // Filter containers based on selected filter
-  const shouldShowContainers = selectedFilter === 'all' || selectedFilter === 'wasteContainers';
-  const visibleContainers = shouldShowContainers ? containers : [];
+  const shouldShowContainers = selectedFilter === 'all' || selectedFilter === 'wasteContainers'
+  const visibleContainers = shouldShowContainers ? containers : []
 
   const handleContainerPress = (container: WasteContainer) => {
-    setSelectedContainer(container);
-    setShowContainerCard(true);
-  };
+    setSelectedContainer(container)
+    setShowContainerCard(true)
+  }
 
   const handleCloseCard = () => {
-    setShowContainerCard(false);
-    setSelectedContainer(null);
-  };
+    setShowContainerCard(false)
+    setSelectedContainer(null)
+  }
 
   if (loading) {
     return (
@@ -105,7 +102,7 @@ export default function MapScreen() {
         <ActivityIndicator size="large" color="#1E40AF" />
         <Text style={styles.loadingText}>{t('map.loading')}</Text>
       </View>
-    );
+    )
   }
 
   if (permissionStatus !== 'granted') {
@@ -117,7 +114,7 @@ export default function MapScreen() {
           <Text style={styles.permissionButtonText}>{t('map.permissions.button')}</Text>
         </TouchableOpacity>
       </View>
-    );
+    )
   }
 
   if (!location) {
@@ -126,7 +123,7 @@ export default function MapScreen() {
         <ActivityIndicator size="large" color="#1E40AF" />
         <Text style={styles.loadingText}>{t('map.loading')}</Text>
       </View>
-    );
+    )
   }
 
   // Default to Sofia center if location is not available
@@ -135,7 +132,7 @@ export default function MapScreen() {
     longitude: location?.coords.longitude || 23.3219,
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -149,10 +146,7 @@ export default function MapScreen() {
           {filters.map((filter) => (
             <TouchableOpacity
               key={filter.key}
-              style={[
-                styles.filterChip,
-                selectedFilter === filter.key && styles.filterChipActive,
-              ]}
+              style={[styles.filterChip, selectedFilter === filter.key && styles.filterChipActive]}
               onPress={() => setSelectedFilter(filter.key)}
             >
               <Text
@@ -212,17 +206,10 @@ export default function MapScreen() {
         animationType="slide"
         onRequestClose={handleCloseCard}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={handleCloseCard}
-        >
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={handleCloseCard}>
           <View style={styles.modalContent}>
             {selectedContainer && (
-              <WasteContainerCard
-                container={selectedContainer}
-                onClose={handleCloseCard}
-              />
+              <WasteContainerCard container={selectedContainer} onClose={handleCloseCard} />
             )}
           </View>
         </TouchableOpacity>
@@ -235,7 +222,7 @@ export default function MapScreen() {
         </View>
       )}
     </View>
-  );
+  )
 }
 
 // Helper function to get pin color based on container status
@@ -245,8 +232,8 @@ function getContainerPinColor(container: WasteContainer): string {
     full: '#EF4444', // Red
     maintenance: '#F59E0B', // Orange
     inactive: '#6B7280', // Gray
-  };
-  return colorMap[container.status] || '#10B981';
+  }
+  return colorMap[container.status] || '#10B981'
 }
 
 const styles = StyleSheet.create({
@@ -358,9 +345,9 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-});
+})
