@@ -1,5 +1,9 @@
 # Your Sofia Mobile - AI Agent Instructions
 
+## Important Instructions
+
+**Do not generate summaries of completed work.** The user can see changes in the diff/file changes. Only provide summaries if explicitly requested.
+
 ## Project Overview
 A bilingual (Bulgarian/English) React Native mobile app for Sofia city services, built with Expo. The app provides city services, news, air quality monitoring, and payment features for Sofia residents.
 
