@@ -2,7 +2,7 @@
   "expo": {
     "name": "YourSofia",
     "slug": "your-sofia",
-    "version": "1.0.0",
+    "version": "0.5.0",
     "sdkVersion": "54.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/sofia-gerb.png",
@@ -11,7 +11,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "icon": "./assets/images/icon.png",
+      "icon": "./assets/images/sofia-gerb.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/sofia-gerb.jpg",
         "backgroundColor": "#ffffff"
@@ -22,6 +22,7 @@
       }
     },
     "android": {
+      "package": "bg.sofia.yoursofia",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/sofia-gerb.jpg",
         "backgroundColor": "#ffffff"
@@ -34,7 +35,7 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/sofia-gerb.png"
     },
     "plugins": [
       "expo-router",
@@ -43,7 +44,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow YourSofia to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow Your Sofia to use your location."
         }
       ],
       "expo-secure-store"
