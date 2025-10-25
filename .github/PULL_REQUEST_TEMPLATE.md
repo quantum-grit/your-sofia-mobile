@@ -126,13 +126,9 @@ Closes #
 
 **New dependencies added:**
 
--
+- **Dependencies updated:**
 
-**Dependencies updated:**
-
--
-
-**Reason for dependency changes:**
+- **Reason for dependency changes:**
 
 ## Security Considerations
 
@@ -149,13 +145,9 @@ Closes #
 
 **Environment variables:**
 
--
+- **Database migrations:**
 
-**Database migrations:**
-
--
-
-**Other deployment steps:**
+- **Other deployment steps:**
 
 -
 
@@ -192,10 +184,8 @@ Closes #
 
 <!-- Specific questions or concerns -->
 
--
+- ***
 
----
-
-**Thank you for contributing to Your Sofia! 🎉**
+  **Thank you for contributing to Your Sofia! 🎉**
 
 By submitting this PR, I confirm that my contribution is made under the terms of the EUPL-1.2 license.

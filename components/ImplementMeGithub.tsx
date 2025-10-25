@@ -16,14 +16,25 @@ import {X} from 'lucide-react-native'
  *
  * // In your component:
  * <ImplementMeGithub issueUrl="https://github.com/sofia-municipality/your-sofia/issues/123" />
+ * <ImplementMeGithub
+ *   issueUrl="https://github.com/sofia-municipality/your-sofia/issues/123"
+ *   backgroundColor="#FEF3C7"
+ *   extendedText="This feature is under development"
+ * />
  * ```
  */
 
 interface ImplementMeGithubProps {
   issueUrl: string
+  backgroundColor?: string
+  extendedText?: string
 }
 
-export function ImplementMeGithub({issueUrl}: ImplementMeGithubProps) {
+export function ImplementMeGithub({
+  issueUrl,
+  backgroundColor = '#F3F4F6',
+  extendedText,
+}: ImplementMeGithubProps) {
   const {t} = useTranslation()
   const [showCallout, setShowCallout] = useState(false)
 
@@ -40,9 +51,23 @@ export function ImplementMeGithub({issueUrl}: ImplementMeGithubProps) {
     setShowCallout(false)
   }
 
+  // Extended text mode - renders as a notification bar at top
+  if (extendedText) {
+    return (
+      <TouchableOpacity
+        style={styles.notificationBar}
+        onPress={() => Linking.openURL('https://github.com/sofia-municipality/your-sofia-mobile/')}
+      >
+        <Text style={styles.notificationText}>{extendedText}</Text>
+        <GitHubIcon size={24} color="#1E40AF" />
+      </TouchableOpacity>
+    )
+  }
+
+  // Default mode - small icon button
   return (
     <>
-      <TouchableOpacity onPress={handlePress} style={styles.iconButton}>
+      <TouchableOpacity onPress={handlePress} style={[styles.iconButton, {backgroundColor}]}>
         <GitHubIcon size={18} color="#6B7280" />
       </TouchableOpacity>
 
@@ -54,8 +79,8 @@ export function ImplementMeGithub({issueUrl}: ImplementMeGithubProps) {
             </TouchableOpacity>
 
             <View style={styles.content}>
-              <GitHubIcon size={18} color="#6B7280" />
               <Text style={styles.message}>{t('common.implementMeMessage')}</Text>
+              <GitHubIcon size={18} color="#6B7280" />
               <TouchableOpacity style={styles.linkButton} onPress={handleLinkPress}>
                 <Text style={styles.linkText}>{issueUrl}</Text>
               </TouchableOpacity>
@@ -77,6 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    borderRadius: 12,
   },
   callout: {
     backgroundColor: '#ffffff',
@@ -122,5 +148,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1E40AF',
     textDecorationLine: 'underline',
+  },
+  notificationBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EFF6FF',
+    padding: 8,
+    borderRadius: 12,
+    margin: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#1E40AF',
+    gap: 12,
+  },
+  notificationText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1F2937',
+    padding: 0,
   },
 })

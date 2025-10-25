@@ -124,6 +124,7 @@ export default {
     filters: {
       all: 'All',
       wasteContainers: 'Waste Containers',
+      transport: 'Transport',
       news: 'News',
       events: 'Events',
     },
@@ -151,6 +152,14 @@ export default {
       paper: 'Paper',
       plastic: 'Plastic',
       metal: 'Metal',
+    },
+    filters: {
+      all: 'All',
+      full: 'Full',
+      dirty: 'Dirty',
+      broken: 'Broken',
+      empty: 'Empty',
+      forCollection: 'For Collection',
     },
     notes: 'Notes',
     reportIssue: 'Report Issue',

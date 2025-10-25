@@ -166,7 +166,9 @@ export default function ProfileScreen() {
         {/* Notification Bar */}
         <TouchableOpacity
           style={styles.notificationBar}
-          onPress={() => Linking.openURL('https://github.com/sofia-municipality')} //append your-sofia when created
+          onPress={() =>
+            Linking.openURL('https://github.com/sofia-municipality/your-sofia-mobile/')
+          }
         >
           <Text style={styles.notificationText}>{t('profile.staticScreenNotice')}</Text>
           <GitHubIcon size={24} color="#1E40AF" />

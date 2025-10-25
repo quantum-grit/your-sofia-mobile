@@ -13,19 +13,19 @@ import {
 import MapView, {Marker, PROVIDER_DEFAULT} from 'react-native-maps'
 import * as Location from 'expo-location'
 import {useTranslation} from 'react-i18next'
-import {useWasteContainers} from '../../hooks/useWasteContainers'
-import {WasteContainerCard} from '../../components/WasteContainerCard'
-import {WasteContainerMarker} from '../../components/WasteContainerMarker'
-import type {WasteContainer} from '../../types/wasteContainer'
+import {useWasteContainers} from '../../../hooks/useWasteContainers'
+import {WasteContainerCard} from '../../../components/WasteContainerCard'
+import {WasteContainerMarker} from '../../../components/WasteContainerMarker'
+import type {WasteContainer} from '../../../types/wasteContainer'
 
-type MapFilter = 'all' | 'wasteContainers' | 'news' | 'events'
+type ContainerFilter = 'all' | 'full' | 'dirty' | 'broken' | 'active' | 'for-collection'
 
-export default function MapScreen() {
+export default function WasteContainers() {
   const {t} = useTranslation()
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
   const [permissionStatus, setPermissionStatus] = useState<Location.PermissionStatus | null>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedFilter, setSelectedFilter] = useState<MapFilter>('all')
+  const [selectedFilter, setSelectedFilter] = useState<ContainerFilter>('all')
   const [selectedContainer, setSelectedContainer] = useState<WasteContainer | null>(null)
   const [showContainerCard, setShowContainerCard] = useState(false)
   const [isFirstFocus, setIsFirstFocus] = useState(true)
@@ -88,16 +88,20 @@ export default function MapScreen() {
     }
   }
 
-  const filters: {key: MapFilter; label: string}[] = [
-    {key: 'all', label: t('map.filters.all')},
-    {key: 'wasteContainers', label: t('map.filters.wasteContainers')},
-    {key: 'news', label: t('map.filters.news')},
-    {key: 'events', label: t('map.filters.events')},
+  const filters: {key: ContainerFilter; label: string}[] = [
+    {key: 'all', label: t('wasteContainers.filters.all')},
+    {key: 'full', label: t('wasteContainers.filters.full')},
+    {key: 'dirty', label: t('wasteContainers.filters.dirty')},
+    {key: 'broken', label: t('wasteContainers.filters.broken')},
+    {key: 'active', label: t('wasteContainers.filters.empty')},
+    {key: 'for-collection', label: t('wasteContainers.filters.forCollection')},
   ]
 
   // Filter containers based on selected filter
-  const shouldShowContainers = selectedFilter === 'all' || selectedFilter === 'wasteContainers'
-  const visibleContainers = shouldShowContainers ? containers : []
+  const visibleContainers =
+    selectedFilter === 'all'
+      ? containers
+      : containers.filter((container) => container.status === selectedFilter)
 
   const handleContainerPress = (container: WasteContainer) => {
     setSelectedContainer(container)
@@ -149,32 +153,6 @@ export default function MapScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Filter chips */}
-      <View style={styles.filtersContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filtersScrollContent}
-        >
-          {filters.map((filter) => (
-            <TouchableOpacity
-              key={filter.key}
-              style={[styles.filterChip, selectedFilter === filter.key && styles.filterChipActive]}
-              onPress={() => setSelectedFilter(filter.key)}
-            >
-              <Text
-                style={[
-                  styles.filterChipText,
-                  selectedFilter === filter.key && styles.filterChipTextActive,
-                ]}
-              >
-                {filter.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
       {/* Map */}
       <MapView
         provider={PROVIDER_DEFAULT}
@@ -211,6 +189,32 @@ export default function MapScreen() {
           </Marker>
         ))}
       </MapView>
+
+      {/* Filter chips - overlay */}
+      <View style={styles.filtersContainer}>
+        <ScrollView
+          horizontal={false}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filtersScrollContent}
+        >
+          {filters.map((filter) => (
+            <TouchableOpacity
+              key={filter.key}
+              style={[styles.filterChip, selectedFilter === filter.key && styles.filterChipActive]}
+              onPress={() => setSelectedFilter(filter.key)}
+            >
+              <Text
+                style={[
+                  styles.filterChipText,
+                  selectedFilter === filter.key && styles.filterChipTextActive,
+                ]}
+              >
+                {filter.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Container Info Modal */}
       <Modal
@@ -292,30 +296,39 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   filtersContainer: {
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-    paddingVertical: 12,
+    position: 'absolute',
+    top: 4,
+    left: 280,
+    right: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderRadius: 12,
+    padding: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
   filtersScrollContent: {
-    paddingHorizontal: 16,
-    gap: 8,
+    padding: 4,
+    gap: 4,
   },
   filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    borderRadius: 16,
     backgroundColor: '#F3F4F6',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    marginRight: 8,
   },
   filterChipActive: {
     backgroundColor: '#1E40AF',
     borderColor: '#1E40AF',
   },
   filterChipText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
     color: '#6B7280',
   },

@@ -55,7 +55,7 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
         }}
       />
       <Tabs.Screen
-        name="map"
+        name="maps"
         options={{
           title: t('common.map'),
           tabBarLabel: t('common.map'),
