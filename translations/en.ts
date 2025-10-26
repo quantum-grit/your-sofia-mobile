@@ -274,4 +274,3 @@ export default {
     sessionExpiredMessage: 'Your session has expired. Please log in again.',
   },
 }
-
