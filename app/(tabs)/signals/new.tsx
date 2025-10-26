@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  Platform,
 } from 'react-native'
 import {useTranslation} from 'react-i18next'
 import {useRouter, useLocalSearchParams} from 'expo-router'
+import * as Location from 'expo-location'
 import {getUniqueReporterId} from '../../../lib/deviceId'
 import {createSignal, checkExistingSignal} from '../../../lib/payload'
 import type {CreateSignalInput} from '../../../types/signal'
@@ -92,6 +92,32 @@ export default function NewSignalScreen() {
     try {
       setLoading(true)
 
+      // Get current location for waste container signals
+      let currentLocation: {latitude: number; longitude: number; address?: string} | undefined
+      if (formData.category === 'waste-container') {
+        try {
+          const {status} = await Location.requestForegroundPermissionsAsync()
+          if (status === 'granted') {
+            const locationData = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.Balanced,
+            })
+            currentLocation = {
+              latitude: locationData.coords.latitude,
+              longitude: locationData.coords.longitude,
+            }
+          } else {
+            Alert.alert(t('common.error'), t('signals.locationPermissionRequired'))
+            setLoading(false)
+            return
+          }
+        } catch (locationError) {
+          console.error('Error getting location:', locationError)
+          Alert.alert(t('common.error'), t('signals.locationError'))
+          setLoading(false)
+          return
+        }
+      }
+
       // Check for existing signal if this is a waste container signal
       if (formData.category === 'waste-container' && containerPublicNumber && deviceId) {
         const {exists, signal: existingSignal} = await checkExistingSignal(
@@ -122,11 +148,12 @@ export default function NewSignalScreen() {
         }
       }
 
-      // Prepare submission data with selected states and device ID
+      // Prepare submission data with selected states, device ID, and current location
       const submitData = {
         ...formData,
         containerState: selectedStates,
         reporterUniqueId: deviceId,
+        location: currentLocation || formData.location,
       }
 
       await createSignal(submitData as CreateSignalInput, i18n.language as 'bg' | 'en')
@@ -139,8 +166,12 @@ export default function NewSignalScreen() {
     } catch (error) {
       console.error('Error creating signal:', error)
 
+      // Check if it's a proximity error from backend
+      if (error instanceof Error && error.message.includes('You must be within 30 meters')) {
+        Alert.alert(t('common.error'), error.message, [{text: 'OK', style: 'default'}])
+      }
       // Check if it's a duplicate signal error from backend
-      if (
+      else if (
         error instanceof Error &&
         error.message.includes('Signal for same object already exists')
       ) {

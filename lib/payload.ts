@@ -126,7 +126,7 @@ export async function fetchWasteContainers(options?: {
   limit?: number
   page?: number
 }): Promise<PayloadResponse<WasteContainer>> {
-  const {status, wasteType, limit = 100, page = 1} = options || {}
+  const {status, wasteType, limit = 3000, page = 1} = options || {}
 
   // Build query parameters
   const params = new URLSearchParams({
@@ -335,7 +335,14 @@ export async function createSignal(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(errorData.message || `Failed to create signal: ${response.statusText}`)
+    console.log('[createSignal] Error response:', JSON.stringify(errorData, null, 2))
+    // Payload CMS error structure can be: { message, errors } or { data: [{ message }] }
+    const errorMessage =
+      errorData.message ||
+      errorData.errors?.[0]?.message ||
+      errorData.data?.[0]?.message ||
+      `Failed to create signal: ${response.statusText}`
+    throw new Error(errorMessage)
   }
 
   return response.json()

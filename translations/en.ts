@@ -228,6 +228,10 @@ export default {
     },
     success: 'Signal submitted successfully!',
     error: 'Error submitting signal',
+    locationPermissionRequired:
+      'To report a container signal, you must allow access to your location.',
+    locationError: 'We could not get your current location. Please try again.',
+    proximityError: 'You must be within 30 meters of the container to report a signal.',
   },
   settings: {
     apiEnvironment: 'API Environment',
