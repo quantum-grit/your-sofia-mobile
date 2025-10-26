@@ -88,6 +88,15 @@ export default function WasteContainers() {
     }
   }
 
+  // Calculate counts for each filter
+  const getFilterCount = useCallback(
+    (filterKey: ContainerFilter): number => {
+      if (filterKey === 'all') return containers.length
+      return containers.filter((container) => container.status === filterKey).length
+    },
+    [containers]
+  )
+
   const filters: {key: ContainerFilter; label: string}[] = [
     {key: 'all', label: t('wasteContainers.filters.all')},
     {key: 'full', label: t('wasteContainers.filters.full')},
@@ -97,11 +106,18 @@ export default function WasteContainers() {
     {key: 'for-collection', label: t('wasteContainers.filters.forCollection')},
   ]
 
-  // Filter containers based on selected filter
-  const visibleContainers =
-    selectedFilter === 'all'
-      ? containers
-      : containers.filter((container) => container.status === selectedFilter)
+  // Filter containers based on selected filter - use useMemo to avoid recalculating on every render
+  const visibleContainers = React.useMemo(() => {
+    if (selectedFilter === 'all') return containers
+    return containers.filter((container) => container.status === selectedFilter)
+  }, [containers, selectedFilter])
+
+  const handleFilterChange = useCallback((filter: ContainerFilter) => {
+    // Force immediate state update without batching
+    React.startTransition(() => {
+      setSelectedFilter(filter)
+    })
+  }, [])
 
   const handleContainerPress = (container: WasteContainer) => {
     setSelectedContainer(container)
@@ -197,22 +213,21 @@ export default function WasteContainers() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filtersScrollContent}
         >
-          {filters.map((filter) => (
-            <TouchableOpacity
-              key={filter.key}
-              style={[styles.filterChip, selectedFilter === filter.key && styles.filterChipActive]}
-              onPress={() => setSelectedFilter(filter.key)}
-            >
-              <Text
-                style={[
-                  styles.filterChipText,
-                  selectedFilter === filter.key && styles.filterChipTextActive,
-                ]}
+          {filters.map((filter) => {
+            const count = getFilterCount(filter.key)
+            const isActive = selectedFilter === filter.key
+            return (
+              <TouchableOpacity
+                key={filter.key}
+                style={[styles.filterChip, isActive && styles.filterChipActive]}
+                onPress={() => handleFilterChange(filter.key)}
               >
-                {filter.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text style={[styles.filterChipText, isActive && styles.filterChipTextActive]}>
+                  {filter.label} ({count})
+                </Text>
+              </TouchableOpacity>
+            )
+          })}
         </ScrollView>
       </View>
 
@@ -298,7 +313,7 @@ const styles = StyleSheet.create({
   filtersContainer: {
     position: 'absolute',
     top: 4,
-    left: 280,
+    left: 260,
     right: 4,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderRadius: 12,
