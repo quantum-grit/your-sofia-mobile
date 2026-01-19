@@ -18,7 +18,6 @@ A bilingual (Bulgarian/English) open-source mobile application empowering Sofia 
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
-- [Contact & Support](#contact--support)
 
 ---
 
