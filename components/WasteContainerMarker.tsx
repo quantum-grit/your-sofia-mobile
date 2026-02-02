@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, StyleSheet} from 'react-native'
-import {Trash2, Recycle, Shapes} from 'lucide-react-native'
+import {Trash2, Recycle, Shapes, Container} from 'lucide-react-native'
 import type {WasteType, ContainerState} from '../types/wasteContainer'
 
 interface WasteContainerMarkerProps {
@@ -16,12 +16,20 @@ export function WasteContainerMarker({
   wasteType,
   state,
 }: WasteContainerMarkerProps) {
-  // Priority: bulkyWaste > recyclables > default trash
-  const Icon = state?.includes('bulkyWaste')
-    ? Shapes
-    : wasteType === 'recyclables'
-      ? Recycle
-      : Trash2
+  const getIcon = () => {
+    if (state?.includes('bulkyWaste')) return Shapes
+
+    switch (wasteType) {
+      case 'recyclables':
+        return Recycle
+      case 'trashCan':
+        return Trash2
+      default:
+        return Container
+    }
+  }
+
+  const Icon = getIcon()
 
   return (
     <View style={[styles.container, {width: size, height: size}]}>

@@ -158,6 +158,7 @@ export default {
       paper: 'Paper',
       plastic: 'Plastic',
       metal: 'Metal',
+      trashCan: 'Trash Can',
     },
     filters: {
       all: 'All',

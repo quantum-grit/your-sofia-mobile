@@ -3,7 +3,16 @@ import type {WasteContainer} from '../../types/wasteContainer'
 
 export const wasteContainerFormSchema = z.object({
   publicNumber: z.string().min(1, 'newCityObject.publicNumberRequired'),
-  wasteType: z.enum(['general', 'recyclables', 'organic', 'glass', 'paper', 'plastic', 'metal']),
+  wasteType: z.enum([
+    'general',
+    'recyclables',
+    'organic',
+    'glass',
+    'paper',
+    'plastic',
+    'metal',
+    'trashCan',
+  ]),
   capacityVolume: z.number().min(0.1, 'newCityObject.capacityRequired'),
   capacitySize: z.enum(['tiny', 'small', 'standard', 'big', 'industrial']),
   binCount: z.number().min(1).optional(),

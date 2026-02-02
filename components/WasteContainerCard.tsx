@@ -216,6 +216,7 @@ export function WasteContainerCard({
       paper: t('wasteContainers.type.paper') || 'Paper',
       plastic: t('wasteContainers.type.plastic') || 'Plastic',
       metal: t('wasteContainers.type.metal') || 'Metal',
+      trashCan: t('wasteContainers.type.trashCan') || 'Trash Can',
     }
     return labels[type] || type
   }

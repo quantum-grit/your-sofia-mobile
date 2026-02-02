@@ -159,6 +159,7 @@ export default {
       paper: 'Хартия',
       plastic: 'Пластмаса',
       metal: 'Метал',
+      trashCan: 'Кошче',
     },
     filters: {
       all: 'Всички',
