@@ -6,6 +6,7 @@ export type WasteType =
   | 'paper'
   | 'plastic'
   | 'metal'
+  | 'trashCan'
 
 export type CapacitySize = 'tiny' | 'small' | 'standard' | 'big' | 'industrial'
 
