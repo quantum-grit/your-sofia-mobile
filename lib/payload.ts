@@ -6,6 +6,7 @@
 
 import type {WasteContainer, CreateContainerInput} from '../types/wasteContainer'
 import type {Signal, CreateSignalInput} from '../types/signal'
+import type {Assignment, CreateAssignmentInput, AssignmentProgress} from '../types/assignment'
 import {environmentManager} from './environment'
 
 const getApiUrl = () => environmentManager.getApiUrl()
@@ -132,6 +133,53 @@ export function getMediaUrl(media: any): string | undefined {
   if (typeof media === 'string') return `${getApiUrl()}${media}`
   if (media.url) return `${getApiUrl()}${media.url}`
   return undefined
+}
+
+/**
+ * Fetch waste containers with aggregated signal counts
+ * Uses backend SQL query for efficiency - single database call
+ */
+export async function fetchContainersWithSignals(options?: {
+  limit?: number
+  page?: number
+}): Promise<PayloadResponse<WasteContainer & {signalCount: number; activeSignalCount: number}>> {
+  const {limit = 1000, page = 1} = options || {}
+
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+    page: page.toString(),
+  })
+
+  const url = `${getApiUrl()}/api/waste-containers/containers-with-signal-count?${params}`
+  console.log('[fetchContainersWithSignals] Request URL:', url)
+
+  const response = await fetch(url)
+  handleAuthError(response)
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.error('[fetchContainersWithSignals] Error response:', {
+      status: response.status,
+      statusText: response.statusText,
+      body: errorText,
+    })
+    throw new Error(`Failed to fetch containers with signals: ${response.statusText}`)
+  }
+
+  const data = await response.json()
+
+  // Transform image URLs if present
+  if (data.docs) {
+    data.docs = data.docs.map((container: any) => ({
+      ...container,
+      images:
+        container.images?.map((img: any) =>
+          typeof img === 'string' ? img : `${getApiUrl()}${img.url}`
+        ) || [],
+    }))
+  }
+
+  return data
 }
 
 /**
@@ -742,4 +790,153 @@ export async function updateWasteContainer(
   }
 
   return response.json()
+}
+
+/**
+ * Fetch assignments from Payload CMS
+ */
+export async function fetchAssignments(options?: {
+  status?: 'pending' | 'in-progress' | 'completed' | 'cancelled'
+  assignedTo?: number
+  limit?: number
+  page?: number
+}): Promise<PayloadResponse<Assignment>> {
+  const params = new URLSearchParams()
+
+  if (options?.status) {
+    params.append('where[status][equals]', options.status)
+  }
+
+  if (options?.assignedTo) {
+    params.append('where[assignedTo][equals]', options.assignedTo.toString())
+  }
+
+  if (options?.limit) {
+    params.append('limit', options.limit.toString())
+  }
+
+  if (options?.page) {
+    params.append('page', options.page.toString())
+  }
+
+  // Always populate relationships
+  params.append('depth', '2')
+  params.append('sort', '-createdAt')
+
+  const response = await fetch(`${getApiUrl()}/api/assignments?${params.toString()}`)
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch assignments: ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+/**
+ * Fetch a single assignment by ID
+ */
+export async function fetchAssignmentById(id: string): Promise<Assignment> {
+  const response = await fetch(`${getApiUrl()}/api/assignments/${id}?depth=2`)
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch assignment: ${response.statusText}`)
+  }
+
+  const data = await response.json()
+  return data
+}
+
+/**
+ * Create a new assignment
+ */
+export async function createAssignment(
+  assignmentData: CreateAssignmentInput,
+  authToken: string
+): Promise<Assignment> {
+  const response = await fetch(`${getApiUrl()}/api/assignments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${authToken}`,
+    },
+    body: JSON.stringify(assignmentData),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    handleAuthError(response)
+    throw new Error(errorData.message || `Failed to create assignment: ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+/**
+ * Update an existing assignment
+ */
+export async function updateAssignment(
+  id: string,
+  assignmentData: Partial<Assignment>,
+  authToken: string
+): Promise<Assignment> {
+  const response = await fetch(`${getApiUrl()}/api/assignments/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${authToken}`,
+    },
+    body: JSON.stringify(assignmentData),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    handleAuthError(response)
+    throw new Error(errorData.message || `Failed to update assignment: ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+/**
+ * Calculate assignment progress based on container states
+ */
+export function calculateAssignmentProgress(assignment: Assignment): AssignmentProgress {
+  const containers = Array.isArray(assignment.containers) ? assignment.containers : []
+  const totalContainers = containers.length
+
+  const containerStatuses = containers
+    .filter((c): c is WasteContainer => typeof c === 'object' && 'id' in c)
+    .map((container) => {
+      const currentStates = container.state || []
+      const requiredActivities = assignment.activities || []
+
+      const completedActivities = requiredActivities.filter((activity) =>
+        currentStates.includes(activity)
+      )
+      const pendingActivities = requiredActivities.filter(
+        (activity) => !currentStates.includes(activity)
+      )
+
+      const isComplete = pendingActivities.length === 0 && requiredActivities.length > 0
+
+      return {
+        containerId: container.id,
+        publicNumber: container.publicNumber,
+        isComplete,
+        completedActivities,
+        pendingActivities,
+      }
+    })
+
+  const completedContainers = containerStatuses.filter((c) => c.isComplete).length
+  const percentageComplete =
+    totalContainers > 0 ? Math.round((completedContainers / totalContainers) * 100) : 0
+
+  return {
+    assignmentId: assignment.id,
+    totalContainers,
+    completedContainers,
+    percentageComplete,
+    containerStatuses,
+  }
 }
