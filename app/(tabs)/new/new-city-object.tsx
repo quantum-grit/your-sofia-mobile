@@ -42,7 +42,7 @@ export default function NewCityObjectScreen() {
   const params = useLocalSearchParams()
   const cameraRef = useRef<CameraView>(null)
   const formRef = useRef<any>(null)
-  const {user, isContainerAdmin} = useAuth()
+  const {isContainerAdmin, token} = useAuth()
 
   // Check if we're editing an existing container
   const containerId = params.containerId as string | undefined
@@ -207,7 +207,10 @@ export default function NewCityObjectScreen() {
 
       if (isEditing && containerId) {
         // Update existing container
-        await updateWasteContainer(containerId, formData, photoFiles?.[0])
+        if (!token) {
+          throw new Error('Authentication required')
+        }
+        await updateWasteContainer(containerId, formData, token, photoFiles?.[0])
         Alert.alert(t('common.success'), t('newCityObject.updateSuccess'), [
           {
             text: 'OK',
@@ -219,7 +222,10 @@ export default function NewCityObjectScreen() {
         ])
       } else {
         // Create new container
-        await createWasteContainer(formData, photoFiles?.[0])
+        if (!token) {
+          throw new Error('Authentication required')
+        }
+        await createWasteContainer(formData, token, photoFiles?.[0])
         Alert.alert(t('common.success'), t('newCityObject.createSuccess'), [
           {
             text: 'OK',
