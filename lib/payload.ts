@@ -631,6 +631,7 @@ export async function updateSignal(
  */
 export async function createWasteContainer(
   containerData: CreateContainerInput,
+  authToken: string,
   photo?: {uri: string; type: string; name: string}
 ): Promise<WasteContainer> {
   let imageId: string | undefined
@@ -646,6 +647,9 @@ export async function createWasteContainer(
 
     const uploadResponse = await fetch(`${getApiUrl()}/api/media`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
       body: formData,
     })
 
@@ -662,6 +666,7 @@ export async function createWasteContainer(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({
       ...containerData,
@@ -685,6 +690,7 @@ export async function createWasteContainer(
 export async function updateWasteContainer(
   id: string,
   containerData: Partial<WasteContainer>,
+  authToken: string,
   photo?: {uri: string; type: string; name: string}
 ): Promise<WasteContainer> {
   let imageId: string | undefined
@@ -700,6 +706,9 @@ export async function updateWasteContainer(
 
     const uploadResponse = await fetch(`${getApiUrl()}/api/media`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
       body: formData,
     })
 
@@ -721,6 +730,7 @@ export async function updateWasteContainer(
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(updatePayload),
   })

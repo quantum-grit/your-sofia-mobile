@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import {
   View,
   Text,
@@ -25,11 +25,14 @@ import {
   ChevronUp,
   Info,
   History,
+  Edit,
 } from 'lucide-react-native'
 import {useAuth} from '../contexts/AuthContext'
 import {useContainerSignals} from '../hooks/useContainerSignals'
-import {cleanContainer} from '../lib/payload'
+import {cleanContainer, updateWasteContainer} from '../lib/payload'
 import * as ImagePicker from 'expo-image-picker'
+import {WasteContainerForm} from '../forms/waste-container'
+import type {WasteContainerFormData} from '../forms/waste-container'
 
 interface WasteContainerCardProps {
   container: WasteContainer
@@ -61,6 +64,9 @@ export function WasteContainerCard({
   const [showObservations, setShowObservations] = useState(false)
   const [observations, setObservations] = useState<any[]>([])
   const [loadingObservations, setLoadingObservations] = useState(false)
+  const [showEditForm, setShowEditForm] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const formRef = useRef<any>(null)
 
   const handleReportIssue = () => {
     // Close the card first
@@ -80,6 +86,26 @@ export function WasteContainerCard({
         returnTo: '/(tabs)/maps/waste-containers',
       },
     } as any)
+  }
+
+  const handleEditSubmit = async (data: WasteContainerFormData) => {
+    setIsUpdating(true)
+    try {
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+      await updateWasteContainer(container.id, data, token)
+      Alert.alert(t('common.success'), t('newCityObject.updateSuccess'))
+      setShowEditForm(false)
+      if (onContainerUpdated) {
+        onContainerUpdated()
+      }
+    } catch (error) {
+      console.error('Failed to update container:', error)
+      Alert.alert(t('common.error'), t('newCityObject.createError'))
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   const handleShowObservations = async () => {
@@ -235,9 +261,16 @@ export function WasteContainerCard({
     <View style={styles.card}>
       <View style={styles.header}>
         <View style={{flex: 1}}>
-          <Text style={styles.containerNumber}>
-            {t('wasteContainers.name')}: {container.publicNumber}
-          </Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.containerNumber}>
+              {t('wasteContainers.name')}: {container.publicNumber}
+            </Text>
+            {isContainerAdmin && (
+              <TouchableOpacity onPress={() => setShowEditForm(true)}>
+                <Edit size={16} color="#3B82F6" />
+              </TouchableOpacity>
+            )}
+          </View>
           <View style={styles.statusBadge}>
             <View style={[styles.statusDot, {backgroundColor: getStatusColor(container.status)}]} />
             <Text style={styles.statusText}>{container.status.toUpperCase()}</Text>
@@ -553,6 +586,42 @@ export function WasteContainerCard({
         </View>
       </Modal>
 
+      {/* Edit Container Modal */}
+      <Modal
+        visible={showEditForm}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowEditForm(false)}
+      >
+        <View style={styles.formModalOverlay}>
+          <View style={[styles.formModalContent, {maxHeight: '95%'}]}>
+            <View style={styles.formHeader}>
+              <Text style={styles.formTitle}>
+                {t('common.edit')} {t('wasteContainers.name')}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowEditForm(false)}
+                style={styles.formCloseButton}
+              >
+                <X size={24} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <WasteContainerForm
+                ref={formRef}
+                container={container}
+                onSubmit={handleEditSubmit}
+                onCancel={() => setShowEditForm(false)}
+                isSubmitting={isUpdating}
+                isEditing={true}
+                canEdit={true}
+              />
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
       {/* Clean Container Form Modal */}
       <Modal
         visible={showCleanForm}
@@ -674,11 +743,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  editButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#3B82F6',
+  },
   containerNumber: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1F2937',
-    marginBottom: 4,
   },
   statusBadge: {
     flexDirection: 'row',
