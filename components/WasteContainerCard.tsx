@@ -31,6 +31,7 @@ import {cleanContainer, updateWasteContainer} from '../lib/payload'
 import * as ImagePicker from 'expo-image-picker'
 import {WasteContainerForm} from '../forms/waste-container'
 import type {WasteContainerFormData} from '../forms/waste-container'
+import {Signal} from '@/types/signal'
 
 interface WasteContainerCardProps {
   container: WasteContainer
@@ -86,25 +87,54 @@ export function WasteContainerCard({
     } as any)
   }
 
-  // Fetch last observation photos on mount
+  // Fetch last observation photos and signal photos on mount
   React.useEffect(() => {
     const fetchLastObservationPhotos = async () => {
       setLoadingPhotos(true)
       try {
-        const response = await fetch(
+        // Fetch observation photos
+        const observationsResponse = await fetch(
           `${process.env.EXPO_PUBLIC_API_URL}/api/waste-container-observations?where[container][equals]=${container.id}&depth=2&sort=-cleanedAt&limit=3`
         )
-        const data = await response.json()
-        const transformedPhotos = (data.docs || [])
+        const observationsData = await observationsResponse.json()
+        const observationPhotos = (observationsData.docs || [])
           .filter((obs: any) => obs.photo)
           .map((obs: any) => ({
-            id: obs.id,
+            id: `obs-${obs.id}`,
             url: obs.photo.url?.startsWith('http')
               ? obs.photo.url
               : `${process.env.EXPO_PUBLIC_API_URL}${obs.photo.url}`,
-            cleanedAt: obs.cleanedAt,
+            createdAt: obs.cleanedAt,
+            type: 'cleaning',
           }))
-        setLastObservationPhotos(transformedPhotos)
+
+        // Fetch signals for this container
+        const signalsResponse = await fetch(
+          `${process.env.EXPO_PUBLIC_API_URL}/api/signals?where[cityObject.referenceId][equals]=${container.publicNumber}&depth=2&sort=-createdAt&limit=3`
+        )
+        const signalsData = await signalsResponse.json()
+        //log the signalsData for debugging
+        console.log('Signals data:', signalsData)
+
+        const signalPhotos = (signalsData.docs || []).flatMap((signal: Signal) => {
+          if (!signal.images || signal.images.length === 0) return []
+          return signal.images.map((photo: any) => ({
+            id: `signal-${signal.id}-${photo.id}`,
+            url: photo.url?.startsWith('http')
+              ? photo.url
+              : `${process.env.EXPO_PUBLIC_API_URL}${photo.url}`,
+            createdAt: signal.createdAt,
+            type: 'signal',
+          }))
+        })
+
+        // Merge and sort by date (most recent first)
+        const allPhotos = [...observationPhotos, ...signalPhotos].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+
+        // Take only the first 3 photos
+        setLastObservationPhotos(allPhotos.slice(0, 3))
       } catch (error) {
         console.error('Error fetching last observation photos:', error)
       } finally {
@@ -113,7 +143,7 @@ export function WasteContainerCard({
     }
 
     fetchLastObservationPhotos()
-  }, [container.id])
+  }, [container.id, container.publicNumber])
 
   const handleEditSubmit = async (data: WasteContainerFormData) => {
     setIsUpdating(true)
@@ -349,7 +379,8 @@ export function WasteContainerCard({
                     resizeMode="cover"
                   />
                   <Text style={styles.lastPhotoDate}>
-                    {new Date(photo.cleanedAt).toLocaleDateString()}
+                    {t(`wasteContainers.${photo.type}`)}:
+                    {new Date(photo.createdAt).toLocaleDateString()}
                   </Text>
                 </TouchableOpacity>
               ))}
