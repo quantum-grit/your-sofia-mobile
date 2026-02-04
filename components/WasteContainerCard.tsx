@@ -32,6 +32,7 @@ import * as ImagePicker from 'expo-image-picker'
 import {WasteContainerForm} from '../forms/waste-container'
 import type {WasteContainerFormData} from '../forms/waste-container'
 import {Signal} from '@/types/signal'
+import {environmentManager} from '@/lib/environment'
 
 interface WasteContainerCardProps {
   container: WasteContainer
@@ -94,8 +95,9 @@ export function WasteContainerCard({
       try {
         // Fetch observation photos
         const observationsResponse = await fetch(
-          `${process.env.EXPO_PUBLIC_API_URL}/api/waste-container-observations?where[container][equals]=${container.id}&depth=2&sort=-cleanedAt&limit=3`
+          `${environmentManager.getApiUrl()}/api/waste-container-observations?where[container][equals]=${container.id}&depth=2&sort=-cleanedAt&limit=3`
         )
+        console.log('Observations data:', observationsResponse)
         const observationsData = await observationsResponse.json()
         const observationPhotos = (observationsData.docs || [])
           .filter((obs: any) => obs.photo)
@@ -103,14 +105,18 @@ export function WasteContainerCard({
             id: `obs-${obs.id}`,
             url: obs.photo.url?.startsWith('http')
               ? obs.photo.url
-              : `${process.env.EXPO_PUBLIC_API_URL}${obs.photo.url}`,
+              : `${environmentManager.getApiUrl()}${obs.photo.url}`,
             createdAt: obs.cleanedAt,
             type: 'cleaning',
           }))
 
+        console.log(
+          'Signal fetch url: ',
+          `${environmentManager.getApiUrl()}/api/signals?where[cityObject.referenceId][equals]=${container.publicNumber}&depth=2&sort=-createdAt&limit=3`
+        )
         // Fetch signals for this container
         const signalsResponse = await fetch(
-          `${process.env.EXPO_PUBLIC_API_URL}/api/signals?where[cityObject.referenceId][equals]=${container.publicNumber}&depth=2&sort=-createdAt&limit=3`
+          `${environmentManager.getApiUrl()}/api/signals?where[cityObject.referenceId][equals]=${container.publicNumber}&depth=2&sort=-createdAt&limit=3`
         )
         const signalsData = await signalsResponse.json()
         //log the signalsData for debugging
@@ -122,7 +128,7 @@ export function WasteContainerCard({
             id: `signal-${signal.id}-${photo.id}`,
             url: photo.url?.startsWith('http')
               ? photo.url
-              : `${process.env.EXPO_PUBLIC_API_URL}${photo.url}`,
+              : `${environmentManager.getApiUrl()}${photo.url}`,
             createdAt: signal.createdAt,
             type: 'signal',
           }))
@@ -132,6 +138,8 @@ export function WasteContainerCard({
         const allPhotos = [...observationPhotos, ...signalPhotos].sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
+
+        console.log('All photos:', allPhotos)
 
         // Take only the first 3 photos
         setLastObservationPhotos(allPhotos.slice(0, 3))
@@ -361,7 +369,7 @@ export function WasteContainerCard({
             <Text style={styles.lastPhotosLabel}>{t('wasteContainers.lastObservations')}:</Text>
             <ScrollView
               horizontal
-              showsHorizontalScrollIndicator={false}
+              showsHorizontalScrollIndicator={true}
               style={styles.lastPhotosScroll}
             >
               {lastObservationPhotos.map((photo) => (
