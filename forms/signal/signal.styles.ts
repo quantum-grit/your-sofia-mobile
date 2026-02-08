@@ -92,9 +92,7 @@ export const styles = StyleSheet.create({
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 16,
-    marginTop: 12,
+    marginTop: 4,
   },
   categoryText: {
     fontSize: 14,
@@ -127,7 +125,7 @@ export const styles = StyleSheet.create({
   },
   section: {
     paddingHorizontal: 16,
-    marginTop: 20,
+    marginTop: 4,
   },
   sectionLabel: {
     fontSize: 14,
@@ -174,6 +172,7 @@ export const styles = StyleSheet.create({
     color: '#ffffff',
   },
   metaText: {
+    paddingLeft: 4,
     fontSize: 14,
     color: '#6B7280',
   },
@@ -206,5 +205,33 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: '#92400E',
     lineHeight: 20,
+  },
+  photoWrapper: {
+    position: 'relative',
+  },
+  deletePhotoButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#EF4444',
+    borderRadius: 12,
+    padding: 4,
+  },
+  photoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#1E40AF',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  photoButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1E40AF',
   },
 })

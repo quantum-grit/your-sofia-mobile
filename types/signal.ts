@@ -24,7 +24,7 @@ export interface Signal {
     address?: string
   }
   images?: {
-    id: string
+    id?: number
     url: string
     alt?: string
   }[]

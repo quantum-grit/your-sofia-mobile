@@ -5,6 +5,15 @@ export const signalFormSchema = z.object({
   title: z.string().min(1, 'signals.validation.titleRequired'),
   description: z.string().optional(),
   containerState: z.array(z.string()).optional(),
+  photos: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        uri: z.string(),
+        isNew: z.boolean().optional(),
+      })
+    )
+    .optional(),
 })
 
 export type SignalFormData = z.infer<typeof signalFormSchema>
