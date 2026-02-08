@@ -73,18 +73,30 @@ export default function SignalDetailsScreen() {
       try {
         setSaving(true)
 
+        // Separate new photos from existing ones
+        const newPhotos = (data.photos || []).filter((p) => p.isNew)
+        const existingPhotoIds = (data.photos || [])
+          .filter((p) => !p.isNew && p.id !== undefined)
+          .map((p) => p.id as number)
+
         const updateData = {
           title: data.title.trim(),
           description: data.description?.trim() || '',
           containerState: (data.containerState || []) as ContainerState[],
-          reporterUniqueId: deviceId,
+          newPhotos: newPhotos.map((p) => ({
+            uri: p.uri,
+            type: 'image/jpeg',
+            name: `signal-${signal.id}-${Date.now()}.jpg`,
+          })),
+          existingPhotoIds,
         }
 
-        const response = await updateSignal(signal.id, updateData, i18n.language as 'bg' | 'en')
-
-        console.log('[Signal Update] Response:', {
-          response,
-        })
+        const response = await updateSignal(
+          signal.id,
+          updateData,
+          i18n.language as 'bg' | 'en',
+          deviceId
+        )
 
         const updatedSignal = (response as any).doc
 

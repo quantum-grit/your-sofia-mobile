@@ -1,9 +1,10 @@
-import React, {forwardRef, useImperativeHandle} from 'react'
-import {View, Text, TextInput, TouchableOpacity, ScrollView, Image} from 'react-native'
+import React, {forwardRef, useImperativeHandle, useCallback, useMemo} from 'react'
+import {View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert} from 'react-native'
 import {useForm, Controller} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useTranslation} from 'react-i18next'
-import {MapPin, Calendar, FileText, Tag, AlertCircle} from 'lucide-react-native'
+import {MapPin, Calendar, FileText, Tag, AlertCircle, Camera, Upload, X} from 'lucide-react-native'
+import * as ImagePicker from 'expo-image-picker'
 import {signalFormSchema, type SignalFormData, type SignalFormProps} from './schema'
 import {styles} from './signal.styles'
 import {CONTAINER_STATES, getStateColor} from '../../types/wasteContainer'
@@ -25,6 +26,12 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
         title: signal.title || '',
         description: signal.description || '',
         containerState: signal.containerState || [],
+        photos:
+          signal.images?.map((img) => ({
+            id: img.id,
+            uri: img.url,
+            isNew: false,
+          })) || [],
       },
     })
 
@@ -34,6 +41,73 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
     }))
 
     const selectedStates = watch('containerState') || []
+    const watchedPhotos = watch('photos')
+    const photos = useMemo(() => watchedPhotos || [], [watchedPhotos])
+
+    const removePhoto = useCallback(
+      (photoId: number) => {
+        const currentPhotos = photos.filter((p) => p.id !== photoId)
+        setValue('photos', currentPhotos)
+      },
+      [photos, setValue]
+    )
+
+    const takePhoto = useCallback(async () => {
+      try {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+        if (!permissionResult.granted) {
+          Alert.alert(t('common.error'), t('newSignal.cameraPermissionRequired'))
+          return
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ['images'],
+          allowsEditing: false,
+          quality: 0.8,
+        })
+
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const asset = result.assets[0]
+          const newPhoto = {
+            uri: asset.uri,
+            isNew: true,
+          }
+          setValue('photos', [...photos, newPhoto])
+        }
+      } catch (error) {
+        console.error('Error taking photo:', error)
+        Alert.alert(t('common.error'), t('newSignal.photoError'))
+      }
+    }, [photos, setValue, t])
+
+    const pickFromGallery = useCallback(async () => {
+      try {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+        if (!permissionResult.granted) {
+          Alert.alert(t('common.error'), t('newSignal.galleryPermissionRequired'))
+          return
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ['images'],
+          allowsEditing: false,
+          quality: 0.8,
+          allowsMultipleSelection: true,
+        })
+
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const newPhotos = result.assets.map((asset, index) => ({
+            id: Date.now() + index,
+            uri: asset.uri,
+            isNew: true,
+          }))
+          setValue('photos', [...photos, ...newPhotos])
+        }
+      } catch (error) {
+        console.error('Error picking from gallery:', error)
+        Alert.alert(t('common.error'), t('newSignal.photoError'))
+      }
+    }, [photos, setValue, t])
 
     const toggleState = (state: string) => {
       const newStates = selectedStates.includes(state)
@@ -76,7 +150,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
             flexDirection: 'row',
             alignItems: 'center',
             gap: 12,
-            marginBottom: 16,
+            marginBottom: 4,
             flexWrap: 'wrap',
           }}
         >
@@ -89,58 +163,54 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
             </Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-            <Tag size={16} color="#6B7280" />
-            <Text style={styles.categoryText}>{t(`signals.categories.${signal.category}`)}</Text>
+            <Calendar size={16} color="#6B7280" />
+            <Text style={styles.metaText}>
+              {new Date(signal.createdAt).toLocaleDateString(i18n.language, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </Text>
           </View>
         </View>
 
-        {/* Title */}
-        {isEditing ? (
+        {signal.cityObject?.name && (
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>{t('signals.form.title')}</Text>
-            <Controller
-              control={control}
-              name="title"
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={[styles.input, errors.title && styles.inputError]}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('signals.form.titlePlaceholder')}
-                  editable={!isSubmitting}
-                />
-              )}
-            />
-            {errors.title && <Text style={styles.errorText}>{t(errors.title.message || '')}</Text>}
+            <View style={styles.metaRow}>
+              {/* City Object */}
+              <MapPin size={16} color="#6B7280" />
+              <Text style={styles.metaText}>{signal.cityObject.name}</Text>
+            </View>
           </View>
-        ) : null}
+        )}
 
-        {/* Description */}
+        {/* Title */}
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t('signals.form.description')}</Text>
+          <Text style={styles.sectionLabel}>{t('signals.form.title')}</Text>
           {isEditing ? (
-            <Controller
-              control={control}
-              name="description"
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  style={[styles.input, styles.textArea]}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder={t('signals.form.descriptionPlaceholder')}
-                  multiline
-                  numberOfLines={4}
-                  textAlignVertical="top"
-                  editable={!isSubmitting}
-                />
+            <>
+              <Controller
+                control={control}
+                name="title"
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    style={[styles.input, errors.title && styles.inputError]}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder={t('signals.form.titlePlaceholder')}
+                    editable={!isSubmitting}
+                  />
+                )}
+              />
+              {errors.title && (
+                <Text style={styles.errorText}>{t(errors.title.message || '')}</Text>
               )}
-            />
+            </>
           ) : (
-            <Text style={styles.descriptionText}>
-              {signal.description || t('signals.form.noDescription')}
-            </Text>
+            <Text style={styles.descriptionText}>{signal.title}</Text>
           )}
         </View>
 
@@ -194,23 +264,51 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
         )}
 
         {/* Images */}
-        {!isEditing && signal.images && signal.images.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionLabel}>{t('signals.form.photos')}</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>{t('signals.form.photos')}</Text>
+
+          {photos && photos.length > 0 && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.imagesContainer}>
-                {signal.images.map((image, index) => (
-                  <Image
-                    key={image.id || index}
-                    source={{uri: image.url}}
-                    style={styles.image}
-                    resizeMode="cover"
-                  />
+                {photos.map((photo, index) => (
+                  <View key={photo.id || index} style={styles.photoWrapper}>
+                    <Image source={{uri: photo.uri}} style={styles.image} resizeMode="cover" />
+                    {isEditing && (
+                      <TouchableOpacity
+                        style={styles.deletePhotoButton}
+                        onPress={() => photo.id && removePhoto(photo.id)}
+                        disabled={isSubmitting}
+                      >
+                        <X size={16} color="#ffffff" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 ))}
               </View>
             </ScrollView>
-          </View>
-        )}
+          )}
+
+          {isEditing && (
+            <View style={{flexDirection: 'row', gap: 8, marginTop: 12}}>
+              <TouchableOpacity
+                style={[styles.photoButton, {flex: 1}]}
+                onPress={takePhoto}
+                disabled={isSubmitting}
+              >
+                <Camera size={20} color="#1E40AF" />
+                <Text style={styles.photoButtonText}>{t('signals.form.takePhoto')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.photoButton, {flex: 1}]}
+                onPress={pickFromGallery}
+                disabled={isSubmitting}
+              >
+                <Upload size={20} color="#1E40AF" />
+                <Text style={styles.photoButtonText}>{t('signals.form.chooseFromGallery')}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
 
         {/* City Object */}
         {signal.cityObject?.name && (
@@ -232,20 +330,32 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
           </View>
         )}
 
-        {/* Created Date */}
+        {/* Description */}
         <View style={styles.section}>
-          <View style={styles.metaRow}>
-            <Calendar size={16} color="#6B7280" />
-            <Text style={styles.metaText}>
-              {new Date(signal.createdAt).toLocaleDateString(i18n.language, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+          <Text style={styles.sectionLabel}>{t('signals.form.description')}</Text>
+          {isEditing ? (
+            <Controller
+              control={control}
+              name="description"
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  style={[styles.input, styles.textArea]}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder={t('signals.form.descriptionPlaceholder')}
+                  multiline
+                  numberOfLines={4}
+                  textAlignVertical="top"
+                  editable={!isSubmitting}
+                />
+              )}
+            />
+          ) : (
+            <Text style={styles.descriptionText}>
+              {signal.description || t('signals.form.noDescription')}
             </Text>
-          </View>
+          )}
         </View>
 
         {/* Admin Notes */}

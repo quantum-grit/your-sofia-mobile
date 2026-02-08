@@ -662,15 +662,65 @@ export async function fetchSignalStats(
  */
 export async function updateSignal(
   id: string,
-  signalData: Partial<Signal>,
-  locale: 'bg' | 'en' = 'bg'
+  signalData: Partial<Signal> & {
+    newPhotos?: {uri: string; type: string; name: string}[]
+    existingPhotoIds?: number[]
+  },
+  locale: 'bg' | 'en' = 'bg',
+  reporterUniqueId?: string
 ): Promise<Signal> {
+  const {newPhotos, existingPhotoIds, ...updateData} = signalData
+
+  // Upload new photos if provided
+  let allImageIds: number[] = existingPhotoIds || []
+
+  if (newPhotos && newPhotos.length > 0) {
+    for (const photo of newPhotos) {
+      const formData = new FormData()
+      formData.append('file', {
+        uri: photo.uri,
+        type: photo.type,
+        name: photo.name,
+      } as any)
+
+      formData.append(
+        '_payload',
+        JSON.stringify({
+          reporterUniqueId: reporterUniqueId || null,
+        })
+      )
+
+      const uploadResponse = await fetch(`${getApiUrl()}/api/media`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (uploadResponse.ok) {
+        const uploadedImage = await uploadResponse.json()
+        allImageIds.push(uploadedImage.doc.id)
+      } else {
+        const errorData = await uploadResponse.json().catch(() => ({}))
+        const errorMessage = errorData.message || `Failed to upload photo: ${photo.name}`
+        console.error('Photo upload failed:', errorMessage)
+        throw new Error(errorMessage)
+      }
+    }
+  }
+
+  // Update signal with all image IDs (existing + new)
+  // Always include images field if existingPhotoIds was provided, even if empty array
+  const finalUpdateData = {
+    ...updateData,
+    ...(existingPhotoIds !== undefined ? {images: allImageIds} : {}),
+    ...(reporterUniqueId !== undefined ? {reporterUniqueId} : {}),
+  }
+
   const response = await fetch(`${getApiUrl()}/api/signals/${id}?locale=${locale}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(signalData),
+    body: JSON.stringify(finalUpdateData),
   })
   handleAuthError(response)
 

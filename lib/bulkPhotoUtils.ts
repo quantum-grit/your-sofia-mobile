@@ -441,7 +441,8 @@ export async function createObjectsFromPhotos(
               {
                 status: 'resolved',
               },
-              locale
+              locale,
+              reporterUniqueId
             )
             closedSignals++
           } catch (error) {
