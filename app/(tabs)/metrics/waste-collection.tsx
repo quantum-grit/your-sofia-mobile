@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
     alignItems: 'center',
   },
-  summaryValue: {fontSize: 22, fontWeight: '700'},
+  summaryValue: {fontSize: 20, fontWeight: '700'},
   summaryLabel: {fontSize: 10, color: '#9CA3AF', marginTop: 2, textAlign: 'center'},
   tabRow: {
     flexDirection: 'row',
