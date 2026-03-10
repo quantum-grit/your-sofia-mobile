@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {useTranslation} from 'react-i18next'
 import {CartesianChart, StackedBar, Bar} from 'victory-native'
+import {Text as SkiaText, matchFont} from '@shopify/react-native-skia'
 import {useCollectionMetrics, MetricsRange} from '../../../hooks/useCollectionMetrics'
 
 type ChartTab = 'zone' | 'district'
@@ -11,6 +12,7 @@ export default function WasteCollectionDashboard() {
   const [range, setRange] = useState<MetricsRange>('week')
   const [chartTab, setChartTab] = useState<ChartTab>('zone')
   const {data, loading, error, refresh} = useCollectionMetrics(range)
+  const font = matchFont({fontSize: 10})
 
   const totalContainers = data?.byZone.reduce((s, z) => s + z.totalContainers, 0) ?? 0
   const totalCollected = data?.byZone.reduce((s, z) => s + z.collectedContainers, 0) ?? 0
@@ -18,9 +20,10 @@ export default function WasteCollectionDashboard() {
 
   const zoneData =
     data?.byZone.map((z) => ({
-      name: z.zoneName.replace('Зона ', 'З'),
+      name: z.zoneName,
       collected: z.collectedContainers,
       notCollected: z.totalContainers - z.collectedContainers,
+      total: z.totalContainers,
     })) ?? []
 
   const districtData =
@@ -28,6 +31,7 @@ export default function WasteCollectionDashboard() {
       name: d.districtName.slice(0, 8),
       collected: d.collectedContainers,
       notCollected: d.totalContainers - d.collectedContainers,
+      total: d.totalContainers,
     })) ?? []
 
   const histogramData =
@@ -131,28 +135,45 @@ export default function WasteCollectionDashboard() {
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={{width: Math.max(360, chartData.length * 56), height: 280}}>
+            <View style={{width: Math.max(360, chartData.length * 56), height: 300}}>
               <CartesianChart
                 data={chartData}
                 xKey="name"
-                yKeys={['collected', 'notCollected']}
-                domainPadding={{left: 20, right: 20}}
+                yKeys={['collected', 'notCollected', 'total']}
+                domainPadding={{left: 20, right: 20, top: 20}}
                 axisOptions={{
-                  font: null,
+                  font,
                   tickCount: {x: chartData.length, y: 5},
                   labelColor: '#6B7280',
                   lineColor: '#E5E7EB',
                 }}
               >
                 {({points, chartBounds}) => (
-                  <StackedBar
-                    points={[points.collected, points.notCollected]}
-                    chartBounds={chartBounds}
-                    colors={['#1E40AF', '#D1D5DB']}
-                    barOptions={({isTop}) =>
-                      isTop ? {roundedCorners: {topLeft: 3, topRight: 3}} : {}
-                    }
-                  />
+                  <>
+                    <StackedBar
+                      points={[points.collected, points.notCollected]}
+                      chartBounds={chartBounds}
+                      colors={['#1E40AF', '#D1D5DB']}
+                      barOptions={({isTop}) =>
+                        isTop ? {roundedCorners: {topLeft: 3, topRight: 3}} : {}
+                      }
+                    />
+                    {points.total.map((point, i) => {
+                      const val = chartData[i]?.collected ?? 0
+                      if (val === 0 || point.y == null) return null
+                      const label = String(val)
+                      return (
+                        <SkiaText
+                          key={i}
+                          x={point.x - label.length * 3}
+                          y={(point.y ?? 0) - 4}
+                          text={label}
+                          font={font}
+                          color="#1E40AF"
+                        />
+                      )
+                    })}
+                  </>
                 )}
               </CartesianChart>
             </View>
@@ -176,14 +197,14 @@ export default function WasteCollectionDashboard() {
               <Text style={styles.emptyText}>{t('metrics.noData')}</Text>
             </View>
           ) : (
-            <View style={{width: Math.max(300, histogramData.length * 56), height: 220}}>
+            <View style={{width: Math.max(300, histogramData.length * 64), height: 240}}>
               <CartesianChart
                 data={histogramData}
                 xKey="bucket"
                 yKeys={['count']}
-                domainPadding={{left: 20, right: 20}}
+                domainPadding={{left: 20, right: 20, top: 24}}
                 axisOptions={{
-                  font: null,
+                  font,
                   tickCount: {x: histogramData.length, y: 5},
                   labelColor: '#6B7280',
                   lineColor: '#E5E7EB',
@@ -195,6 +216,7 @@ export default function WasteCollectionDashboard() {
                     chartBounds={chartBounds}
                     color="#059669"
                     roundedCorners={{topLeft: 4, topRight: 4}}
+                    labels={{position: 'top', font, color: '#059669'}}
                   />
                 )}
               </CartesianChart>
