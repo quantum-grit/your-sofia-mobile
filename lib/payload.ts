@@ -1016,3 +1016,46 @@ export function calculateAssignmentProgress(assignment: Assignment): AssignmentP
     containerStatuses,
   }
 }
+
+// ─── Collection Metrics ───────────────────────────────────────────────────────
+
+export interface DistrictStat {
+  districtId: string
+  districtName: string
+  totalContainers: number
+  collectedContainers: number
+}
+
+export interface ZoneStat {
+  zoneNumber: number
+  zoneName: string
+  serviceCompanyId: number | null
+  totalContainers: number
+  collectedContainers: number
+}
+
+export interface TimeBucket {
+  bucket: string
+  bucketOrder: number
+  containerCount: number
+}
+
+export interface CollectionMetrics {
+  from: string
+  to: string
+  byDistrict: DistrictStat[]
+  byZone: ZoneStat[]
+  byTimeSinceCollection: TimeBucket[]
+}
+
+export async function fetchCollectionMetrics(from: string, to: string): Promise<CollectionMetrics> {
+  const params = new URLSearchParams({from, to})
+  const url = `${getApiUrl()}/api/waste-containers/collection-metrics?${params.toString()}`
+  console.log('[fetchCollectionMetrics] GET', url)
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch collection metrics: ${response.statusText}`)
+  }
+  const json = await response.json()
+  return json
+}
