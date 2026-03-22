@@ -198,6 +198,7 @@ export default {
       bagged: 'Bagged',
       fallen: 'Fallen',
       bulkyWaste: 'Bulky Waste',
+      uncollected: 'Uncollected',
     },
     filterByState: 'Filter by State',
     filterByType: 'Filter by Type',
