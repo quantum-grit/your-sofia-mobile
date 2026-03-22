@@ -30,7 +30,7 @@ export default function TabLayout() {
 
 function TabLayoutContent({t}: {t: (key: string) => string}) {
   const insets = useSafeAreaInsets()
-  const {isContainerAdmin} = useAuth()
+  const {isContainerAdmin, isAuthenticated} = useAuth()
 
   return (
     <Tabs
@@ -97,7 +97,7 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
       <Tabs.Screen
         name="assignments"
         options={{
-          href: isContainerAdmin ? '/assignments' : null, // Only show for containerAdmin
+          href: isContainerAdmin && isAuthenticated ? '/assignments' : null, // Only show for authenticated containerAdmin
           title: t('assignments.title'),
           tabBarLabel: t('assignments.title'),
           tabBarIcon: ({color}) => <ClipboardList size={24} color={color} />,

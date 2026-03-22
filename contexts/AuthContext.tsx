@@ -29,6 +29,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 const AUTH_TOKEN_KEY = 'auth_token'
 const AUTH_USER_KEY = 'auth_user'
 
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return typeof payload.exp === 'number' && payload.exp * 1000 < Date.now()
+  } catch {
+    return true // treat malformed tokens as expired
+  }
+}
+
 export function AuthProvider({children}: {children: ReactNode}) {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
@@ -58,8 +67,16 @@ export function AuthProvider({children}: {children: ReactNode}) {
       ])
 
       if (storedToken && storedUser) {
-        setToken(storedToken)
-        setUser(JSON.parse(storedUser))
+        if (isTokenExpired(storedToken)) {
+          // Clear stale credentials so the user isn't silently treated as logged-in
+          await Promise.all([
+            AsyncStorage.removeItem(AUTH_TOKEN_KEY),
+            AsyncStorage.removeItem(AUTH_USER_KEY),
+          ])
+        } else {
+          setToken(storedToken)
+          setUser(JSON.parse(storedUser))
+        }
       }
     } catch (error) {
       console.error('Error loading auth state:', error)
@@ -177,7 +194,7 @@ export function AuthProvider({children}: {children: ReactNode}) {
     register,
     logout,
     deleteAccount,
-    isAuthenticated: !!user && !!token,
+    isAuthenticated: !!user && !!token && !isTokenExpired(token),
     isContainerAdmin: user?.role === 'containerAdmin' || user?.role === 'admin',
   }
 
