@@ -28,8 +28,8 @@ export function useDeviceHeading(): UseDeviceHeadingResult {
 
       const sub = Magnetometer.addListener(({x, y}) => {
         if (!mounted) return
-        // Standard compass bearing from magnetometer x/y axes
-        let raw = Math.atan2(-y, x) * (180 / Math.PI) + 90
+        // Standard compass bearing: 0=N, 90=E, 180=S, 270=W (clockwise)
+        let raw = Math.atan2(-x, y) * (180 / Math.PI)
         raw = ((raw % 360) + 360) % 360
 
         if (smoothed === null) {
