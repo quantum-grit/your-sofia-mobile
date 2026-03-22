@@ -1,11 +1,25 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import {useTranslation} from 'react-i18next'
 import {CartesianChart, StackedBar, Bar} from 'victory-native'
 import {Text as SkiaText, matchFont} from '@shopify/react-native-skia'
 import {useCollectionMetrics, MetricsRange} from '../../../hooks/useCollectionMetrics'
 
 type ChartTab = 'zone' | 'district'
+
+function colorByBucketOrder(order: number): string {
+  if (order === 0) return '#059669'
+  if (order === 1) return '#F97316'
+  return '#DC2626'
+}
 
 export default function WasteCollectionDashboard() {
   const {t} = useTranslation()
@@ -37,13 +51,18 @@ export default function WasteCollectionDashboard() {
   const histogramData =
     data?.byTimeSinceCollection.map((b) => ({
       bucket: b.bucket,
+      bucketOrder: b.bucketOrder,
       count: b.containerCount,
     })) ?? []
 
   const chartData = chartTab === 'zone' ? zoneData : districtData
 
   return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={styles.content}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} />}
+    >
       {/* Date range selector */}
       <View style={styles.rangeRow}>
         {(['day', 'week', 'month'] as MetricsRange[]).map((r) => (
@@ -134,7 +153,7 @@ export default function WasteCollectionDashboard() {
             </View>
           </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={true}>
             <View style={{width: Math.max(360, chartData.length * 56), height: 300}}>
               <CartesianChart
                 data={chartData}
@@ -197,30 +216,42 @@ export default function WasteCollectionDashboard() {
               <Text style={styles.emptyText}>{t('metrics.noData')}</Text>
             </View>
           ) : (
-            <View style={{width: Math.max(300, histogramData.length * 64), height: 240}}>
-              <CartesianChart
-                data={histogramData}
-                xKey="bucket"
-                yKeys={['count']}
-                domainPadding={{left: 20, right: 20, top: 24}}
-                axisOptions={{
-                  font,
-                  tickCount: {x: histogramData.length, y: 5},
-                  labelColor: '#6B7280',
-                  lineColor: '#E5E7EB',
-                }}
-              >
-                {({points, chartBounds}) => (
-                  <Bar
-                    points={points.count}
-                    chartBounds={chartBounds}
-                    color="#059669"
-                    roundedCorners={{topLeft: 4, topRight: 4}}
-                    labels={{position: 'top', font, color: '#059669'}}
-                  />
-                )}
-              </CartesianChart>
-            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+              <View style={{width: Math.max(300, histogramData.length * 64), height: 240}}>
+                <CartesianChart
+                  data={histogramData}
+                  xKey="bucket"
+                  yKeys={['count']}
+                  domainPadding={{left: 20, right: 20, top: 24}}
+                  axisOptions={{
+                    font,
+                    tickCount: {x: histogramData.length, y: 5},
+                    labelColor: '#6B7280',
+                    lineColor: '#E5E7EB',
+                  }}
+                >
+                  {({points, chartBounds}) => (
+                    <>
+                      {points.count.map((point, i) => (
+                        <Bar
+                          key={i}
+                          points={[point]}
+                          barCount={points.count.length}
+                          chartBounds={chartBounds}
+                          color={colorByBucketOrder(histogramData[i]?.bucketOrder ?? i)}
+                          roundedCorners={{topLeft: 4, topRight: 4}}
+                          labels={{
+                            position: 'top',
+                            font,
+                            color: colorByBucketOrder(histogramData[i]?.bucketOrder ?? i),
+                          }}
+                        />
+                      ))}
+                    </>
+                  )}
+                </CartesianChart>
+              </View>
+            </ScrollView>
           )}
         </View>
       )}
