@@ -156,6 +156,7 @@ export default {
       transportBpilot: 'bPilot',
       news: 'Новини',
       events: 'Събития',
+      arView: 'Разгледай',
     },
     permissions: {
       title: 'Необходимо е разрешение за местоположение',
@@ -163,6 +164,22 @@ export default {
       button: 'Разреши достъп',
     },
     loading: 'Зареждане на картата...',
+  },
+
+  arView: {
+    cleaning: 'Почистване',
+    lastCleaned: 'преди',
+    expectedCleaning: 'след',
+    inHours: 'след',
+    servicedBy: 'Обслужван от',
+    distance: 'Разстояние',
+    unknown: 'Неизвестно',
+    lessThanHour: '< 1 час',
+    hour: 'час',
+    hours: 'часа',
+    day: 'ден',
+    days: 'дни',
+    noCompass: 'Компасът не е наличен — позицията може да е неточна',
   },
 
   wasteContainers: {
@@ -443,6 +460,8 @@ export default {
     newCityObjectDescription: 'Добавете нов контейнер или друг градски обект',
     bulkPhotoUpload: 'Масово качване на снимки',
     bulkPhotoUploadDescription: 'Обработете множество снимки наведнъж',
+    arView: 'Разгледай',
+    arViewDescription: 'Виж близките контейнери през камерата',
   },
   newCityObject: {
     title: 'Нов градски обект',

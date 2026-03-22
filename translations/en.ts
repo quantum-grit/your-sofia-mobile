@@ -154,6 +154,7 @@ export default {
       transport: 'Transport',
       news: 'News',
       events: 'Events',
+      arView: 'Explore',
     },
     permissions: {
       title: 'Location Permission Required',
@@ -161,6 +162,22 @@ export default {
       button: 'Allow Access',
     },
     loading: 'Loading map...',
+  },
+
+  arView: {
+    cleaning: 'Cleaning',
+    lastCleaned: 'last',
+    expectedCleaning: 'next',
+    inHours: 'in',
+    servicedBy: 'Operator',
+    distance: 'Distance',
+    unknown: 'Unknown',
+    lessThanHour: '< 1 hr',
+    hour: 'hr',
+    hours: 'hrs',
+    day: 'day',
+    days: 'days',
+    noCompass: 'Compass unavailable — AR position may be inaccurate',
   },
 
   wasteContainers: {
@@ -441,6 +458,8 @@ export default {
     newCityObjectDescription: 'Add a new container or other city object',
     bulkPhotoUpload: 'Bulk Photo Upload',
     bulkPhotoUploadDescription: 'Process multiple photos at once',
+    arView: 'Explore',
+    arViewDescription: 'View nearby containers through the camera',
   },
   newCityObject: {
     title: 'New City Object',
