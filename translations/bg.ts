@@ -200,6 +200,7 @@ export default {
       bagged: 'Чувалиран',
       fallen: 'Паднал',
       bulkyWaste: 'Едри отпадъци',
+      uncollected: 'Несъбрани',
     },
     filterByState: 'Филтър по състояние',
     filterByType: 'Филтър по вид',

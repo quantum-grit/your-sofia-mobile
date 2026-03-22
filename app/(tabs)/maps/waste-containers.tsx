@@ -33,7 +33,7 @@ import {
   type WasteType,
 } from '../../../types/wasteContainer'
 
-type ContainerFilter = 'all' | ContainerState
+type ContainerFilter = 'all' | 'uncollected' | ContainerState
 
 export default function WasteContainers() {
   const {t} = useTranslation()
@@ -332,8 +332,14 @@ export default function WasteContainers() {
         }
         return containers.length
       }
+      if (filterKey === 'uncollected') {
+        if (selectedTypeFilter !== 'all') {
+          return containers.filter((c) => c.wasteType === selectedTypeFilter).length
+        }
+        return containers.length
+      }
       return containers.filter((container) => {
-        const matchesState = container.state?.includes(filterKey) ?? false
+        const matchesState = container.state?.includes(filterKey as ContainerState) ?? false
         const matchesType =
           selectedTypeFilter === 'all' || container.wasteType === selectedTypeFilter
         return matchesState && matchesType
@@ -347,22 +353,26 @@ export default function WasteContainers() {
     (typeKey: WasteType | 'all'): number => {
       if (typeKey === 'all') {
         // If state filter is active, count only containers with that state
-        if (selectedStateFilter !== 'all') {
-          return containers.filter((c) => c.state?.includes(selectedStateFilter) ?? false).length
+        if (selectedStateFilter !== 'all' && selectedStateFilter !== 'uncollected') {
+          return containers.filter(
+            (c) => c.state?.includes(selectedStateFilter as ContainerState) ?? false
+          ).length
         }
         return containers.length
       }
       return containers.filter((container) => {
         const matchesType = container.wasteType === typeKey
         const matchesState =
-          selectedStateFilter === 'all' || (container.state?.includes(selectedStateFilter) ?? false)
+          selectedStateFilter === 'all' ||
+          selectedStateFilter === 'uncollected' ||
+          (container.state?.includes(selectedStateFilter as ContainerState) ?? false)
         return matchesType && matchesState
       }).length
     },
     [containers, selectedStateFilter]
   )
 
-  const stateFilters: {key: ContainerState | 'all'; label: string}[] = [
+  const stateFilters: {key: ContainerFilter; label: string}[] = [
     {key: 'all', label: t('wasteContainers.filters.all')},
     {key: 'full', label: t('wasteContainers.filters.full')},
     {key: 'dirty', label: t('wasteContainers.filters.dirty')},
@@ -372,6 +382,7 @@ export default function WasteContainers() {
     {key: 'bagged', label: t('wasteContainers.filters.bagged')},
     {key: 'fallen', label: t('wasteContainers.filters.fallen')},
     {key: 'bulkyWaste', label: t('wasteContainers.filters.bulkyWaste')},
+    {key: 'uncollected', label: t('wasteContainers.filters.uncollected')},
   ]
 
   const typeFilters: {key: WasteType | 'all'; label: string}[] = [
@@ -390,7 +401,9 @@ export default function WasteContainers() {
   const visibleContainers = React.useMemo(() => {
     return containers.filter((container) => {
       const matchesState =
-        selectedStateFilter === 'all' || (container.state?.includes(selectedStateFilter) ?? false)
+        selectedStateFilter === 'all' ||
+        selectedStateFilter === 'uncollected' ||
+        (container.state?.includes(selectedStateFilter as ContainerState) ?? false)
       const matchesType = selectedTypeFilter === 'all' || container.wasteType === selectedTypeFilter
       return matchesState && matchesType
     })
@@ -404,10 +417,10 @@ export default function WasteContainers() {
         latitude: container.latitude,
         longitude: container.longitude,
       },
-      pinColor: getContainerPinColor(container),
+      pinColor: getContainerPinColor(container, selectedStateFilter === 'uncollected'),
       container,
     }))
-  }, [visibleContainers])
+  }, [visibleContainers, selectedStateFilter])
 
   const handleStateFilterChange = useCallback((filter: ContainerFilter) => {
     // Force immediate state update without batching
@@ -694,8 +707,19 @@ export default function WasteContainers() {
   )
 }
 
-// Helper function to get pin color based on container status
-function getContainerPinColor(container: WasteContainer): string {
+// Helper function to get pin color based on container status.
+// Pass uncollectedMode=true to colour by time since last collection instead.
+function getContainerPinColor(container: WasteContainer, uncollectedMode = false): string {
+  if (uncollectedMode) {
+    if (!container.lastCleaned) return 'red'
+    // PostgreSQL timestamps use a space separator and short tz offset: "2026-03-11 07:46:30+00"
+    // Normalise to valid ISO 8601: space → T, and expand +HH / -HH offsets to +HH:00.
+    const normalized = container.lastCleaned.replace(' ', 'T').concat(':00')
+    const hoursSince = (Date.now() - new Date(normalized).getTime()) / (1000 * 60 * 60)
+    if (hoursSince <= 24) return 'green'
+    if (hoursSince <= 36) return 'orange'
+    return 'red'
+  }
   if (container.state?.includes('full') || container.status === 'full') {
     return 'red'
   }
