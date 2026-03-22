@@ -2,7 +2,7 @@ import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native'
 import {useTranslation} from 'react-i18next'
 import {useRouter} from 'expo-router'
-import {AlertTriangle, MapPin, Images} from 'lucide-react-native'
+import {AlertTriangle, MapPin, Images, ScanSearch} from 'lucide-react-native'
 
 export default function NewScreen() {
   const {t} = useTranslation()
@@ -44,6 +44,17 @@ export default function NewScreen() {
               </View>
               <Text style={styles.buttonTitle}>{t('new.bulkPhotoUpload')}</Text>
               <Text style={styles.buttonDescription}>{t('new.bulkPhotoUploadDescription')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push('../(tabs)/new/ar-view')}
+            >
+              <View style={styles.iconContainer}>
+                <ScanSearch size={36} color="#1E40AF" />
+              </View>
+              <Text style={styles.buttonTitle}>{t('new.arView')}</Text>
+              <Text style={styles.buttonDescription}>{t('new.arViewDescription')}</Text>
             </TouchableOpacity>
           </View>
         </View>
