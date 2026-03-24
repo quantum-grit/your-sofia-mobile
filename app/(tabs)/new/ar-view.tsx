@@ -408,6 +408,15 @@ export default function ArView() {
         </View>
       ))}
 
+      {/* DEBUG: heading readout — remove before release */}
+      {__DEV__ && (
+        <View style={styles.debugBadge}>
+          <Text style={styles.debugText}>
+            {heading !== null ? `↑ ${heading.toFixed(1)}°` : 'Heading: …'}
+          </Text>
+        </View>
+      )}
+
       {/* No compass warning */}
       {!compassAvailable && (
         <View style={styles.compassWarning}>
@@ -557,6 +566,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.55)',
     borderRadius: 20,
     padding: 8,
+  },
+  debugBadge: {
+    position: 'absolute',
+    top: 16,
+    left: 16,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  debugText: {
+    color: '#FBBF24',
+    fontSize: 14,
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
   },
   modalOverlay: {
     flex: 1,
