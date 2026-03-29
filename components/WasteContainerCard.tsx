@@ -40,6 +40,31 @@ interface WasteContainerCardProps {
   onContainerUpdated?: () => void
 }
 
+function getNextCollectionLabel(daysOfWeek: string[], t: (key: string) => string): string {
+  if (!daysOfWeek?.length) return ''
+  const days = daysOfWeek.map(Number)
+  const now = new Date()
+  const todayISO = now.getDay() === 0 ? 7 : now.getDay()
+  for (let offset = 0; offset <= 6; offset++) {
+    const checkISO = ((todayISO - 1 + offset) % 7) + 1
+    if (days.includes(checkISO)) {
+      if (offset === 0) return t('wasteContainers.collectionToday')
+      if (offset === 1) return t('wasteContainers.collectionTomorrow')
+      return t(`wasteContainers.collectionDay.${checkISO}`)
+    }
+  }
+  return ''
+}
+
+function getFrequencyLabel(
+  daysOfWeek: string[],
+  timesPerDay: number,
+  t: (key: string, opts?: Record<string, unknown>) => string
+): string {
+  const perWeek = daysOfWeek.length * timesPerDay
+  return t('wasteContainers.collectionFrequency', {count: perWeek})
+}
+
 export function WasteContainerCard({
   container,
   onClose,
@@ -462,6 +487,31 @@ export function WasteContainerCard({
                 <Text style={styles.extendedInfoValue}>{container.serviceInterval}</Text>
               </View>
             }
+
+            {container.collectionDaysOfWeek && container.collectionDaysOfWeek.length > 0 && (
+              <>
+                <View style={styles.extendedInfoRow}>
+                  <Text style={styles.extendedInfoLabel}>
+                    {t('wasteContainers.nextCollection')}:
+                  </Text>
+                  <Text style={styles.extendedInfoValue}>
+                    {getNextCollectionLabel(container.collectionDaysOfWeek, t)}
+                  </Text>
+                </View>
+                <View style={styles.extendedInfoRow}>
+                  <Text style={styles.extendedInfoLabel}>
+                    {t('wasteContainers.serviceInterval')}:
+                  </Text>
+                  <Text style={styles.extendedInfoValue}>
+                    {getFrequencyLabel(
+                      container.collectionDaysOfWeek,
+                      container.collectionTimesPerDay ?? 1,
+                      t
+                    )}
+                  </Text>
+                </View>
+              </>
+            )}
 
             {
               <View style={styles.extendedInfoRow}>

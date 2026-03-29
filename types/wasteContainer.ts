@@ -96,6 +96,9 @@ export interface WasteContainer {
     url: string
     alt?: string
   }
+  collectionDaysOfWeek?: string[]
+  collectionTimesPerDay?: number
+  scheduleSource?: string | null
   createdAt: string
   updatedAt: string
 }
