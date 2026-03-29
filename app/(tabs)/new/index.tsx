@@ -45,17 +45,6 @@ export default function NewScreen() {
               <Text style={styles.buttonTitle}>{t('new.bulkPhotoUpload')}</Text>
               <Text style={styles.buttonDescription}>{t('new.bulkPhotoUploadDescription')}</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => router.push('../(tabs)/new/ar-view')}
-            >
-              <View style={styles.iconContainer}>
-                <ScanSearch size={36} color="#1E40AF" />
-              </View>
-              <Text style={styles.buttonTitle}>{t('new.arView')}</Text>
-              <Text style={styles.buttonDescription}>{t('new.arViewDescription')}</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

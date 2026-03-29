@@ -1046,6 +1046,11 @@ export interface CollectionMetrics {
   byDistrict: DistrictStat[]
   byZone: ZoneStat[]
   byTimeSinceCollection: TimeBucket[]
+  scheduleCompliance: {
+    scheduledToday: number
+    delayed: number
+    missed: number
+  }
 }
 
 export async function fetchCollectionMetrics(from: string, to: string): Promise<CollectionMetrics> {

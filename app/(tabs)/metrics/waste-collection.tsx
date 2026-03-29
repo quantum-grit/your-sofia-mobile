@@ -55,6 +55,27 @@ export default function WasteCollectionDashboard() {
       count: b.containerCount,
     })) ?? []
 
+  const compliance = data?.scheduleCompliance
+  const complianceData = compliance
+    ? [
+        {
+          status: t('metrics.complianceOnTime'),
+          count: Math.max(0, compliance.scheduledToday - compliance.delayed),
+          color: '#059669',
+        },
+        {
+          status: t('metrics.complianceDelayed'),
+          count: Math.max(0, compliance.delayed - compliance.missed),
+          color: '#F97316',
+        },
+        {
+          status: t('metrics.complianceMissed'),
+          count: compliance.missed,
+          color: '#DC2626',
+        },
+      ]
+    : []
+
   const chartData = chartTab === 'zone' ? zoneData : districtData
 
   return (
@@ -253,6 +274,55 @@ export default function WasteCollectionDashboard() {
               </View>
             </ScrollView>
           )}
+        </View>
+      )}
+
+      {/* Schedule compliance bar chart */}
+      {!loading && !error && data && (
+        <View style={[styles.chartSection, {marginTop: 8}]}>
+          <Text style={styles.sectionTitle}>{t('metrics.scheduleCompliance')}</Text>
+          <View style={styles.legend}>
+            {complianceData.map((item) => (
+              <View key={item.status} style={styles.legendItem}>
+                <View style={[styles.legendDot, {backgroundColor: item.color}]} />
+                <Text style={styles.legendText}>{item.status}</Text>
+              </View>
+            ))}
+          </View>
+          <View style={{width: 300, height: 220}}>
+            <CartesianChart
+              data={complianceData}
+              xKey="status"
+              yKeys={['count']}
+              domainPadding={{left: 40, right: 40, top: 24}}
+              axisOptions={{
+                font,
+                tickCount: {x: 3, y: 5},
+                labelColor: '#6B7280',
+                lineColor: '#E5E7EB',
+              }}
+            >
+              {({points, chartBounds}) => (
+                <>
+                  {points.count.map((point, i) => (
+                    <Bar
+                      key={i}
+                      points={[point]}
+                      barCount={3}
+                      chartBounds={chartBounds}
+                      color={complianceData[i]?.color ?? '#6B7280'}
+                      roundedCorners={{topLeft: 4, topRight: 4}}
+                      labels={{
+                        position: 'top',
+                        font,
+                        color: complianceData[i]?.color ?? '#6B7280',
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+            </CartesianChart>
+          </View>
         </View>
       )}
     </ScrollView>
