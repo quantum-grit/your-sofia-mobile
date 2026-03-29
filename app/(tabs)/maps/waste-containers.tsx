@@ -20,6 +20,7 @@ import {
   ChevronUp,
   ZoomIn,
   ZoomOut,
+  ScanSearch,
 } from 'lucide-react-native'
 import {useRouter, useLocalSearchParams} from 'expo-router'
 import {WasteContainerCard} from '../../../components/WasteContainerCard'
@@ -35,7 +36,7 @@ import {
 
 type ContainerFilter = 'all' | 'uncollected' | ContainerState
 
-export default function WasteContainers() {
+export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
   const {t} = useTranslation()
   const router = useRouter()
   const params = useLocalSearchParams()
@@ -668,6 +669,13 @@ export default function WasteContainers() {
         </TouchableOpacity>
       </View>
 
+      {/* AR View Button */}
+      {onOpenAR && (
+        <TouchableOpacity style={styles.arButton} onPress={onOpenAR}>
+          <ScanSearch size={22} color="#1E40AF" />
+        </TouchableOpacity>
+      )}
+
       {/* Container Info Modal */}
       <Modal
         visible={showContainerCard}
@@ -946,5 +954,21 @@ const styles = StyleSheet.create({
   },
   actionButtonActive: {
     backgroundColor: '#1E40AF',
+  },
+  arButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    backgroundColor: '#F3F4F6',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 })

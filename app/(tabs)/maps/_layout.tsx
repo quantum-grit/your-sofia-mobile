@@ -7,8 +7,9 @@ import TransportMap from './transport-bpilot'
 import NewsMap from './news'
 import EventsMap from './events'
 import BgsmetView from './bgsmet-view'
+import ArView from './ar-view'
 
-type MapFilter = 'wasteContainers' | 'bgsmetView' | 'transport' | 'news' | 'events'
+type MapFilter = 'wasteContainers' | 'bgsmetView' | 'transport' | 'news' | 'events' | 'arView'
 
 export default function MapsLayout() {
   const {t} = useTranslation()
@@ -22,11 +23,16 @@ export default function MapsLayout() {
     {key: 'events', label: t('map.filters.events')},
   ]
 
+  const openAR = () => setSelectedFilter('arView')
+  const closeAR = () => setSelectedFilter('wasteContainers')
+
   // Determine which map component(s) to render
   const renderMapContent = () => {
     switch (selectedFilter) {
       case 'wasteContainers':
-        return <WasteContainers />
+        return <WasteContainers onOpenAR={openAR} />
+      case 'arView':
+        return <ArView onClose={closeAR} />
       case 'bgsmetView':
         return <BgsmetView />
       case 'transport':
@@ -36,7 +42,7 @@ export default function MapsLayout() {
       case 'events':
         return <EventsMap />
       default:
-        return <WasteContainers />
+        return <WasteContainers onOpenAR={openAR} />
     }
   }
 
@@ -51,22 +57,22 @@ export default function MapsLayout() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filtersScrollContent}
         >
-          {filters.map((filter) => (
-            <TouchableOpacity
-              key={filter.key}
-              style={[styles.filterChip, selectedFilter === filter.key && styles.filterChipActive]}
-              onPress={() => setSelectedFilter(filter.key)}
-            >
-              <Text
-                style={[
-                  styles.filterChipText,
-                  selectedFilter === filter.key && styles.filterChipTextActive,
-                ]}
+          {filters.map((filter) => {
+            const isActive =
+              selectedFilter === filter.key ||
+              (filter.key === 'wasteContainers' && selectedFilter === 'arView')
+            return (
+              <TouchableOpacity
+                key={filter.key}
+                style={[styles.filterChip, isActive && styles.filterChipActive]}
+                onPress={() => setSelectedFilter(filter.key)}
               >
-                {filter.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text style={[styles.filterChipText, isActive && styles.filterChipTextActive]}>
+                  {filter.label}
+                </Text>
+              </TouchableOpacity>
+            )
+          })}
         </ScrollView>
       </View>
 
