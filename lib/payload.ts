@@ -1125,21 +1125,34 @@ export async function createSubscription(input: CreateSubscriptionInput): Promis
 export async function updateSubscription(
   id: number | string,
   input: UpdateSubscriptionInput,
-  authToken?: string | null
+  authToken?: string | null,
+  pushToken?: string | null
 ): Promise<Subscription> {
-  const url = `${getApiUrl()}/api/subscriptions/${id}`
-  const headers: Record<string, string> = {'Content-Type': 'application/json'}
-  if (authToken) headers['Authorization'] = `JWT ${authToken}`
+  // Authenticated users use the standard Payload REST API (JWT-guarded).
+  // Anonymous devices must go through the custom /mine endpoint which
+  // validates ownership via the push token string instead.
+  if (authToken) {
+    const url = `${getApiUrl()}/api/subscriptions/${id}`
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${authToken}`,
+    }
+    const response = await fetch(url, {method: 'PATCH', headers, body: JSON.stringify(input)})
+    handleAuthError(response)
+    if (!response.ok) throw new Error(`Failed to update subscription: ${response.statusText}`)
+    const data = await response.json()
+    return data.doc as Subscription
+  }
 
+  if (!pushToken) throw new Error('Cannot update subscription: no auth token and no push token')
+
+  const url = `${getApiUrl()}/api/subscriptions/mine?token=${encodeURIComponent(pushToken)}`
   const response = await fetch(url, {
     method: 'PATCH',
-    headers,
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(input),
   })
-  handleAuthError(response)
-  if (!response.ok) {
-    throw new Error(`Failed to update subscription: ${response.statusText}`)
-  }
+  if (!response.ok) throw new Error(`Failed to update subscription: ${response.statusText}`)
   const data = await response.json()
   return data.doc as Subscription
 }

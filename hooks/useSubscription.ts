@@ -11,6 +11,7 @@ import {PUSH_TOKEN_KEY, SUBSCRIPTION_ID_KEY} from '../lib/storageKeys'
 
 interface UseSubscriptionReturn {
   subscription: Subscription | null
+  pushTokenString: string | null
   isLoading: boolean
   error: string | null
   /** Persist category + location preferences. Creates subscription if needed, patches if exists. */
@@ -26,6 +27,7 @@ interface UseSubscriptionReturn {
 
 export function useSubscription(): UseSubscriptionReturn {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
+  const [pushTokenString, setPushTokenString] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -36,8 +38,11 @@ export function useSubscription(): UseSubscriptionReturn {
       const token = await AsyncStorage.getItem(PUSH_TOKEN_KEY)
       if (!token) {
         setSubscription(null)
+        setPushTokenString(null)
         return
       }
+
+      setPushTokenString(token)
 
       // Fetch subscription by push token; cache the id for fast writes later
       const cachedId = await AsyncStorage.getItem(SUBSCRIPTION_ID_KEY)
@@ -77,7 +82,12 @@ export function useSubscription(): UseSubscriptionReturn {
 
       if (cachedId || subscription?.id) {
         const id = cachedId ?? subscription!.id
-        const updated = await updateSubscription(id, {categories, locationFilters}, authToken)
+        const updated = await updateSubscription(
+          id,
+          {categories, locationFilters},
+          authToken,
+          token
+        )
         setSubscription(updated)
         await AsyncStorage.setItem(SUBSCRIPTION_ID_KEY, String(updated.id))
       } else {
@@ -88,7 +98,8 @@ export function useSubscription(): UseSubscriptionReturn {
           const updated = await updateSubscription(
             existing.id,
             {categories, locationFilters},
-            authToken
+            authToken,
+            token
           )
           setSubscription(updated)
         } else {
@@ -126,6 +137,7 @@ export function useSubscription(): UseSubscriptionReturn {
 
   return {
     subscription,
+    pushTokenString,
     isLoading,
     error,
     saveSubscription,

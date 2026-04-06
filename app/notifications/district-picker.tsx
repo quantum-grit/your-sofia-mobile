@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next'
 import {Check} from 'lucide-react-native'
 import {fetchCityDistricts} from '../../lib/payload'
 import type {CityDistrict, LocationFilterDistrict} from '../../types/subscription'
+import {emitNotificationFilter} from '../../lib/notificationFilterBridge'
 
 export default function DistrictPickerScreen() {
   const {t} = useTranslation()
@@ -34,9 +35,8 @@ export default function DistrictPickerScreen() {
       filterType: 'district',
       district: {id: selected.id, name: selected.name, districtId: selected.districtId},
     }
-    // Pass result back to notifications/index via global bridge
-    const addFilter = (global as any).__addNotificationFilter
-    if (typeof addFilter === 'function') addFilter(filter)
+    // Pass result back to notifications/index via the notification filter bridge
+    emitNotificationFilter(filter)
     router.back()
   }
 

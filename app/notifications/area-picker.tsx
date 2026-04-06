@@ -4,6 +4,7 @@ import {useRouter} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import MapView, {Marker, Polygon, type Region} from 'react-native-maps'
 import type {LocationFilterArea} from '../../types/subscription'
+import {emitNotificationFilter} from '../../lib/notificationFilterBridge'
 
 const SOFIA_REGION: Region = {
   latitude: 42.6977,
@@ -54,8 +55,7 @@ export default function AreaPickerScreen() {
       polygon: {type: 'Polygon', coordinates: [ring]},
     }
 
-    const addFilter = (global as any).__addNotificationFilter
-    if (typeof addFilter === 'function') addFilter(filter)
+    emitNotificationFilter(filter)
     router.back()
   }
 
@@ -81,7 +81,7 @@ export default function AreaPickerScreen() {
         <Text style={styles.hint}>
           {vertices.length === 0
             ? t('notifications.drawArea')
-            : `${vertices.length} ${vertices.length === 1 ? 'точка' : 'точки'}`}
+            : t('notifications.pointsCount', {count: vertices.length})}
         </Text>
         <View style={styles.actions}>
           <TouchableOpacity

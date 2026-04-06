@@ -173,6 +173,8 @@ export default {
     drawArea: 'Draw an area',
     confirmLocation: 'Confirm',
     undoPoint: 'Undo last point',
+    pointsCount_one: '{{count}} point',
+    pointsCount_other: '{{count}} points',
     closePolygon: 'Close area',
     removeFilter: 'Remove',
     editFilter: 'Edit',

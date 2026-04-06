@@ -17,6 +17,7 @@ import {MapPin, Plus, Trash2, ChevronRight} from 'lucide-react-native'
 import {CATEGORY_DISPLAY_ORDER, getCategoryColor, getCategoryIcon} from '../../lib/categories'
 import {useSubscription} from '../../hooks/useSubscription'
 import {useAuth} from '../../contexts/AuthContext'
+import {registerNotificationFilterListener} from '../../lib/notificationFilterBridge'
 import type {LocationFilter, SubscriptionCategory} from '../../types/subscription'
 import {formatLocationFilter} from '../../lib/formatLocationFilter'
 
@@ -114,18 +115,13 @@ export default function NotificationsScreen() {
     }
   }
 
-  // Listen for filter passed back from pickers via router params
-  // (each picker calls router.push with a result that we append on focus)
+  // Listen for filter passed back from pickers via the notification filter bridge
   const addFilterFromParams = useCallback((filter: Omit<LocationFilter, 'id'>) => {
     setLocationFilters((prev) => [...prev, filter])
   }, [])
 
-  // Expose addFilterFromParams globally so pickers can call it; clean up on unmount
   useEffect(() => {
-    ;(global as any).__addNotificationFilter = addFilterFromParams
-    return () => {
-      delete (global as any).__addNotificationFilter
-    }
+    return registerNotificationFilterListener(addFilterFromParams)
   }, [addFilterFromParams])
 
   if (isLoading) {

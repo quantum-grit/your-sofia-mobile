@@ -4,6 +4,7 @@ import {useRouter} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import MapView, {Marker, type Region} from 'react-native-maps'
 import type {LocationFilterPoint} from '../../types/subscription'
+import {emitNotificationFilter} from '../../lib/notificationFilterBridge'
 
 // Sofia center
 const SOFIA_REGION: Region = {
@@ -35,8 +36,7 @@ export default function PointPickerScreen() {
       longitude: markerCoord.longitude,
       radius,
     }
-    const addFilter = (global as any).__addNotificationFilter
-    if (typeof addFilter === 'function') addFilter(filter)
+    emitNotificationFilter(filter)
     router.back()
   }
 

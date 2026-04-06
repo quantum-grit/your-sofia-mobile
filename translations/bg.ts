@@ -174,6 +174,8 @@ export default {
     confirmLocation: 'Потвърди',
     undoPoint: 'Премахни последна точка',
     closePolygon: 'Затвори зоната',
+    pointsCount_one: '{{count}} точка',
+    pointsCount_other: '{{count}} точки',
     removeFilter: 'Премахни',
     editFilter: 'Промени',
     noPushToken:

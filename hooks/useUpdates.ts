@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MapBounds} from '@/lib/mapBounds'
 import {
-  fetchUpdates,
+  fetchNewsUpdates,
   fetchUpdateSources,
   mapSourcesById,
   mapUpdateMessageToNewsItem,
@@ -10,6 +10,7 @@ import {
 import type {NewsItem} from '@/types/news'
 
 interface UseUpdatesOptions {
+  pushToken?: string | null
   categories?: string[]
   bounds?: MapBounds | null
   zoom?: number
@@ -23,6 +24,7 @@ export function useUpdates(options: UseUpdatesOptions = {}) {
   const [news, setNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const pushToken = options.pushToken ?? null
   const categoriesKey = options.categories?.join('|') ?? ''
   const hasLoadedRef = useRef(false)
   const inFlightRef = useRef(false)
@@ -41,8 +43,8 @@ export function useUpdates(options: UseUpdatesOptions = {}) {
       : 'no-bounds'
     const zoomKey = typeof options.zoom === 'number' ? options.zoom.toFixed(2) : 'no-zoom'
 
-    return `${categoriesKey}|${boundsKey}|${zoomKey}|${i18n.language}`
-  }, [categoriesKey, i18n.language, options.bounds, options.zoom])
+    return `${pushToken ?? ''}|${categoriesKey}|${boundsKey}|${zoomKey}|${i18n.language}`
+  }, [pushToken, categoriesKey, i18n.language, options.bounds, options.zoom])
 
   const loadUpdates = useCallback(
     async (force: boolean = false) => {
@@ -91,7 +93,8 @@ export function useUpdates(options: UseUpdatesOptions = {}) {
         setError(null)
 
         const [messages, sources] = await Promise.all([
-          fetchUpdates({
+          fetchNewsUpdates({
+            pushToken: pushToken ?? undefined,
             categories: categoriesKey ? categoriesKey.split('|') : undefined,
             bounds: options.bounds ?? undefined,
             zoom: options.zoom,
@@ -127,6 +130,7 @@ export function useUpdates(options: UseUpdatesOptions = {}) {
       options.bounds,
       options.zoom,
       options.limit,
+      pushToken,
       error,
       buildRequestKey,
       FAILURE_COOLDOWN_MS,
