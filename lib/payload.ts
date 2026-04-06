@@ -1064,3 +1064,82 @@ export async function fetchCollectionMetrics(from: string, to: string): Promise<
   const json = await response.json()
   return json
 }
+
+// ─── Subscriptions ────────────────────────────────────────────────────────────
+
+import type {
+  CityDistrict,
+  Subscription,
+  CreateSubscriptionInput,
+  UpdateSubscriptionInput,
+} from '../types/subscription'
+
+/**
+ * Fetch all city districts ordered by districtId.
+ */
+export async function fetchCityDistricts(): Promise<CityDistrict[]> {
+  const url = `${getApiUrl()}/api/city-districts?limit=24&sort=districtId`
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch city districts: ${response.statusText}`)
+  }
+  const data = await response.json()
+  return data.docs as CityDistrict[]
+}
+
+/**
+ * Fetch the subscription for a given Expo push token string.
+ * Returns null if no subscription exists yet.
+ */
+export async function fetchMySubscription(token: string): Promise<Subscription | null> {
+  const url = `${getApiUrl()}/api/subscriptions/mine?token=${encodeURIComponent(token)}`
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch subscription: ${response.statusText}`)
+  }
+  const data = await response.json()
+  return data.subscription as Subscription | null
+}
+
+/**
+ * Create a new subscription document.
+ */
+export async function createSubscription(input: CreateSubscriptionInput): Promise<Subscription> {
+  const url = `${getApiUrl()}/api/subscriptions`
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(input),
+  })
+  if (!response.ok) {
+    throw new Error(`Failed to create subscription: ${response.statusText}`)
+  }
+  const data = await response.json()
+  return data.doc as Subscription
+}
+
+/**
+ * Patch an existing subscription document.
+ * Pass authToken when the user is authenticated to keep the user field linked.
+ */
+export async function updateSubscription(
+  id: number | string,
+  input: UpdateSubscriptionInput,
+  authToken?: string | null
+): Promise<Subscription> {
+  const url = `${getApiUrl()}/api/subscriptions/${id}`
+  const headers: Record<string, string> = {'Content-Type': 'application/json'}
+  if (authToken) headers['Authorization'] = `JWT ${authToken}`
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(input),
+  })
+  handleAuthError(response)
+  if (!response.ok) {
+    throw new Error(`Failed to update subscription: ${response.statusText}`)
+  }
+  const data = await response.json()
+  return data.doc as Subscription
+}
