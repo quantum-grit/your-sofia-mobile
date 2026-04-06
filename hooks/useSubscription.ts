@@ -1,10 +1,13 @@
 import {useState, useEffect, useCallback} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {fetchMySubscription, createSubscription, updateSubscription} from '../lib/payload'
-import type {Subscription, LocationFilter, SubscriptionCategory} from '../types/subscription'
-
-const PUSH_TOKEN_KEY = 'pushToken'
-const SUBSCRIPTION_ID_KEY = 'subscriptionId'
+import {
+  fetchMySubscription,
+  createSubscription,
+  updateSubscription,
+  fetchPushTokenId,
+} from '../lib/payload'
+import type {Subscription, LocationFilter} from '../types/subscription'
+import {PUSH_TOKEN_KEY, SUBSCRIPTION_ID_KEY} from '../lib/storageKeys'
 
 interface UseSubscriptionReturn {
   subscription: Subscription | null
@@ -36,7 +39,7 @@ export function useSubscription(): UseSubscriptionReturn {
         return
       }
 
-      // Fast path: we already know the subscription id
+      // Fetch subscription by push token; cache the id for fast writes later
       const cachedId = await AsyncStorage.getItem(SUBSCRIPTION_ID_KEY)
       const sub = await fetchMySubscription(token)
 
@@ -90,16 +93,7 @@ export function useSubscription(): UseSubscriptionReturn {
           setSubscription(updated)
         } else {
           // We only have the token string — creation requires the push-token document id.
-          // The POST body accepts the token string via the `token` helper endpoint behaviour,
-          // but the Payload REST API requires the pushToken relationship id.
-          // Resolve the push-token doc id from the server.
-          const response = await fetch(
-            `${process.env.EXPO_PUBLIC_API_URL}/api/push-tokens?where[token][equals]=${encodeURIComponent(token)}&limit=1`
-          )
-          if (!response.ok) throw new Error('Could not resolve push token document')
-          const data = await response.json()
-          if (!data.docs?.length) throw new Error('Push token not registered on server')
-          const pushTokenId = data.docs[0].id
+          const pushTokenId = await fetchPushTokenId(token)
 
           const created = await createSubscription({
             pushToken: pushTokenId,

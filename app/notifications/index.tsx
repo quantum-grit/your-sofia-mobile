@@ -143,8 +143,13 @@ export default function NotificationsScreen() {
     setLocationFilters((prev) => [...prev, filter])
   }, [])
 
-  // Expose addFilterFromParams globally so pickers can call it
-  ;(global as any).__addNotificationFilter = addFilterFromParams
+  // Expose addFilterFromParams globally so pickers can call it; clean up on unmount
+  useEffect(() => {
+    ;(global as any).__addNotificationFilter = addFilterFromParams
+    return () => {
+      delete (global as any).__addNotificationFilter
+    }
+  }, [addFilterFromParams])
 
   if (isLoading) {
     return (

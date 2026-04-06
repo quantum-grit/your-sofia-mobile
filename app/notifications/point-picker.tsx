@@ -22,7 +22,9 @@ export default function PointPickerScreen() {
   const [radius, setRadius] = useState<number>(1000)
 
   const handleMapPress = (e: any) => {
-    setMarkerCoord(e.nativeEvent.coordinate)
+    const coordinate = e?.nativeEvent?.coordinate
+    if (!coordinate) return
+    setMarkerCoord(coordinate)
   }
 
   const handleConfirm = () => {

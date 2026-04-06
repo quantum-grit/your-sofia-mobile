@@ -4,8 +4,7 @@ import {Alert} from 'react-native'
 import {router} from 'expo-router'
 import {environmentManager} from '../lib/environment'
 import {setAuthErrorHandler, updateSubscription} from '../lib/payload'
-
-const SUBSCRIPTION_ID_KEY = 'subscriptionId'
+import {SUBSCRIPTION_ID_KEY} from '../lib/storageKeys'
 
 interface User {
   id: number

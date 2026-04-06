@@ -1143,3 +1143,16 @@ export async function updateSubscription(
   const data = await response.json()
   return data.doc as Subscription
 }
+
+/**
+ * Resolve the Payload document id for a given Expo push token string.
+ * Throws if the token is not yet registered on the server.
+ */
+export async function fetchPushTokenId(token: string): Promise<number | string> {
+  const url = `${getApiUrl()}/api/push-tokens?where[token][equals]=${encodeURIComponent(token)}&limit=1`
+  const response = await fetch(url)
+  if (!response.ok) throw new Error('Could not resolve push token document')
+  const data = await response.json()
+  if (!data.docs?.length) throw new Error('Push token not registered on server')
+  return data.docs[0].id
+}
