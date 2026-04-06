@@ -129,7 +129,8 @@ describe('useSubscription — saveSubscription()', () => {
     expect(mockUpdate).toHaveBeenCalledWith(
       SUB_ID,
       {categories: ['cat-1'], locationFilters: []},
-      undefined
+      undefined,
+      PUSH_TOKEN
     )
     expect(result.current.subscription).toEqual(updated)
   })
@@ -153,7 +154,8 @@ describe('useSubscription — saveSubscription()', () => {
     expect(mockUpdate).toHaveBeenCalledWith(
       SUB_ID,
       {categories: ['cat-2'], locationFilters: []},
-      undefined
+      undefined,
+      PUSH_TOKEN
     )
   })
 
@@ -175,7 +177,8 @@ describe('useSubscription — saveSubscription()', () => {
     expect(mockUpdate).toHaveBeenCalledWith(
       SUB_ID,
       {categories: ['cat-3'], locationFilters: []},
-      undefined
+      undefined,
+      PUSH_TOKEN
     )
     const cached = await AsyncStorage.getItem('subscriptionId')
     expect(cached).toBe(SUB_ID)
@@ -217,7 +220,7 @@ describe('useSubscription — saveSubscription()', () => {
 
     await act(() => result.current.saveSubscription([], [], 'jwt-token-abc'))
 
-    expect(mockUpdate).toHaveBeenCalledWith(SUB_ID, expect.any(Object), 'jwt-token-abc')
+    expect(mockUpdate).toHaveBeenCalledWith(SUB_ID, expect.any(Object), 'jwt-token-abc', PUSH_TOKEN)
   })
 
   it('sends locationFilters in updateSubscription payload', async () => {
@@ -236,7 +239,8 @@ describe('useSubscription — saveSubscription()', () => {
     expect(mockUpdate).toHaveBeenCalledWith(
       SUB_ID,
       {categories: [], locationFilters: filters},
-      undefined
+      undefined,
+      PUSH_TOKEN
     )
   })
 })
