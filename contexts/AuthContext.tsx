@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Alert} from 'react-native'
 import {router} from 'expo-router'
 import {environmentManager} from '../lib/environment'
-import {setAuthErrorHandler} from '../lib/payload'
+import {setAuthErrorHandler, updateSubscription} from '../lib/payload'
+import {SUBSCRIPTION_ID_KEY} from '../lib/storageKeys'
 
 interface User {
   id: number
@@ -110,6 +111,16 @@ export function AuthProvider({children}: {children: ReactNode}) {
 
       setToken(data.token)
       setUser(data.user)
+
+      // Link the device's anonymous subscription to this user (non-fatal)
+      try {
+        const subscriptionId = await AsyncStorage.getItem(SUBSCRIPTION_ID_KEY)
+        if (subscriptionId) {
+          await updateSubscription(subscriptionId, {user: data.user.id}, data.token)
+        }
+      } catch (linkErr) {
+        console.warn('[AuthContext] Could not link subscription to user (non-fatal):', linkErr)
+      }
     } catch (error) {
       console.error('Login error:', error)
       throw error

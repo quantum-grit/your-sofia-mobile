@@ -23,6 +23,7 @@ import {NewsCard} from '../../../components/NewsCard'
 import {NewsMap} from '../../../components/NewsMap'
 import {useUpdates} from '../../../hooks/useUpdates'
 import {useUpdateCategories} from '../../../hooks/useUpdateCategories'
+import {useSubscription} from '../../../hooks/useSubscription'
 import {useNotifications} from '../../../hooks/useNotifications'
 import {useBellAction} from '../../../contexts/BellActionContext'
 import type {AirQualityData} from '../../../types/airQuality'
@@ -53,15 +54,21 @@ export default function HomeScreen() {
   const newsSectionRef = useRef<View>(null)
   const bellScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const {registerBellAction} = useBellAction()
-  const selectedCategories = selectedTopic !== 'all' ? [selectedTopic] : undefined
-
   const {filterChips, categories} = useUpdateCategories()
+  const {pushTokenString} = useSubscription()
+
+  // When a specific topic is selected, pass it as an explicit category override.
+  // When showing "all", pass the push token so the backend resolves subscription categories.
+  const selectedCategories = selectedTopic !== 'all' ? [selectedTopic] : undefined
+  const activePushToken = selectedTopic === 'all' ? pushTokenString : undefined
+
   const {
     news,
     loading: newsLoading,
     error: newsError,
     refresh,
   } = useUpdates({
+    pushToken: activePushToken,
     categories: selectedCategories,
     limit: 20,
     bounds: SOFIA_DEFAULT_BOUNDS,
@@ -74,6 +81,7 @@ export default function HomeScreen() {
     error: mapError,
     refresh: refreshMap,
   } = useUpdates({
+    pushToken: activePushToken,
     categories: selectedCategories,
     bounds: isMapView ? mapBounds : null,
     zoom: mapZoom,

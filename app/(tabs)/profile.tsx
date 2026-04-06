@@ -389,8 +389,10 @@ export default function ProfileScreen() {
             <View style={styles.sectionItems}>
               {section.items.map((item) => {
                 const IconComponent = item.icon
+                const onPress =
+                  item.id === 12 ? () => router.push('/notifications' as any) : undefined
                 return (
-                  <TouchableOpacity key={item.id} style={styles.menuItem}>
+                  <TouchableOpacity key={item.id} style={styles.menuItem} onPress={onPress}>
                     <View style={styles.menuItemContent}>
                       <View style={styles.menuItemIcon}>
                         <IconComponent size={20} color="#1E40AF" />
@@ -408,7 +410,6 @@ export default function ProfileScreen() {
           </View>
         ))}
 
-        {/* App Settings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('profile.appSettings')}</Text>
           <TouchableOpacity style={styles.menuItem}>

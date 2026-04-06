@@ -31,13 +31,18 @@ async function parseJsonResponse<T>(
   }
 }
 
-export async function fetchUpdates(options?: {
+export async function fetchNewsUpdates(options?: {
+  pushToken?: string
   categories?: string[]
   bounds?: MapBounds
   zoom?: number
 }): Promise<UpdateMessage[]> {
   const baseUrl = getUpdatesBaseUrl()
   const params = new URLSearchParams()
+
+  if (options?.pushToken) {
+    params.set('pushToken', options.pushToken)
+  }
 
   if (options?.bounds) {
     params.set('north', options.bounds.north.toString())
