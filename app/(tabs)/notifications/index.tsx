@@ -11,21 +11,29 @@ import {
 } from 'react-native'
 import {useState, useEffect, useCallback} from 'react'
 import {useRouter} from 'expo-router'
+import {useFocusEffect} from '@react-navigation/native'
 import {useTranslation} from 'react-i18next'
-import {MapPin, Plus, Trash2, ChevronRight} from 'lucide-react-native'
+import {AlertCircle, MapPin, Plus, Trash2, ChevronRight} from 'lucide-react-native'
 
-import {CATEGORY_DISPLAY_ORDER, getCategoryColor, getCategoryIcon} from '../../lib/categories'
-import {useSubscription} from '../../hooks/useSubscription'
-import {useAuth} from '../../contexts/AuthContext'
-import {registerNotificationFilterListener} from '../../lib/notificationFilterBridge'
-import type {LocationFilter, SubscriptionCategory} from '../../types/subscription'
-import {formatLocationFilter} from '../../lib/formatLocationFilter'
+import {CATEGORY_DISPLAY_ORDER, getCategoryColor, getCategoryIcon} from '../../../lib/categories'
+import {useSubscription} from '../../../hooks/useSubscription'
+import {useAuth} from '../../../contexts/AuthContext'
+import {registerNotificationFilterListener} from '../../../lib/notificationFilterBridge'
+import type {LocationFilter, SubscriptionCategory} from '../../../types/subscription'
+import {formatLocationFilter} from '../../../lib/formatLocationFilter'
 
 export default function NotificationsScreen() {
   const {t} = useTranslation()
   const router = useRouter()
   const {token: authToken} = useAuth()
-  const {subscription, isLoading, saveSubscription} = useSubscription()
+  const {subscription, pushTokenString, isLoading, saveSubscription, reload} = useSubscription()
+
+  // Reload on focus so we pick up the push token stored by useNotifications in the home tab
+  useFocusEffect(
+    useCallback(() => {
+      reload()
+    }, [reload])
+  )
 
   // Local drafts
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set())
@@ -73,24 +81,24 @@ export default function NotificationsScreen() {
         text: t('notifications.locationTypeDistrict'),
         onPress: () =>
           router.push({
-            pathname: '/notifications/district-picker',
-            params: {returnTo: '/notifications'},
+            pathname: '/(tabs)/notifications/district-picker',
+            params: {returnTo: '/(tabs)/notifications'},
           } as any),
       },
       {
         text: t('notifications.locationTypePoint'),
         onPress: () =>
           router.push({
-            pathname: '/notifications/point-picker',
-            params: {returnTo: '/notifications'},
+            pathname: '/(tabs)/notifications/point-picker',
+            params: {returnTo: '/(tabs)/notifications'},
           } as any),
       },
       {
         text: t('notifications.locationTypeArea'),
         onPress: () =>
           router.push({
-            pathname: '/notifications/area-picker',
-            params: {returnTo: '/notifications'},
+            pathname: '/(tabs)/notifications/area-picker',
+            params: {returnTo: '/(tabs)/notifications'},
           } as any),
       },
       {text: t('common.cancel'), style: 'cancel'},
@@ -137,6 +145,13 @@ export default function NotificationsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* No push token banner */}
+        {!pushTokenString && (
+          <View style={styles.noPushTokenBanner}>
+            <AlertCircle size={18} color="#92400E" />
+            <Text style={styles.noPushTokenText}>{t('notifications.noPushToken')}</Text>
+          </View>
+        )}
         {/* Categories */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -213,9 +228,9 @@ export default function NotificationsScreen() {
       {/* Save button */}
       <View style={styles.footer}>
         <TouchableOpacity
-          style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
+          style={[styles.saveButton, (isSaving || !pushTokenString) && styles.saveButtonDisabled]}
           onPress={handleSave}
-          disabled={isSaving}
+          disabled={isSaving || !pushTokenString}
         >
           {isSaving ? (
             <ActivityIndicator color="#ffffff" size="small" />
@@ -232,6 +247,18 @@ const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#F9FAFB'},
   centered: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   scrollContent: {padding: 16, paddingBottom: 24},
+  noPushTokenBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#FEF3C7',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+  },
+  noPushTokenText: {flex: 1, fontSize: 13, color: '#92400E', lineHeight: 18},
   section: {
     backgroundColor: '#ffffff',
     borderRadius: 12,

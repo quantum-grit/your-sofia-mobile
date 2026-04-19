@@ -3,8 +3,8 @@ import {useState} from 'react'
 import {useRouter} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import MapView, {Marker, Polygon, type Region} from 'react-native-maps'
-import type {LocationFilterArea} from '../../types/subscription'
-import {emitNotificationFilter} from '../../lib/notificationFilterBridge'
+import type {LocationFilterArea} from '../../../types/subscription'
+import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
 
 const SOFIA_REGION: Region = {
   latitude: 42.6977,

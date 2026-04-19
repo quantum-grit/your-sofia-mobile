@@ -1,11 +1,6 @@
 import {useState, useEffect, useCallback} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {
-  fetchMySubscription,
-  createSubscription,
-  updateSubscription,
-  fetchPushTokenId,
-} from '../lib/payload'
+import {fetchMySubscription, updateSubscription} from '../lib/payload'
 import type {Subscription, LocationFilter} from '../types/subscription'
 import {PUSH_TOKEN_KEY, SUBSCRIPTION_ID_KEY} from '../lib/storageKeys'
 
@@ -79,42 +74,18 @@ export function useSubscription(): UseSubscriptionReturn {
       if (!token) throw new Error('No push token registered on this device')
 
       const cachedId = await AsyncStorage.getItem(SUBSCRIPTION_ID_KEY)
+      const id = cachedId ?? subscription?.id
 
-      if (cachedId || subscription?.id) {
-        const id = cachedId ?? subscription!.id
-        const updated = await updateSubscription(
-          id,
-          {categories, locationFilters},
-          authToken,
-          token
-        )
-        setSubscription(updated)
-        await AsyncStorage.setItem(SUBSCRIPTION_ID_KEY, String(updated.id))
-      } else {
-        // Need the push-token document id first (server-side lookup)
-        const existing = await fetchMySubscription(token)
-        if (existing) {
-          await AsyncStorage.setItem(SUBSCRIPTION_ID_KEY, String(existing.id))
-          const updated = await updateSubscription(
-            existing.id,
-            {categories, locationFilters},
-            authToken,
-            token
-          )
-          setSubscription(updated)
-        } else {
-          // We only have the token string — creation requires the push-token document id.
-          const pushTokenId = await fetchPushTokenId(token)
-
-          const created = await createSubscription({
-            pushToken: pushTokenId,
-            categories,
-            locationFilters,
-          })
-          setSubscription(created)
-          await AsyncStorage.setItem(SUBSCRIPTION_ID_KEY, String(created.id))
-        }
-      }
+      // Always route through /mine for anonymous devices — it upserts server-side.
+      // Authenticated users with a known subscription ID use the JWT-authenticated path.
+      const updated = await updateSubscription(
+        id ?? '',
+        {categories, locationFilters},
+        authToken,
+        token
+      )
+      setSubscription(updated)
+      await AsyncStorage.setItem(SUBSCRIPTION_ID_KEY, String(updated.id))
     },
     [subscription]
   )

@@ -11,9 +11,9 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import {Check} from 'lucide-react-native'
-import {fetchCityDistricts} from '../../lib/payload'
-import type {CityDistrict, LocationFilterDistrict} from '../../types/subscription'
-import {emitNotificationFilter} from '../../lib/notificationFilterBridge'
+import {fetchCityDistricts} from '../../../lib/payload'
+import type {CityDistrict, LocationFilterDistrict} from '../../../types/subscription'
+import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
 
 export default function DistrictPickerScreen() {
   const {t} = useTranslation()
