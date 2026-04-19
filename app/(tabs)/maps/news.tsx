@@ -9,16 +9,15 @@ import {useUpdateCategories} from '../../../hooks/useUpdateCategories'
 import {estimateZoom, getBoundsFromRegion, type MapBounds} from '../../../lib/mapBounds'
 import {getCategoryColor, getCategoryIcon} from '../../../lib/categories'
 import {TopicFilter} from '../../../components/TopicFilter'
-import type {NewsTopicType} from '../../../types/news'
 
 export default function NewsMap() {
   const {t} = useTranslation()
   const router = useRouter()
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
-  const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all')
+  const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set(['all']))
   const selectedCategories = useMemo(
-    () => (selectedTopic !== 'all' ? [selectedTopic] : undefined),
-    [selectedTopic]
+    () => (selectedTopics.has('all') ? undefined : Array.from(selectedTopics)),
+    [selectedTopics]
   )
   const {filterChips} = useUpdateCategories()
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null)
@@ -129,8 +128,8 @@ export default function NewsMap() {
 
       <View style={styles.filterOverlay}>
         <TopicFilter
-          selectedTopic={selectedTopic}
-          onTopicChange={setSelectedTopic}
+          selectedTopics={selectedTopics}
+          onTopicsChange={setSelectedTopics}
           topics={filterChips}
         />
       </View>

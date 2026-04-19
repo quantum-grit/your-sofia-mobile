@@ -1,14 +1,34 @@
 import {View, Text, ScrollView, TouchableOpacity, StyleSheet} from 'react-native'
-import type {NewsTopicType, NewsFilterChip} from '../types/news'
+import type {NewsFilterChip} from '../types/news'
 import {getCategoryColor} from '@/lib/categories'
 
 interface TopicFilterProps {
-  selectedTopic: NewsTopicType
-  onTopicChange: (topic: NewsTopicType) => void
+  selectedTopics: Set<string>
+  onTopicsChange: (topics: Set<string>) => void
   topics: NewsFilterChip[]
 }
 
-export function TopicFilter({selectedTopic, onTopicChange, topics}: TopicFilterProps) {
+export function TopicFilter({selectedTopics, onTopicsChange, topics}: TopicFilterProps) {
+  const allSelected = selectedTopics.has('all')
+
+  const handlePress = (id: string) => {
+    if (id === 'all') {
+      // Toggle all: if already showing all, go back to nothing (which also means all)
+      onTopicsChange(new Set(['all']))
+      return
+    }
+    const next = new Set(selectedTopics)
+    next.delete('all')
+    if (next.has(id)) {
+      next.delete(id)
+      // Nothing left → fall back to 'all'
+      if (next.size === 0) next.add('all')
+    } else {
+      next.add(id)
+    }
+    onTopicsChange(next)
+  }
+
   return (
     <ScrollView
       horizontal
@@ -16,7 +36,7 @@ export function TopicFilter({selectedTopic, onTopicChange, topics}: TopicFilterP
       contentContainerStyle={styles.container}
     >
       {topics.map((topic) => {
-        const isSelected = selectedTopic === topic.id
+        const isSelected = topic.id === 'all' ? allSelected : selectedTopics.has(topic.id)
         const Icon = topic.icon
         const categoryColor = topic.id === 'all' ? '#1E40AF' : getCategoryColor(topic.id)
 
@@ -27,7 +47,7 @@ export function TopicFilter({selectedTopic, onTopicChange, topics}: TopicFilterP
               styles.chip,
               isSelected && {backgroundColor: categoryColor, borderColor: categoryColor},
             ]}
-            onPress={() => onTopicChange(topic.id)}
+            onPress={() => handlePress(topic.id)}
           >
             {Icon && (
               <View style={styles.icon}>
