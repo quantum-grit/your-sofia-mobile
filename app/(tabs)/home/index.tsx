@@ -54,7 +54,7 @@ export default function HomeScreen() {
   const bellScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const {registerBellAction} = useBellAction()
   const {filterChips, categories} = useUpdateCategories()
-  const {subscription, pushTokenString} = useSubscription()
+  const {subscription} = useSubscription()
 
   // Seed selected topics from subscription categories on first load
   const subscriptionSeededRef = useRef(false)
@@ -68,12 +68,12 @@ export default function HomeScreen() {
     }
   }, [subscription])
 
-  // Derive categories / push token to pass to useUpdates
-  const isAllSelected = selectedTopics.has('all')
-  // When 'all' is selected with a push token, let the backend filter by subscription.
+  // Derive categories / push token to pass to useUpdates.
   // When specific topics are selected, pass them explicitly.
+  // When 'all' is selected, pass no filter — show everything unfiltered.
+  const isAllSelected = selectedTopics.has('all')
   const selectedCategories = isAllSelected ? undefined : Array.from(selectedTopics)
-  const activePushToken = isAllSelected ? pushTokenString : undefined
+  const activePushToken = undefined
 
   const {
     news,
