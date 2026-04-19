@@ -3,8 +3,8 @@ import {useState} from 'react'
 import {useRouter} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import MapView, {Marker, type Region} from 'react-native-maps'
-import type {LocationFilterPoint} from '../../types/subscription'
-import {emitNotificationFilter} from '../../lib/notificationFilterBridge'
+import type {LocationFilterPoint} from '../../../types/subscription'
+import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
 
 // Sofia center
 const SOFIA_REGION: Region = {

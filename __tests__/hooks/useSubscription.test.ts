@@ -159,13 +159,9 @@ describe('useSubscription — saveSubscription()', () => {
     )
   })
 
-  it('re-fetches subscription and updates when no cachedId and no state', async () => {
+  it('calls updateSubscription with empty id when no cachedId and no state (server upserts via /mine)', async () => {
     await setToken(PUSH_TOKEN)
-    const existingSub = makeSub()
-    // First load → null (not registered yet), second fetch inside saveSubscription → finds it
-    mockFetch
-      .mockResolvedValueOnce(null) // load()
-      .mockResolvedValueOnce(existingSub) // saveSubscription fallback fetch
+    mockFetch.mockResolvedValue(null)
     const updated = makeSub({categories: ['cat-3']})
     mockUpdate.mockResolvedValue(updated)
 
@@ -175,7 +171,7 @@ describe('useSubscription — saveSubscription()', () => {
     await act(() => result.current.saveSubscription(['cat-3'], []))
 
     expect(mockUpdate).toHaveBeenCalledWith(
-      SUB_ID,
+      '',
       {categories: ['cat-3'], locationFilters: []},
       undefined,
       PUSH_TOKEN
@@ -184,26 +180,23 @@ describe('useSubscription — saveSubscription()', () => {
     expect(cached).toBe(SUB_ID)
   })
 
-  it('creates a new subscription when no token doc exists yet', async () => {
+  it('creates a new subscription via /mine upsert when no subscription exists yet', async () => {
     await setToken(PUSH_TOKEN)
-    mockFetch
-      .mockResolvedValueOnce(null) // load()
-      .mockResolvedValueOnce(null) // saveSubscription fallback fetch
-    mockFetchTokenId.mockResolvedValue('pt-99')
+    mockFetch.mockResolvedValue(null)
     const created = makeSub({id: 'new-sub'})
-    mockCreate.mockResolvedValue(created)
+    mockUpdate.mockResolvedValue(created)
 
     const {result} = renderHook(() => useSubscription())
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
     await act(() => result.current.saveSubscription(['cat-4'], []))
 
-    expect(mockFetchTokenId).toHaveBeenCalledWith(PUSH_TOKEN)
-    expect(mockCreate).toHaveBeenCalledWith({
-      pushToken: 'pt-99',
-      categories: ['cat-4'],
-      locationFilters: [],
-    })
+    expect(mockUpdate).toHaveBeenCalledWith(
+      '',
+      {categories: ['cat-4'], locationFilters: []},
+      undefined,
+      PUSH_TOKEN
+    )
     expect(result.current.subscription).toEqual(created)
     const cached = await AsyncStorage.getItem('subscriptionId')
     expect(cached).toBe('new-sub')

@@ -390,7 +390,7 @@ export default function ProfileScreen() {
               {section.items.map((item) => {
                 const IconComponent = item.icon
                 const onPress =
-                  item.id === 12 ? () => router.push('/notifications' as any) : undefined
+                  item.id === 12 ? () => router.push('/(tabs)/notifications' as any) : undefined
                 return (
                   <TouchableOpacity key={item.id} style={styles.menuItem} onPress={onPress}>
                     <View style={styles.menuItemContent}>

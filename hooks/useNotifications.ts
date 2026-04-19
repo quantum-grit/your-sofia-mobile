@@ -29,9 +29,12 @@ export function useNotifications() {
     // Register for push notifications
     registerForPushNotificationsAsync().then((token) => {
       if (token) {
+        console.log('[useNotifications] Push token obtained:', token)
         setExpoPushToken(token)
         // Send token to backend
         sendTokenToBackend(token)
+      } else {
+        console.log('[useNotifications] No push token obtained (simulator or permission denied)')
       }
     })
 
@@ -92,8 +95,13 @@ export function useNotifications() {
     try {
       // Store token locally
       await AsyncStorage.setItem(PUSH_TOKEN_KEY, token)
+      console.log('[useNotifications] Push token saved to AsyncStorage:', token)
 
       // Send token to Payload backend
+      console.log(
+        '[useNotifications] Registering token with backend:',
+        `${API_URL}/api/push-tokens`
+      )
       const response = await fetch(`${API_URL}/api/push-tokens`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -106,12 +114,19 @@ export function useNotifications() {
 
       if (!response.ok) {
         // Token might already exist, that's okay
-        console.log('Token registration response:', response.status)
+        console.log(
+          '[useNotifications] Token registration response (may already exist):',
+          response.status
+        )
       } else {
-        console.log('Push token registered successfully')
+        const data = await response.json()
+        console.log(
+          '[useNotifications] Push token registered successfully, backend id:',
+          data?.doc?.id ?? data?.id
+        )
       }
     } catch (error) {
-      console.error('Error sending push token to backend:', error)
+      console.error('[useNotifications] Error sending push token to backend:', error)
     }
   }
 
@@ -134,28 +149,31 @@ async function registerForPushNotificationsAsync() {
     })
   }
 
-  if (Device.isDevice) {
-    const {status: existingStatus} = await Notifications.getPermissionsAsync()
-    let finalStatus = existingStatus
+  const {status: existingStatus} = await Notifications.getPermissionsAsync()
+  console.log('[useNotifications] Existing permission status:', existingStatus)
+  let finalStatus = existingStatus
 
-    if (existingStatus !== 'granted') {
-      const {status} = await Notifications.requestPermissionsAsync()
-      finalStatus = status
-    }
-
-    if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for push notification!')
-      return null
-    }
-
-    token = (
-      await Notifications.getExpoPushTokenAsync({
-        projectId: Constants.expoConfig?.extra?.eas?.projectId,
-      })
-    ).data
-  } else {
-    console.log('Must use physical device for Push Notifications')
+  if (existingStatus !== 'granted') {
+    const {status} = await Notifications.requestPermissionsAsync()
+    console.log('[useNotifications] Permission request result:', status)
+    finalStatus = status
   }
+
+  if (finalStatus !== 'granted') {
+    console.log('[useNotifications] Permission denied — cannot get push token')
+    return null
+  }
+
+  console.log(
+    '[useNotifications] Fetching Expo push token, projectId:',
+    Constants.expoConfig?.extra?.eas?.projectId
+  )
+  token = (
+    await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig?.extra?.eas?.projectId,
+    })
+  ).data
+  console.log('[useNotifications] Expo push token fetched:', token)
 
   return token
 }

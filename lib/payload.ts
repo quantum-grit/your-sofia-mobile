@@ -1128,9 +1128,22 @@ export async function updateSubscription(
   authToken?: string | null,
   pushToken?: string | null
 ): Promise<Subscription> {
-  // Authenticated users use the standard Payload REST API (JWT-guarded).
-  // Anonymous devices must go through the custom /mine endpoint which
-  // validates ownership via the push token string instead.
+  // When a push token is present, always use /mine — it validates device ownership,
+  // resolves category slugs to IDs, and handles upsert. This is correct even for
+  // authenticated users because the JWT path sends raw slugs which Payload ignores.
+  if (pushToken) {
+    const url = `${getApiUrl()}/api/subscriptions/mine?token=${encodeURIComponent(pushToken)}`
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(input),
+    })
+    if (!response.ok) throw new Error(`Failed to update subscription: ${response.statusText}`)
+    const data = await response.json()
+    return data.doc as Subscription
+  }
+
+  // Fallback: authenticated users without a push token (e.g. linkUser) use JWT.
   if (authToken) {
     const url = `${getApiUrl()}/api/subscriptions/${id}`
     const headers: Record<string, string> = {
@@ -1144,17 +1157,7 @@ export async function updateSubscription(
     return data.doc as Subscription
   }
 
-  if (!pushToken) throw new Error('Cannot update subscription: no auth token and no push token')
-
-  const url = `${getApiUrl()}/api/subscriptions/mine?token=${encodeURIComponent(pushToken)}`
-  const response = await fetch(url, {
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(input),
-  })
-  if (!response.ok) throw new Error(`Failed to update subscription: ${response.statusText}`)
-  const data = await response.json()
-  return data.doc as Subscription
+  throw new Error('Cannot update subscription: no auth token and no push token')
 }
 
 /**

@@ -27,7 +27,6 @@ import {useSubscription} from '../../../hooks/useSubscription'
 import {useNotifications} from '../../../hooks/useNotifications'
 import {useBellAction} from '../../../contexts/BellActionContext'
 import type {AirQualityData} from '../../../types/airQuality'
-import type {NewsTopicType} from '../../../types/news'
 import type {MapBounds} from '../../../lib/mapBounds'
 import {SOFIA_DEFAULT_BOUNDS} from '../../../lib/mapBounds'
 
@@ -45,7 +44,7 @@ const mockAirQualityData: AirQualityData = {
 export default function HomeScreen() {
   const {t} = useTranslation()
   const router = useRouter()
-  const [selectedTopic, setSelectedTopic] = useState<NewsTopicType>('all')
+  const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set(['all']))
   const [isMapView, setIsMapView] = useState(false)
   const [isFirstFocus, setIsFirstFocus] = useState(true)
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null)
@@ -55,12 +54,26 @@ export default function HomeScreen() {
   const bellScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const {registerBellAction} = useBellAction()
   const {filterChips, categories} = useUpdateCategories()
-  const {pushTokenString} = useSubscription()
+  const {subscription} = useSubscription()
 
-  // When a specific topic is selected, pass it as an explicit category override.
-  // When showing "all", pass the push token so the backend resolves subscription categories.
-  const selectedCategories = selectedTopic !== 'all' ? [selectedTopic] : undefined
-  const activePushToken = selectedTopic === 'all' ? pushTokenString : undefined
+  // Seed selected topics from subscription categories on first load
+  const subscriptionSeededRef = useRef(false)
+  useEffect(() => {
+    if (subscriptionSeededRef.current) return
+    if (!subscription) return
+    const slugs = subscription.categories.map((c) => c.slug).filter(Boolean)
+    if (slugs.length > 0) {
+      subscriptionSeededRef.current = true
+      setSelectedTopics(new Set(slugs))
+    }
+  }, [subscription])
+
+  // Derive categories / push token to pass to useUpdates.
+  // When specific topics are selected, pass them explicitly.
+  // When 'all' is selected, pass no filter — show everything unfiltered.
+  const isAllSelected = selectedTopics.has('all')
+  const selectedCategories = isAllSelected ? undefined : Array.from(selectedTopics)
+  const activePushToken = undefined
 
   const {
     news,
@@ -94,7 +107,7 @@ export default function HomeScreen() {
   // Handle bell click - filter to alerts and scroll to news section
   const handleBellPress = useCallback(() => {
     const bellTopic = categories.includes('uncategorized') ? 'uncategorized' : 'all'
-    setSelectedTopic(bellTopic)
+    setSelectedTopics(new Set([bellTopic]))
     // Scroll to news section after a brief delay to allow state update
     bellScrollTimeoutRef.current = setTimeout(() => {
       newsSectionRef.current?.measureLayout(
@@ -177,8 +190,8 @@ export default function HomeScreen() {
           </View>
 
           <TopicFilter
-            selectedTopic={selectedTopic}
-            onTopicChange={setSelectedTopic}
+            selectedTopics={selectedTopics}
+            onTopicsChange={setSelectedTopics}
             topics={filterChips}
           />
 

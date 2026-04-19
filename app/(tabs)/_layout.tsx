@@ -8,6 +8,7 @@ import {
   Edit3,
   MapPin,
   AlertTriangle,
+  Bell,
   ChartNoAxesCombined,
   MapPlus,
   ClipboardList,
@@ -144,6 +145,16 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
           tabBarLabel: t('metrics.title'),
           tabBarIcon: ({color}) => <ChartNoAxesCombined size={24} color={color} />,
           headerTitle: () => <TabHeader title={t('metrics.title')} />,
+        }}
+      />
+      {/* HIDDEN - Notifications / Subscription Settings */}
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          href: null, // Hide from tab bar
+          title: t('notifications.title'),
+          tabBarIcon: ({color}) => <Bell size={24} color={color} />,
+          headerShown: false,
         }}
       />
     </Tabs>
