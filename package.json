@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "prepare": "husky",
     "android": "expo run:android",
-    "ios": "expo run:ios",
+    "ios": "REACT_NATIVE_PACKAGER_HOSTNAME=localhost expo run:ios",
     "test": "jest"
   },
   "dependencies": {
