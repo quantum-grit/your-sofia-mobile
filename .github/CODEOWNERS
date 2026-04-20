@@ -1,0 +1,16 @@
+# CODEOWNERS — all paths require review from at least one owner before merge.
+
+# Default: all files require code owner review
+* @sofia-municipality/your-sofia-maintainers
+
+# CI/CD workflows — any change requires maintainer sign-off
+.github/workflows/**           @sofia-municipality/your-sofia-maintainers
+
+# Auth and security-sensitive context
+contexts/AuthContext.tsx        @sofia-municipality/your-sofia-maintainers
+lib/payload.ts                  @sofia-municipality/your-sofia-maintainers
+
+# Dependency manifests
+package.json                    @sofia-municipality/your-sofia-maintainers
+pnpm-lock.yaml                  @sofia-municipality/your-sofia-maintainers
+eas.json                        @sofia-municipality/your-sofia-maintainers
