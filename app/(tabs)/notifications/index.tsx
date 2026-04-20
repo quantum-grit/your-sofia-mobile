@@ -114,9 +114,13 @@ export default function NotificationsScreen() {
       console.error('[NotificationsScreen] save error', err)
       const isNoPushToken =
         err instanceof Error && err.message.includes('No push token registered on this device')
+      const errorDetail =
+        err instanceof Error && err.message && !isNoPushToken ? err.message : undefined
       Alert.alert(
         t('common.error'),
-        isNoPushToken ? t('notifications.noPushToken') : t('notifications.saveError')
+        isNoPushToken
+          ? t('notifications.noPushToken')
+          : (errorDetail ?? t('notifications.saveError'))
       )
     } finally {
       setIsSaving(false)
