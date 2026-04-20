@@ -1138,7 +1138,16 @@ export async function updateSubscription(
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(input),
     })
-    if (!response.ok) throw new Error(`Failed to update subscription: ${response.statusText}`)
+    if (!response.ok) {
+      const errorBody = await response.json().catch(() => ({}))
+      const serverMessage = (errorBody as {error?: string}).error
+      const detail = serverMessage ?? response.statusText
+      console.error('[updateSubscription] PATCH /mine failed', {
+        status: response.status,
+        error: detail,
+      })
+      throw new Error(`Failed to update subscription: ${detail}`)
+    }
     const data = await response.json()
     return data.doc as Subscription
   }
@@ -1152,7 +1161,16 @@ export async function updateSubscription(
     }
     const response = await fetch(url, {method: 'PATCH', headers, body: JSON.stringify(input)})
     handleAuthError(response)
-    if (!response.ok) throw new Error(`Failed to update subscription: ${response.statusText}`)
+    if (!response.ok) {
+      const errorBody = await response.json().catch(() => ({}))
+      const eb = errorBody as {error?: string; message?: string}
+      const serverMessage = eb.message ?? eb.error ?? response.statusText
+      console.error('[updateSubscription] PATCH /:id failed', {
+        status: response.status,
+        error: serverMessage,
+      })
+      throw new Error(`Failed to update subscription: ${serverMessage}`)
+    }
     const data = await response.json()
     return data.doc as Subscription
   }
