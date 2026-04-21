@@ -4,10 +4,13 @@ import * as Device from 'expo-device'
 import {Platform} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Constants from 'expo-constants'
+import {useRouter} from 'expo-router'
+import {getUniqueReporterId} from '../lib/deviceId'
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL
 const PUSH_TOKEN_KEY = 'pushToken'
 const UNREAD_COUNT_KEY = 'unreadNotificationCount'
+const CLOSED_SIGNALS_KEY = 'closedSignalsCount'
 
 // Configure how notifications are displayed
 Notifications.setNotificationHandler({
@@ -20,8 +23,10 @@ Notifications.setNotificationHandler({
 })
 
 export function useNotifications() {
+  const router = useRouter()
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [closedSignalsCount, setClosedSignalsCount] = useState(0)
   const notificationListener = useRef<Notifications.Subscription | null>(null)
   const responseListener = useRef<Notifications.Subscription | null>(null)
 
@@ -40,17 +45,30 @@ export function useNotifications() {
 
     // Load unread count from storage
     loadUnreadCount()
+    loadClosedSignalsCount()
 
     // Listen for incoming notifications
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       console.log('Notification received:', notification)
-      incrementUnreadCount()
+      const notifData = notification.request.content.data as Record<string, unknown> | undefined
+      if (notifData?.type === 'signal-closed') {
+        incrementClosedSignalsCount()
+      } else {
+        incrementUnreadCount()
+      }
     })
 
     // Listen for notification interactions
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
       console.log('Notification tapped:', response)
-      // You can handle navigation here
+      const notifData = response.notification.request.content.data as
+        | Record<string, unknown>
+        | undefined
+      if (notifData?.type === 'update') {
+        router.replace('/(tabs)/home')
+      } else if (notifData?.type === 'signal-closed') {
+        router.replace('/(tabs)/signals')
+      }
     })
 
     return () => {
@@ -72,6 +90,15 @@ export function useNotifications() {
     }
   }
 
+  const loadClosedSignalsCount = async () => {
+    try {
+      const count = await AsyncStorage.getItem(CLOSED_SIGNALS_KEY)
+      setClosedSignalsCount(count ? parseInt(count, 10) : 0)
+    } catch (error) {
+      console.error('Error loading closed signals count:', error)
+    }
+  }
+
   const incrementUnreadCount = async () => {
     try {
       const newCount = unreadCount + 1
@@ -79,6 +106,17 @@ export function useNotifications() {
       await AsyncStorage.setItem(UNREAD_COUNT_KEY, newCount.toString())
     } catch (error) {
       console.error('Error incrementing unread count:', error)
+    }
+  }
+
+  const incrementClosedSignalsCount = async () => {
+    try {
+      const stored = await AsyncStorage.getItem(CLOSED_SIGNALS_KEY)
+      const newCount = (stored ? parseInt(stored, 10) : 0) + 1
+      setClosedSignalsCount(newCount)
+      await AsyncStorage.setItem(CLOSED_SIGNALS_KEY, newCount.toString())
+    } catch (error) {
+      console.error('Error incrementing closed signals count:', error)
     }
   }
 
@@ -91,11 +129,22 @@ export function useNotifications() {
     }
   }
 
+  const clearClosedSignalsCount = async () => {
+    try {
+      setClosedSignalsCount(0)
+      await AsyncStorage.setItem(CLOSED_SIGNALS_KEY, '0')
+    } catch (error) {
+      console.error('Error clearing closed signals count:', error)
+    }
+  }
+
   const sendTokenToBackend = async (token: string) => {
     try {
       // Store token locally
       await AsyncStorage.setItem(PUSH_TOKEN_KEY, token)
       console.log('[useNotifications] Push token saved to AsyncStorage:', token)
+
+      const reporterUniqueId = await getUniqueReporterId().catch(() => null)
 
       // Send token to Payload backend
       console.log(
@@ -109,6 +158,7 @@ export function useNotifications() {
           token,
           device: Platform.OS,
           active: true,
+          ...(reporterUniqueId ? {reporterUniqueId} : {}),
         }),
       })
 
@@ -134,6 +184,8 @@ export function useNotifications() {
     expoPushToken,
     unreadCount,
     clearUnreadCount,
+    closedSignalsCount,
+    clearClosedSignalsCount,
   }
 }
 
