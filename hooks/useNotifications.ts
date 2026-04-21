@@ -192,6 +192,11 @@ export function useNotifications() {
 async function registerForPushNotificationsAsync() {
   let token
 
+  if (!Device.isDevice) {
+    console.log('[useNotifications] Skipping push token — not a physical device')
+    return null
+  }
+
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
       name: 'default',
