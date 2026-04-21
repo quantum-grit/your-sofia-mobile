@@ -18,6 +18,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BellActionProvider} from '../../contexts/BellActionContext'
 import {TabHeader} from '../../components/TabHeader'
 import {useAuth} from '../../contexts/AuthContext'
+import {useNotifications} from '../../hooks/useNotifications'
 
 export default function TabLayout() {
   const {t} = useTranslation()
@@ -32,6 +33,7 @@ export default function TabLayout() {
 function TabLayoutContent({t}: {t: (key: string) => string}) {
   const insets = useSafeAreaInsets()
   const {isContainerAdmin, isAuthenticated} = useAuth()
+  const {closedSignalsCount} = useNotifications()
 
   return (
     <Tabs
@@ -90,6 +92,7 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
           title: t('common.signals'),
           tabBarLabel: t('common.signals'),
           tabBarIcon: ({color}) => <AlertTriangle size={24} color={color} />,
+          tabBarBadge: closedSignalsCount > 0 ? '' : undefined,
           headerTitle: () => (
             <TabHeader title={t('signals.title')} showActionIcon={false} ActionIcon={Plus} />
           ),

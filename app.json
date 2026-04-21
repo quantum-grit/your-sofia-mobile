@@ -62,6 +62,17 @@
             "deploymentTarget": "16.0"
           }
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "iosDisplayInForeground": true,
+          "android": {
+            "icon": "./assets/images/sofia-gerb.png",
+            "color": "#1E40AF",
+            "defaultChannel": "default"
+          }
+        }
       ]
     ],
     "experiments": {

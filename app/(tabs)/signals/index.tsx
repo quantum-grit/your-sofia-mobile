@@ -14,6 +14,7 @@ import {useRouter, useLocalSearchParams} from 'expo-router'
 import {useBellAction} from '../../../contexts/BellActionContext'
 import {fetchSignals} from '../../../lib/payload'
 import {getUniqueReporterId} from '../../../lib/deviceId'
+import {useNotifications} from '../../../hooks/useNotifications'
 import type {Signal} from '../../../types/signal'
 import {AlertCircle, Clock, CheckCircle, XCircle} from 'lucide-react-native'
 
@@ -22,6 +23,7 @@ export default function SignalsScreen() {
   const router = useRouter()
   const {containerReferenceId} = useLocalSearchParams<{containerReferenceId?: string}>()
   const {registerBellAction} = useBellAction()
+  const {clearClosedSignalsCount} = useNotifications()
   const [signals, setSignals] = useState<Signal[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -33,6 +35,13 @@ export default function SignalsScreen() {
   useEffect(() => {
     getUniqueReporterId().then(setDeviceId)
   }, [])
+
+  // Clear the badge whenever the user opens the Signals tab
+  useFocusEffect(
+    useCallback(() => {
+      clearClosedSignalsCount()
+    }, [clearClosedSignalsCount])
+  )
 
   const handleCreateSignal = useCallback(() => {
     router.push('/(tabs)/signals/new' as any)
