@@ -13,7 +13,8 @@ interface UseSubscriptionReturn {
   saveSubscription: (
     categories: (string | number)[],
     locationFilters: Omit<LocationFilter, 'id'>[],
-    authToken?: string | null
+    authToken?: string | null,
+    enabled?: boolean
   ) => Promise<void>
   /** Link the current subscription to an authenticated user. Called after login. */
   linkUser: (userId: number | string, authToken: string) => Promise<void>
@@ -68,7 +69,8 @@ export function useSubscription(): UseSubscriptionReturn {
     async (
       categories: (string | number)[],
       locationFilters: Omit<LocationFilter, 'id'>[],
-      authToken?: string | null
+      authToken?: string | null,
+      enabled?: boolean
     ) => {
       const token = await AsyncStorage.getItem(PUSH_TOKEN_KEY)
       if (!token) throw new Error('No push token registered on this device')
@@ -80,7 +82,7 @@ export function useSubscription(): UseSubscriptionReturn {
       // Authenticated users with a known subscription ID use the JWT-authenticated path.
       const updated = await updateSubscription(
         id ?? '',
-        {categories, locationFilters},
+        {categories, locationFilters, ...(enabled !== undefined ? {enabled} : {})},
         authToken,
         token
       )

@@ -150,6 +150,7 @@ export default {
   notifications: {
     title: 'Notification Subscriptions',
     subtitle: 'Choose categories and locations you want to receive notifications for',
+    enableNotifications: 'Enable notifications',
     categories: 'Categories',
     categoriesSubtitle: 'Receive notifications only for selected topics',
     selectAll: 'Select all',

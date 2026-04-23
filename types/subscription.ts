@@ -51,6 +51,7 @@ export interface CityDistrict {
 
 export interface Subscription {
   id: number | string
+  enabled: boolean
   pushToken: number | string | {id: number | string; token: string}
   user?: number | string | null
   categories: SubscriptionCategory[]
@@ -68,6 +69,7 @@ export interface CreateSubscriptionInput {
 
 export interface UpdateSubscriptionInput {
   user?: number | string | null
+  enabled?: boolean
   categories?: (number | string)[]
   locationFilters?: Omit<LocationFilter, 'id'>[]
 }
