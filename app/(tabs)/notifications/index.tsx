@@ -29,11 +29,16 @@ export default function NotificationsScreen() {
   const {token: authToken} = useAuth()
   const {subscription, pushTokenString, isLoading, saveSubscription, reload} = useSubscription()
 
-  // Reload on focus so we pick up the push token stored by useNotifications in the home tab
+  // Only reload when we don't yet have a push token — to pick up the token registered by
+  // useNotifications in the home tab. Skipping the reload when we already have a token
+  // prevents the server response from wiping locally-added (unsaved) location filters
+  // when the user returns from a picker sub-screen.
   useFocusEffect(
     useCallback(() => {
-      reload()
-    }, [reload])
+      if (!pushTokenString) {
+        reload()
+      }
+    }, [pushTokenString, reload])
   )
 
   // Local drafts
