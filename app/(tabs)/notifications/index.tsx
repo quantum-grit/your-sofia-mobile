@@ -3,6 +3,7 @@ import {
   Text,
   ScrollView,
   Pressable,
+  Switch,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
@@ -36,6 +37,7 @@ export default function NotificationsScreen() {
   )
 
   // Local drafts
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set())
   const [locationFilters, setLocationFilters] = useState<Omit<LocationFilter, 'id'>[]>([])
   const [isSaving, setIsSaving] = useState(false)
@@ -43,6 +45,7 @@ export default function NotificationsScreen() {
   // Populate drafts from loaded subscription
   useEffect(() => {
     if (subscription) {
+      setNotificationsEnabled(subscription.enabled ?? true)
       const slugs = subscription.categories.map((c: SubscriptionCategory) => c.slug).filter(Boolean)
       setSelectedSlugs(new Set<string>(slugs))
       setLocationFilters(
@@ -108,7 +111,9 @@ export default function NotificationsScreen() {
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      await saveSubscription(Array.from(selectedSlugs), locationFilters, authToken)
+      const categoriesToSave = notificationsEnabled ? Array.from(selectedSlugs) : []
+      const filtersToSave = notificationsEnabled ? locationFilters : []
+      await saveSubscription(categoriesToSave, filtersToSave, authToken, notificationsEnabled)
       Alert.alert(t('common.success'), t('notifications.saveSuccess'))
     } catch (err) {
       console.error('[NotificationsScreen] save error', err)
@@ -149,6 +154,17 @@ export default function NotificationsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Enable notifications toggle */}
+        <View style={styles.enableToggleSection}>
+          <Text style={styles.enableToggleLabel}>{t('notifications.enableNotifications')}</Text>
+          <Switch
+            value={notificationsEnabled}
+            onValueChange={setNotificationsEnabled}
+            trackColor={{false: '#D1D5DB', true: '#93C5FD'}}
+            thumbColor={notificationsEnabled ? '#1E40AF' : '#9CA3AF'}
+          />
+        </View>
+
         {/* No push token banner */}
         {!pushTokenString && (
           <View style={styles.noPushTokenBanner}>
@@ -157,7 +173,7 @@ export default function NotificationsScreen() {
           </View>
         )}
         {/* Categories */}
-        <View style={styles.section}>
+        <View style={[styles.section, !notificationsEnabled && styles.sectionDisabled]}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('notifications.categories')}</Text>
             <TouchableOpacity onPress={toggleAll}>
@@ -196,7 +212,7 @@ export default function NotificationsScreen() {
         </View>
 
         {/* Location filters */}
-        <View style={styles.section}>
+        <View style={[styles.section, !notificationsEnabled && styles.sectionDisabled]}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('notifications.locationFilters')}</Text>
           </View>
@@ -330,4 +346,20 @@ const styles = StyleSheet.create({
   },
   saveButtonDisabled: {opacity: 0.6},
   saveButtonText: {color: '#ffffff', fontSize: 16, fontWeight: '700'},
+  enableToggleSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: {width: 0, height: 2},
+    elevation: 2,
+  },
+  enableToggleLabel: {fontSize: 16, fontWeight: '700', color: '#111827'},
+  sectionDisabled: {opacity: 0.4},
 })

@@ -150,6 +150,7 @@ export default {
   notifications: {
     title: 'Абонаменти за известия',
     subtitle: 'Изберете категории и места, за които искате да получавате известия',
+    enableNotifications: 'Активирай известия',
     categories: 'Категории',
     categoriesSubtitle: 'Получавай известия само за избраните теми',
     selectAll: 'Избери всички',
