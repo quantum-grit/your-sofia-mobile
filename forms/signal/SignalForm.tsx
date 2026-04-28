@@ -3,13 +3,157 @@ import {View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert} from 
 import {useForm, Controller} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useTranslation} from 'react-i18next'
-import {MapPin, Calendar, FileText, Tag, AlertCircle, Camera, Upload, X} from 'lucide-react-native'
+import {
+  MapPin,
+  Calendar,
+  FileText,
+  Tag,
+  AlertCircle,
+  Camera,
+  Upload,
+  X,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Send,
+} from 'lucide-react-native'
 import * as ImagePicker from 'expo-image-picker'
 import {signalFormSchema, type SignalFormData, type SignalFormProps} from './schema'
 import {styles} from './signal.styles'
 import {CONTAINER_STATES, getStateColor} from '../../types/wasteContainer'
 import type {Signal} from '../../types/signal'
 import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
+
+function SignalLifecycleBanner({status}: {status: Signal['status']}) {
+  const {t} = useTranslation()
+
+  const isRejected = status === 'rejected'
+  const step1Done = true
+  const step2Active = status === 'in-progress'
+  const step2Done = status === 'resolved' || status === 'rejected'
+  const step3Done = status === 'resolved'
+
+  const step2CircleStyle = isRejected
+    ? styles.lifecycleStepCircleRejected
+    : step2Done
+      ? styles.lifecycleStepCircleDone
+      : step2Active
+        ? styles.lifecycleStepCircleActive
+        : null
+
+  const step2LabelStyle = isRejected
+    ? styles.lifecycleStepLabelRejected
+    : step2Done
+      ? styles.lifecycleStepLabelDone
+      : step2Active
+        ? styles.lifecycleStepLabelActive
+        : null
+
+  const connector1Active = step2Active || step2Done
+  const connector2Active = step3Done
+
+  const messageBoxStyle =
+    status === 'pending'
+      ? styles.lifecycleMessagePending
+      : status === 'in-progress'
+        ? styles.lifecycleMessageInProgress
+        : status === 'resolved'
+          ? styles.lifecycleMessageResolved
+          : styles.lifecycleMessageRejected
+
+  const messageTextStyle =
+    status === 'pending'
+      ? styles.lifecycleMessageTextPending
+      : status === 'in-progress'
+        ? styles.lifecycleMessageTextInProgress
+        : status === 'resolved'
+          ? styles.lifecycleMessageTextResolved
+          : styles.lifecycleMessageTextRejected
+
+  const MessageIcon =
+    status === 'pending'
+      ? Clock
+      : status === 'in-progress'
+        ? Clock
+        : status === 'resolved'
+          ? CheckCircle2
+          : XCircle
+
+  const messageIconColor =
+    status === 'pending'
+      ? colors.textMuted
+      : status === 'in-progress'
+        ? colors.info
+        : status === 'resolved'
+          ? colors.success
+          : colors.error
+
+  const message =
+    status === 'pending'
+      ? t('signals.lifecycle.pendingMessage')
+      : status === 'in-progress'
+        ? t('signals.lifecycle.inProgressMessage')
+        : status === 'resolved'
+          ? t('signals.lifecycle.resolvedMessage')
+          : t('signals.lifecycle.rejectedMessage')
+
+  return (
+    <View style={styles.lifecycleBanner}>
+      {/* Step row */}
+      <View style={styles.lifecycleStepsRow}>
+        {/* Step 1 — always done */}
+        <View style={styles.lifecycleStep}>
+          <View style={[styles.lifecycleStepCircle, styles.lifecycleStepCircleDone]}>
+            <Send size={14} color={colors.surface} />
+          </View>
+          <Text style={[styles.lifecycleStepLabel, styles.lifecycleStepLabelDone]}>
+            {t('signals.lifecycle.step1')}
+          </Text>
+        </View>
+
+        <View
+          style={[styles.lifecycleConnector, connector1Active && styles.lifecycleConnectorActive]}
+        />
+
+        {/* Step 2 — in-progress / resolved / rejected */}
+        <View style={styles.lifecycleStep}>
+          <View style={[styles.lifecycleStepCircle, step2CircleStyle]}>
+            {isRejected ? (
+              <X size={14} color={colors.surface} />
+            ) : step2Done || step2Active ? (
+              <Clock size={14} color={colors.surface} />
+            ) : (
+              <Clock size={14} color={colors.textMuted} />
+            )}
+          </View>
+          <Text style={[styles.lifecycleStepLabel, step2LabelStyle]}>
+            {isRejected ? t('signals.status.rejected') : t('signals.lifecycle.step2')}
+          </Text>
+        </View>
+
+        <View
+          style={[styles.lifecycleConnector, connector2Active && styles.lifecycleConnectorActive]}
+        />
+
+        {/* Step 3 — resolved */}
+        <View style={styles.lifecycleStep}>
+          <View style={[styles.lifecycleStepCircle, step3Done && styles.lifecycleStepCircleDone]}>
+            <CheckCircle2 size={14} color={step3Done ? colors.surface : colors.textMuted} />
+          </View>
+          <Text style={[styles.lifecycleStepLabel, step3Done && styles.lifecycleStepLabelDone]}>
+            {t('signals.lifecycle.step3')}
+          </Text>
+        </View>
+      </View>
+
+      {/* Message callout */}
+      <View style={[styles.lifecycleMessage, messageBoxStyle]}>
+        <MessageIcon size={16} color={messageIconColor} />
+        <Text style={[styles.lifecycleMessageText, messageTextStyle]}>{message}</Text>
+      </View>
+    </View>
+  )
+}
 
 export const SignalForm = forwardRef<any, SignalFormProps>(
   ({signal, onSubmit, onCancel, isSubmitting = false, isEditing = true, canEdit = false}, ref) => {
@@ -186,6 +330,9 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
             </View>
           </View>
         )}
+
+        {/* Lifecycle banner — only shown in read-only view */}
+        {!isEditing && <SignalLifecycleBanner status={signal.status} />}
 
         {/* Title */}
         <View style={styles.section}>

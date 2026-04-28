@@ -395,6 +395,16 @@ export default {
       resolved: 'Resolved',
       rejected: 'Rejected',
     },
+    lifecycle: {
+      step1: 'Submitted',
+      step2: 'In Progress',
+      step3: 'Resolved',
+      pendingMessage:
+        'Your signal has been received and will be reviewed by the responsible district.',
+      inProgressMessage: 'Your signal is being actioned. Expect a response soon.',
+      resolvedMessage: 'The issue has been resolved. Thank you for your contribution!',
+      rejectedMessage: 'Your signal cannot be actioned at this time.',
+    },
     success: 'Signal submitted successfully!',
     error: 'Error submitting signal',
     locationPermissionRequired:

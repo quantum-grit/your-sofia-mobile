@@ -242,4 +242,110 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     color: colors.primary,
   },
+  lifecycleBanner: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 4,
+    padding: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  lifecycleStepsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  lifecycleStep: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  lifecycleStepCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+  },
+  lifecycleStepCircleActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
+  },
+  lifecycleStepCircleDone: {
+    borderColor: colors.success,
+    backgroundColor: colors.success,
+  },
+  lifecycleStepCircleRejected: {
+    borderColor: colors.error,
+    backgroundColor: colors.error,
+  },
+  lifecycleStepLabel: {
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.medium,
+    color: colors.textMuted,
+    textAlign: 'center',
+  },
+  lifecycleStepLabelActive: {
+    color: colors.primary,
+    fontFamily: fonts.semiBold,
+  },
+  lifecycleStepLabelDone: {
+    color: colors.success,
+    fontFamily: fonts.semiBold,
+  },
+  lifecycleStepLabelRejected: {
+    color: colors.error,
+    fontFamily: fonts.semiBold,
+  },
+  lifecycleConnector: {
+    height: 2,
+    flex: 1,
+    backgroundColor: colors.border,
+    marginBottom: 22,
+  },
+  lifecycleConnectorActive: {
+    backgroundColor: colors.success,
+  },
+  lifecycleMessage: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    padding: 12,
+    borderRadius: radius.md,
+  },
+  lifecycleMessagePending: {
+    backgroundColor: colors.surface2,
+  },
+  lifecycleMessageInProgress: {
+    backgroundColor: colors.infoLight,
+  },
+  lifecycleMessageResolved: {
+    backgroundColor: colors.successLight,
+  },
+  lifecycleMessageRejected: {
+    backgroundColor: colors.errorLight,
+  },
+  lifecycleMessageText: {
+    flex: 1,
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.regular,
+    lineHeight: 20,
+  },
+  lifecycleMessageTextPending: {
+    color: colors.textSecondary,
+  },
+  lifecycleMessageTextInProgress: {
+    color: colors.info,
+  },
+  lifecycleMessageTextResolved: {
+    color: colors.success,
+  },
+  lifecycleMessageTextRejected: {
+    color: colors.error,
+  },
 })
