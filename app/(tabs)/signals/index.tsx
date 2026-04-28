@@ -24,7 +24,7 @@ export default function SignalsScreen() {
   const router = useRouter()
   const {containerReferenceId} = useLocalSearchParams<{containerReferenceId?: string}>()
   const {registerBellAction} = useBellAction()
-  const {clearClosedSignalsCount} = useNotifications()
+  const {updatedSignalIds, removeUpdatedSignalId} = useNotifications()
   const [signals, setSignals] = useState<Signal[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -36,13 +36,6 @@ export default function SignalsScreen() {
   useEffect(() => {
     getUniqueReporterId().then(setDeviceId)
   }, [])
-
-  // Clear the badge whenever the user opens the Signals tab
-  useFocusEffect(
-    useCallback(() => {
-      clearClosedSignalsCount()
-    }, [clearClosedSignalsCount])
-  )
 
   const handleCreateSignal = useCallback(() => {
     router.push('/(tabs)/signals/new' as any)
@@ -123,42 +116,51 @@ export default function SignalsScreen() {
     return colorMap[status] || colors.textSecondary
   }
 
-  const renderSignalItem = ({item}: {item: Signal}) => (
-    <TouchableOpacity
-      style={styles.signalCard}
-      onPress={() => router.push(`/(tabs)/signals/${item.id}` as any)}
-      accessibilityRole="button"
-      accessibilityLabel={`${item.title}, ${t(`signals.status.${item.status}`)}`}
-      accessibilityHint="Отваря детайли на сигнала"
-    >
-      <View style={styles.signalHeader}>
-        <View style={styles.statusBadge}>
-          {getStatusIcon(item.status)}
-          <Text style={[styles.statusText, {color: getStatusColor(item.status)}]}>
-            {t(`signals.status.${item.status}`)}
-          </Text>
+  const renderSignalItem = ({item}: {item: Signal}) => {
+    const hasUpdate = updatedSignalIds.includes(String(item.id))
+    return (
+      <TouchableOpacity
+        style={styles.signalCard}
+        onPress={() => {
+          if (hasUpdate) removeUpdatedSignalId(String(item.id))
+          router.push(`/(tabs)/signals/${item.id}` as any)
+        }}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.title}, ${t(`signals.status.${item.status}`)}${hasUpdate ? ', актуализиран' : ''}`}
+        accessibilityHint="Отваря детайли на сигнала"
+      >
+        {hasUpdate && <View style={styles.updateDot} />}
+        <View style={styles.signalHeader}>
+          <View style={styles.statusBadge}>
+            {getStatusIcon(item.status)}
+            <Text style={[styles.statusText, {color: getStatusColor(item.status)}]}>
+              {t(`signals.status.${item.status}`)}
+            </Text>
+          </View>
+          <Text style={styles.categoryBadge}>{t(`signals.categories.${item.category}`)}</Text>
         </View>
-        <Text style={styles.categoryBadge}>{t(`signals.categories.${item.category}`)}</Text>
-      </View>
 
-      <Text style={styles.signalTitle}>{item.title}</Text>
-      <Text style={styles.signalDescription} numberOfLines={2}>
-        {item.description}
-      </Text>
+        <Text style={styles.signalTitle}>{item.title}</Text>
+        <Text style={styles.signalDescription} numberOfLines={2}>
+          {item.description}
+        </Text>
 
-      {item.cityObject?.name && <Text style={styles.signalObject}>📍 {item.cityObject.name}</Text>}
+        {item.cityObject?.name && (
+          <Text style={styles.signalObject}>📍 {item.cityObject.name}</Text>
+        )}
 
-      <Text style={styles.signalDate}>
-        {new Date(item.createdAt).toLocaleDateString(i18n.language, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        })}
-      </Text>
-    </TouchableOpacity>
-  )
+        <Text style={styles.signalDate}>
+          {new Date(item.createdAt).toLocaleDateString(i18n.language, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
 
   if (loading && !refreshing) {
     return (
@@ -309,6 +311,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    overflow: 'visible',
+  },
+  updateDot: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: colors.error,
+    borderWidth: 2,
+    borderColor: colors.surface,
+    zIndex: 1,
   },
   signalHeader: {
     flexDirection: 'row',

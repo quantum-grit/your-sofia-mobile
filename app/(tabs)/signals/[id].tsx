@@ -10,12 +10,14 @@ import type {Signal} from '../../../types/signal'
 import {type ContainerState} from '../../../types/wasteContainer'
 import {SignalForm, type SignalFormData, styles} from '../../../forms/signal'
 import {colors} from '@/styles/tokens'
+import {useNotifications} from '../../../hooks/useNotifications'
 
 export default function SignalDetailsScreen() {
   const {t, i18n} = useTranslation()
   const navigation = useNavigation()
   const {id} = useLocalSearchParams<{id: string}>()
   const formRef = useRef<any>(null)
+  const {removeUpdatedSignalId} = useNotifications()
 
   const [signal, setSignal] = useState<Signal | null>(null)
   const [loading, setLoading] = useState(true)
@@ -50,6 +52,12 @@ export default function SignalDetailsScreen() {
     loadSignal()
     loadDeviceId()
   }, [loadSignal])
+
+  // Clear the red-dot indicator once when this screen mounts for this signal ID
+  useEffect(() => {
+    if (id) removeUpdatedSignalId(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   // Check if user can edit this signal
   useEffect(() => {

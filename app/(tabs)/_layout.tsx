@@ -93,7 +93,7 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
           title: t('common.signals'),
           tabBarLabel: t('common.signals'),
           tabBarIcon: ({color}) => <AlertTriangle size={24} color={color} />,
-          tabBarBadge: closedSignalsCount > 0 ? '' : undefined,
+          tabBarBadge: closedSignalsCount > 0 ? closedSignalsCount : undefined,
           headerTitle: () => (
             <TabHeader title={t('signals.title')} showActionIcon={false} ActionIcon={Plus} />
           ),
