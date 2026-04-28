@@ -127,6 +127,9 @@ export default function SignalsScreen() {
     <TouchableOpacity
       style={styles.signalCard}
       onPress={() => router.push(`/(tabs)/signals/${item.id}` as any)}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.title}, ${t(`signals.status.${item.status}`)}`}
+      accessibilityHint="Отваря детайли на сигнала"
     >
       <View style={styles.signalHeader}>
         <View style={styles.statusBadge}>
@@ -169,8 +172,15 @@ export default function SignalsScreen() {
   if (error) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>{error}</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={() => loadSignals()}>
+        <Text style={styles.errorText} accessibilityLiveRegion="polite">
+          {error}
+        </Text>
+        <TouchableOpacity
+          style={styles.retryButton}
+          onPress={() => loadSignals()}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.retry')}
+        >
           <Text style={styles.retryButtonText}>{t('common.retry')}</Text>
         </TouchableOpacity>
       </View>
@@ -185,6 +195,9 @@ export default function SignalsScreen() {
             <TouchableOpacity
               style={[styles.filterChip, filter === 'all' && styles.filterChipActive]}
               onPress={() => setFilter('all')}
+              accessibilityRole="button"
+              accessibilityLabel={t('signals.allSignals')}
+              accessibilityState={{selected: filter === 'all'}}
             >
               <Text
                 style={[styles.filterChipText, filter === 'all' && styles.filterChipTextActive]}
@@ -195,6 +208,9 @@ export default function SignalsScreen() {
             <TouchableOpacity
               style={[styles.filterChip, filter === 'mine' && styles.filterChipActive]}
               onPress={() => setFilter('mine')}
+              accessibilityRole="button"
+              accessibilityLabel={t('signals.mySignals')}
+              accessibilityState={{selected: filter === 'mine'}}
             >
               <Text
                 style={[styles.filterChipText, filter === 'mine' && styles.filterChipTextActive]}

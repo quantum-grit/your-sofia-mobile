@@ -318,7 +318,11 @@ export function WasteContainerCard({
               {t('wasteContainers.name')}: {container.publicNumber}
             </Text>
             {isContainerAdmin && (
-              <TouchableOpacity onPress={() => setShowEditForm(true)}>
+              <TouchableOpacity
+                onPress={() => setShowEditForm(true)}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.edit')}
+              >
                 <Edit size={16} color={colors.primaryLight} />
               </TouchableOpacity>
             )}
@@ -339,7 +343,12 @@ export function WasteContainerCard({
         </View>
         <View style={styles.headerButtons}>
           {onClose && (
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeButton}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.close')}
+            >
               <X size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
@@ -357,6 +366,11 @@ export function WasteContainerCard({
             } as any)
           }}
           disabled={signalsLoading || !!signalsError}
+          accessibilityRole="button"
+          accessibilityLabel={t('wasteContainers.signalsActive', {
+            active: signalsActive,
+            count: signalsTotal ?? 0,
+          })}
         >
           {signalsLoading ? (
             <ActivityIndicator size="small" color={colors.textSecondary} />
@@ -400,11 +414,15 @@ export function WasteContainerCard({
                     setShowPhotoModal(true)
                   }}
                   style={styles.lastPhotoItem}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${t(`wasteContainers.${photo.type}`)}: ${new Date(photo.createdAt).toLocaleDateString()}`}
                 >
                   <Image
                     source={{uri: photo.url}}
                     style={styles.lastPhotoThumbnail}
                     resizeMode="cover"
+                    accessibilityElementsHidden
+                    importantForAccessibility="no"
                   />
                   <Text style={styles.lastPhotoDate}>
                     {t(`wasteContainers.${photo.type}`)}:
@@ -424,6 +442,9 @@ export function WasteContainerCard({
         <TouchableOpacity
           onPress={() => setShowFullInfo(!showFullInfo)}
           style={styles.fullInfoButton}
+          accessibilityRole="button"
+          accessibilityLabel={t('wasteContainers.fullDetails')}
+          accessibilityState={{expanded: showFullInfo}}
         >
           <Info size={16} color={colors.primary} />
           <Text style={styles.fullInfoButtonText}>{t('wasteContainers.fullDetails')}</Text>
@@ -561,14 +582,24 @@ export function WasteContainerCard({
           </View>
         )}
 
-        <TouchableOpacity onPress={handleReportIssue} style={styles.reportButton}>
+        <TouchableOpacity
+          onPress={handleReportIssue}
+          style={styles.reportButton}
+          accessibilityRole="button"
+          accessibilityLabel={t('wasteContainers.reportIssue')}
+        >
           <AlertTriangle size={16} color={colors.surface} />
           <Text style={styles.reportButtonText}>{t('wasteContainers.reportIssue')}</Text>
         </TouchableOpacity>
 
         {/* Clean Container button for Container Admins */}
         {isContainerAdmin && (container.status !== 'active' || !container.lastCleaned) && (
-          <TouchableOpacity style={styles.cleanButton} onPress={handleCleanContainer}>
+          <TouchableOpacity
+            style={styles.cleanButton}
+            onPress={handleCleanContainer}
+            accessibilityRole="button"
+            accessibilityLabel={t('wasteContainers.cleanContainer')}
+          >
             <CheckCircle size={20} color={colors.surface} />
             <Text style={styles.cleanButtonText}>{t('wasteContainers.cleanContainer')}</Text>
           </TouchableOpacity>
@@ -593,6 +624,8 @@ export function WasteContainerCard({
               setShowPhotoModal(false)
               setSelectedPhotoUrl(null)
             }}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.close')}
           >
             <View style={styles.modalContent}>
               {(selectedPhotoUrl || container.lastCleanedPhoto) && (
@@ -600,6 +633,7 @@ export function WasteContainerCard({
                   source={{uri: selectedPhotoUrl || container.lastCleanedPhoto?.url}}
                   style={styles.modalImage}
                   resizeMode="contain"
+                  accessibilityLabel={t('wasteContainers.photo')}
                 />
               )}
               <TouchableOpacity
@@ -608,6 +642,8 @@ export function WasteContainerCard({
                   setShowPhotoModal(false)
                   setSelectedPhotoUrl(null)
                 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.close')}
               >
                 <X size={24} color="#fff" />
               </TouchableOpacity>
@@ -627,7 +663,11 @@ export function WasteContainerCard({
           <View style={styles.formModalContent}>
             <View style={styles.formHeader}>
               <Text style={styles.formTitle}>{t('wasteContainers.cleaningHistory')}</Text>
-              <TouchableOpacity onPress={() => setShowObservations(false)}>
+              <TouchableOpacity
+                onPress={() => setShowObservations(false)}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.close')}
+              >
                 <X size={24} color="#666" />
               </TouchableOpacity>
             </View>
@@ -651,6 +691,8 @@ export function WasteContainerCard({
               <TouchableOpacity
                 onPress={() => setShowEditForm(false)}
                 style={styles.formCloseButton}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.close')}
               >
                 <X size={24} color={colors.textSecondary} />
               </TouchableOpacity>
@@ -689,6 +731,8 @@ export function WasteContainerCard({
                   setNotes('')
                 }}
                 style={styles.formCloseButton}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.close')}
               >
                 <X size={24} color={colors.textSecondary} />
               </TouchableOpacity>
@@ -705,12 +749,19 @@ export function WasteContainerCard({
                   <TouchableOpacity
                     style={styles.removePhotoButton}
                     onPress={() => setPhotoUri(null)}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('wasteContainers.deletePhoto')}
                   >
                     <X size={20} color="#fff" />
                   </TouchableOpacity>
                 </View>
               ) : (
-                <TouchableOpacity style={styles.takePhotoButton} onPress={handleTakePhoto}>
+                <TouchableOpacity
+                  style={styles.takePhotoButton}
+                  onPress={handleTakePhoto}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('wasteContainers.takePhoto')}
+                >
                   <Camera size={20} color={colors.primary} />
                   <Text style={styles.takePhotoButtonText}>{t('wasteContainers.takePhoto')}</Text>
                 </TouchableOpacity>
@@ -731,6 +782,7 @@ export function WasteContainerCard({
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
+                accessibilityLabel={t('wasteContainers.addNotes')}
               />
             </View>
 
@@ -744,6 +796,9 @@ export function WasteContainerCard({
                   setNotes('')
                 }}
                 disabled={isCleaning}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.cancel')}
+                accessibilityState={{disabled: isCleaning}}
               >
                 <Text style={styles.formCancelButtonText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
@@ -755,6 +810,9 @@ export function WasteContainerCard({
                 ]}
                 onPress={handleSubmitCleaning}
                 disabled={isCleaning || !photoUri}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.confirm')}
+                accessibilityState={{disabled: isCleaning || !photoUri}}
               >
                 {isCleaning ? (
                   <ActivityIndicator color={colors.surface} size="small" />

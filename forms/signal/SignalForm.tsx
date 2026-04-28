@@ -233,6 +233,12 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                       ]}
                       onPress={() => toggleState(state)}
                       disabled={isSubmitting}
+                      accessibilityRole="button"
+                      accessibilityLabel={t(`signals.containerStates.${state}`)}
+                      accessibilityState={{
+                        selected: selectedStates.includes(state),
+                        disabled: isSubmitting,
+                      }}
                     >
                       <Text
                         style={[
@@ -279,6 +285,9 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                         style={styles.deletePhotoButton}
                         onPress={() => photo.id && removePhoto(photo.id)}
                         disabled={isSubmitting}
+                        accessibilityRole="button"
+                        accessibilityLabel={t('signals.form.deletePhoto')}
+                        accessibilityState={{disabled: isSubmitting}}
                       >
                         <X size={16} color={colors.surface} />
                       </TouchableOpacity>
@@ -295,6 +304,9 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                 style={[styles.photoButton, {flex: 1}]}
                 onPress={takePhoto}
                 disabled={isSubmitting}
+                accessibilityRole="button"
+                accessibilityLabel={t('signals.form.takePhoto')}
+                accessibilityState={{disabled: isSubmitting}}
               >
                 <Camera size={20} color={colors.primary} />
                 <Text style={styles.photoButtonText}>{t('signals.form.takePhoto')}</Text>
@@ -303,6 +315,9 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                 style={[styles.photoButton, {flex: 1}]}
                 onPress={pickFromGallery}
                 disabled={isSubmitting}
+                accessibilityRole="button"
+                accessibilityLabel={t('signals.form.chooseFromGallery')}
+                accessibilityState={{disabled: isSubmitting}}
               >
                 <Upload size={20} color={colors.primary} />
                 <Text style={styles.photoButtonText}>{t('signals.form.chooseFromGallery')}</Text>

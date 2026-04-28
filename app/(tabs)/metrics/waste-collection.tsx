@@ -92,6 +92,9 @@ export default function WasteCollectionDashboard() {
             key={r}
             style={[styles.rangeBtn, range === r && styles.rangeBtnActive]}
             onPress={() => setRange(r)}
+            accessibilityRole="button"
+            accessibilityLabel={t(`metrics.last${r.charAt(0).toUpperCase() + r.slice(1)}` as any)}
+            accessibilityState={{selected: range === r}}
           >
             <Text style={[styles.rangeBtnText, range === r && styles.rangeBtnTextActive]}>
               {t(`metrics.last${r.charAt(0).toUpperCase() + r.slice(1)}` as any)}
@@ -129,6 +132,9 @@ export default function WasteCollectionDashboard() {
         <Pressable
           style={[styles.tabBtn, chartTab === 'zone' && styles.tabBtnActive]}
           onPress={() => setChartTab('zone')}
+          accessibilityRole="button"
+          accessibilityLabel={t('metrics.byZone')}
+          accessibilityState={{selected: chartTab === 'zone'}}
         >
           <Text style={[styles.tabBtnText, chartTab === 'zone' && styles.tabBtnTextActive]}>
             {t('metrics.byZone')}
@@ -137,6 +143,9 @@ export default function WasteCollectionDashboard() {
         <Pressable
           style={[styles.tabBtn, chartTab === 'district' && styles.tabBtnActive]}
           onPress={() => setChartTab('district')}
+          accessibilityRole="button"
+          accessibilityLabel={t('metrics.byDistrict')}
+          accessibilityState={{selected: chartTab === 'district'}}
         >
           <Text style={[styles.tabBtnText, chartTab === 'district' && styles.tabBtnTextActive]}>
             {t('metrics.byDistrict')}
@@ -157,7 +166,12 @@ export default function WasteCollectionDashboard() {
         <View style={styles.center}>
           <Text style={styles.errorText}>{t('metrics.errorTitle')}</Text>
           <Text style={styles.errorDetail}>{error}</Text>
-          <Pressable style={styles.retryBtn} onPress={refresh}>
+          <Pressable
+            style={styles.retryBtn}
+            onPress={refresh}
+            accessibilityRole="button"
+            accessibilityLabel={t('metrics.retry')}
+          >
             <Text style={styles.retryBtnText}>{t('metrics.retry')}</Text>
           </Pressable>
         </View>

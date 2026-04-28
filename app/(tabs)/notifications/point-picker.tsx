@@ -72,6 +72,9 @@ export default function PointPickerScreen() {
               key={r}
               style={[styles.radiusChip, radius === r && styles.radiusChipSelected]}
               onPress={() => setRadius(r)}
+              accessibilityRole="button"
+              accessibilityLabel={formatRadius(r)}
+              accessibilityState={{selected: radius === r}}
             >
               <Text style={[styles.radiusChipText, radius === r && styles.radiusChipTextSelected]}>
                 {formatRadius(r)}
@@ -86,6 +89,9 @@ export default function PointPickerScreen() {
           style={[styles.confirmBtn, !markerCoord && styles.confirmBtnDisabled]}
           onPress={handleConfirm}
           disabled={!markerCoord}
+          accessibilityRole="button"
+          accessibilityLabel={t('notifications.confirmLocation')}
+          accessibilityState={{disabled: !markerCoord}}
         >
           <Text style={styles.confirmBtnText}>{t('notifications.confirmLocation')}</Text>
         </TouchableOpacity>

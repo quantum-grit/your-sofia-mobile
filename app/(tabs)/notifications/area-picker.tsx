@@ -93,6 +93,9 @@ export default function AreaPickerScreen() {
             ]}
             onPress={handleUndo}
             disabled={vertices.length === 0}
+            accessibilityRole="button"
+            accessibilityLabel={t('notifications.undoPoint')}
+            accessibilityState={{disabled: vertices.length === 0}}
           >
             <Text style={styles.actionBtnText}>{t('notifications.undoPoint')}</Text>
           </TouchableOpacity>
@@ -105,6 +108,9 @@ export default function AreaPickerScreen() {
               ]}
               onPress={handleClose}
               disabled={vertices.length < 3}
+              accessibilityRole="button"
+              accessibilityLabel={t('notifications.closePolygon')}
+              accessibilityState={{disabled: vertices.length < 3}}
             >
               <Text style={[styles.actionBtnText, {color: colors.primary}]}>
                 {t('notifications.closePolygon')}
@@ -119,6 +125,9 @@ export default function AreaPickerScreen() {
           style={[styles.confirmBtn, !canConfirm && styles.confirmBtnDisabled]}
           onPress={handleConfirm}
           disabled={!canConfirm}
+          accessibilityRole="button"
+          accessibilityLabel={t('notifications.confirmLocation')}
+          accessibilityState={{disabled: !canConfirm}}
         >
           <Text style={styles.confirmBtnText}>{t('notifications.confirmLocation')}</Text>
         </TouchableOpacity>

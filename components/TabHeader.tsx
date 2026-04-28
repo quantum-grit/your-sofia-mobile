@@ -36,7 +36,18 @@ export function TabHeader({
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       {showActionIcon && (
-        <TouchableOpacity style={styles.actionButton} onPress={handleActionPress}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleActionPress}
+          accessibilityRole="button"
+          accessibilityLabel={
+            ActionIcon === Bell
+              ? unreadCount > 0
+                ? `Известия, ${unreadCount} непрочетени`
+                : 'Известия'
+              : 'Действие'
+          }
+        >
           <Icon size={24} color={colors.textMuted} />
           {ActionIcon === Bell && unreadCount > 0 && (
             <View style={styles.notificationBadge}>
