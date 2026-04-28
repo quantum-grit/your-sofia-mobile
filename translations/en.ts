@@ -650,4 +650,10 @@ export default {
     createdOn: 'Created On',
     dueOn: 'Due On',
   },
+  whatsNew: {
+    title: "What's New?",
+    version: 'Version',
+    continue: 'Continue',
+    skip: 'Skip',
+  },
 }

@@ -58,6 +58,14 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name="(tabs)" options={{headerShown: true}} />
+            <Stack.Screen
+              name="whats-new"
+              options={{
+                headerShown: false,
+                presentation: 'transparentModal',
+                animation: 'slide_from_bottom',
+              }}
+            />
             <Stack.Screen name="+not-found" />
           </Stack>
           <StatusBar style="auto" />
