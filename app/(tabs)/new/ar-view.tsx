@@ -18,7 +18,7 @@ import {loadNearbyContainers} from '../../../lib/containerUtils'
 import {getDistanceFromLatLonInMeters} from '../../../lib/mapUtils'
 import {useDeviceHeading} from '../../../hooks/useDeviceHeading'
 import {type WasteContainer} from '../../../types/wasteContainer'
-import {colors} from '@/styles/tokens'
+import {colors, fonts} from '@/styles/tokens'
 
 const HORIZONTAL_FOV = 60 // degrees — approximate phone camera horizontal FOV
 const AR_RADIUS_METERS = 150
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
   },
   permTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     marginBottom: 12,
     textAlign: 'center',
@@ -497,9 +497,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   permButtonText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   overlayWrapper: {
     position: 'absolute',
@@ -524,8 +524,8 @@ const styles = StyleSheet.create({
   },
   overlayTitle: {
     fontSize: 13,
-    fontWeight: '700',
-    color: '#fff',
+    fontFamily: fonts.bold,
+    color: colors.surface,
     marginBottom: 2,
   },
   overlayRow: {
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
   },
   overlayDistance: {
     fontSize: 11,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     marginTop: 4,
   },
   compassWarning: {
@@ -549,9 +549,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   compassWarningText: {
-    color: '#fff',
+    color: colors.surface,
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   loadingBadge: {
     position: 'absolute',
@@ -581,7 +581,7 @@ const styles = StyleSheet.create({
   debugText: {
     color: '#FBBF24',
     fontSize: 14,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     fontVariant: ['tabular-nums'],
   },
   modalOverlay: {

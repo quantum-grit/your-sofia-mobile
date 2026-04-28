@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
   loadingText: {
     marginTop: 12,
     fontSize: fontSizes.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   errorContainer: {
@@ -24,6 +25,7 @@ export const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: fontSizes.caption,
+    fontFamily: fonts.regular,
     color: colors.error,
     marginTop: 4,
   },
@@ -102,6 +104,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSizes.h2,
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     paddingHorizontal: 16,
     marginTop: 16,
@@ -120,6 +123,7 @@ export const styles = StyleSheet.create({
   },
   descriptionText: {
     fontSize: fontSizes.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     lineHeight: 24,
   },
@@ -141,6 +145,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: fontSizes.body,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
   },
   inputError: {
@@ -174,6 +179,7 @@ export const styles = StyleSheet.create({
   metaText: {
     paddingLeft: 4,
     fontSize: fontSizes.bodySm,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   adminNotesContainer: {
@@ -188,6 +194,7 @@ export const styles = StyleSheet.create({
   adminNotesText: {
     flex: 1,
     fontSize: fontSizes.bodySm,
+    fontFamily: fonts.regular,
     color: colors.primary,
     lineHeight: 20,
   },
@@ -203,6 +210,7 @@ export const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: fontSizes.bodySm,
+    fontFamily: fonts.regular,
     color: '#92400E',
     lineHeight: 20,
   },

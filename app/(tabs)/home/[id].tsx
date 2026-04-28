@@ -112,22 +112,26 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: fontSizes.bodySm,
+    fontFamily: fonts.regular,
     color: colors.textMuted,
     marginBottom: 16,
   },
   description: {
     fontSize: fontSizes.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     lineHeight: 24,
     marginBottom: 24,
   },
   contentText: {
     fontSize: 15,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     lineHeight: 24,
   },
   sourceLink: {
     fontSize: fontSizes.label,
+    fontFamily: fonts.regular,
     color: colors.primary,
     marginTop: 16,
     textDecorationLine: 'underline',
@@ -147,6 +151,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: fontSizes.body,
+    fontFamily: fonts.regular,
     color: colors.error,
     marginBottom: 20,
     textAlign: 'center',
@@ -156,6 +161,7 @@ const styles = StyleSheet.create({
 const markdownStyles = StyleSheet.create({
   body: {
     fontSize: 15,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     lineHeight: 24,
   },
@@ -174,6 +180,7 @@ const markdownStyles = StyleSheet.create({
     fontSize: fontSizes.h3,
     lineHeight: 28,
     color: colors.textPrimary,
+    fontFamily: fonts.bold,
     marginBottom: 10,
   },
   heading3: {
@@ -190,10 +197,12 @@ const markdownStyles = StyleSheet.create({
     marginBottom: 12,
   },
   list_item: {
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     lineHeight: 24,
   },
   link: {
+    fontFamily: fonts.regular,
     color: colors.primary,
     textDecorationLine: 'underline',
   },
