@@ -2,6 +2,7 @@ import React from 'react'
 import {View, StyleSheet, ActivityIndicator, Text, Linking} from 'react-native'
 import {WebView} from 'react-native-webview'
 import {useTranslation} from 'react-i18next'
+import {colors, fontSizes} from '@/styles/tokens'
 
 export default function TransportMap() {
   const {t} = useTranslation()
@@ -14,7 +15,7 @@ export default function TransportMap() {
         startInLoadingState={true}
         renderLoading={() => (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#1E40AF" />
+            <ActivityIndicator size="large" color={colors.primary} />
             <Text style={styles.loadingText}>{t('map.loading')}</Text>
           </View>
         )}
@@ -45,7 +46,7 @@ export default function TransportMap() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   webview: {
     flex: 1,
@@ -58,12 +59,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   attributionContainer: {
     position: 'absolute',
@@ -75,11 +76,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   attributionText: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
   },
   attributionLink: {
-    color: '#1E40AF',
+    color: colors.primary,
     textDecorationLine: 'underline',
   },
 })

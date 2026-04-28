@@ -17,11 +17,10 @@ import {
   Receipt,
   ChevronRight,
   Search,
-  Plus,
   Clock,
 } from 'lucide-react-native'
 import {useTranslation} from 'react-i18next'
-import {commonStyles} from '../../styles/common'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 interface Bill {
   id: number
@@ -55,7 +54,7 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     id: 2,
     title: t('payments.bills.waterSewer'),
     icon: Droplets,
-    color: '#3B82F6',
+    color: colors.primaryLight,
     amount: '89.20',
     dueDate: t('payments.common.due') + ' Jan 20',
     status: 'pending',
@@ -64,7 +63,7 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     id: 3,
     title: t('payments.bills.propertyTax'),
     icon: Home,
-    color: '#059669',
+    color: colors.success,
     amount: '450.00',
     dueDate: t('payments.common.due') + ' Feb 1',
     status: 'pending',
@@ -73,7 +72,7 @@ const getBillCategories = (t: (key: string) => string): Bill[] => [
     id: 4,
     title: t('payments.bills.parkingFines'),
     icon: Car,
-    color: '#DC2626',
+    color: colors.error,
     amount: '25.00',
     dueDate: t('payments.status.overdue'),
     status: 'overdue',
@@ -115,11 +114,11 @@ export default function PaymentsScreen() {
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
-            <Search size={20} color="#6B7280" />
+            <Search size={20} color={colors.textSecondary} />
             <TextInput
               style={styles.searchInput}
               placeholder="Търси сметки и услуги..."
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={colors.textMuted}
             />
           </View>
         </View>
@@ -141,7 +140,7 @@ export default function PaymentsScreen() {
                 >
                   <View style={styles.billContent}>
                     <View style={[styles.billIcon, {backgroundColor: bill.color}]}>
-                      <IconComponent size={24} color="#ffffff" />
+                      <IconComponent size={24} color={colors.surface} />
                     </View>
                     <View style={styles.billInfo}>
                       <Text style={styles.billTitle}>{bill.title}</Text>
@@ -156,7 +155,7 @@ export default function PaymentsScreen() {
                     </View>
                     <View style={styles.billAmountContainer}>
                       <Text style={styles.billAmount}>{bill.amount} лв</Text>
-                      <ChevronRight size={20} color="#9CA3AF" />
+                      <ChevronRight size={20} color={colors.textMuted} />
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -165,7 +164,7 @@ export default function PaymentsScreen() {
           </View>
 
           <TouchableOpacity style={styles.payAllButton}>
-            <CreditCard size={20} color="#ffffff" />
+            <CreditCard size={20} color={colors.surface} />
             <Text style={styles.payAllButtonText}>Плати всички сметки</Text>
           </TouchableOpacity>
         </View>
@@ -175,11 +174,11 @@ export default function PaymentsScreen() {
           <Text style={styles.sectionTitle}>Бързи плащания</Text>
           <View style={styles.quickPaymentGrid}>
             <TouchableOpacity style={styles.quickPaymentCard}>
-              <Wifi size={24} color="#1E40AF" />
+              <Wifi size={24} color={colors.primary} />
               <Text style={styles.quickPaymentText}>Интернет</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.quickPaymentCard}>
-              <Receipt size={24} color="#1E40AF" />
+              <Receipt size={24} color={colors.primary} />
               <Text style={styles.quickPaymentText}>Друго плащане</Text>
             </TouchableOpacity>
           </View>
@@ -198,12 +197,12 @@ export default function PaymentsScreen() {
             {recentPayments.map((payment: Payment) => (
               <View key={payment.id} style={styles.paymentHistoryCard}>
                 <View style={styles.paymentHistoryIcon}>
-                  <Receipt size={20} color="#059669" />
+                  <Receipt size={20} color={colors.success} />
                 </View>
                 <View style={styles.paymentHistoryInfo}>
                   <Text style={styles.paymentHistoryTitle}>{payment.title}</Text>
                   <View style={styles.paymentHistoryMeta}>
-                    <Clock size={14} color="#6B7280" />
+                    <Clock size={14} color={colors.textSecondary} />
                     <Text style={styles.paymentHistoryDate}>{payment.date}</Text>
                   </View>
                 </View>
@@ -222,14 +221,14 @@ export default function PaymentsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('payments.common.paymentMethods')}</Text>
           <View style={styles.paymentMethodCard}>
-            <CreditCard size={24} color="#1E40AF" />
+            <CreditCard size={24} color={colors.primary} />
             <View style={styles.paymentMethodInfo}>
               <Text style={styles.paymentMethodTitle}>{t('payments.common.debitCreditCard')}</Text>
               <Text style={styles.paymentMethodDescription}>
                 {t('payments.common.cardsAccepted')}
               </Text>
             </View>
-            <ChevronRight size={20} color="#9CA3AF" />
+            <ChevronRight size={20} color={colors.textMuted} />
           </View>
         </View>
       </ScrollView>
@@ -249,20 +248,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h2,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   addButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -276,7 +275,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -292,8 +291,8 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     marginLeft: 12,
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
   },
   section: {
     paddingHorizontal: 20,
@@ -307,24 +306,23 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   totalAmount: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#DC2626',
+    fontSize: fontSizes.body,
+    color: colors.error,
   },
   viewAllText: {
-    fontSize: 14,
-    color: '#1E40AF',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
+    fontFamily: fonts.medium,
   },
   billsList: {
     gap: 12,
   },
   billCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     shadowColor: '#000',
@@ -338,7 +336,7 @@ const styles = StyleSheet.create({
   },
   overdueBill: {
     borderLeftWidth: 4,
-    borderLeftColor: '#DC2626',
+    borderLeftColor: colors.error,
   },
   billContent: {
     flexDirection: 'row',
@@ -356,18 +354,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   billTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   billDueDate: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   overdueDueDate: {
-    color: '#DC2626',
-    fontWeight: '500',
+    color: colors.error,
+    fontFamily: fonts.medium,
   },
   billAmountContainer: {
     flexDirection: 'row',
@@ -376,23 +374,23 @@ const styles = StyleSheet.create({
   },
   billAmount: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   payAllButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#059669',
+    backgroundColor: colors.success,
     borderRadius: 12,
     paddingVertical: 16,
     marginTop: 16,
     gap: 8,
   },
   payAllButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   quickPaymentGrid: {
     flexDirection: 'row',
@@ -400,7 +398,7 @@ const styles = StyleSheet.create({
   },
   quickPaymentCard: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
@@ -414,9 +412,9 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   quickPaymentText: {
-    fontSize: 14,
-    color: '#1F2937',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
+    fontFamily: fonts.medium,
     marginTop: 8,
     textAlign: 'center',
   },
@@ -424,7 +422,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   paymentHistoryCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     flexDirection: 'row',
@@ -451,9 +449,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paymentHistoryTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.medium,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   paymentHistoryMeta: {
@@ -462,16 +460,16 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   paymentHistoryDate: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
   },
   paymentHistoryAmount: {
     alignItems: 'flex-end',
   },
   paymentHistoryAmountText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.medium,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   paidBadge: {
@@ -482,11 +480,11 @@ const styles = StyleSheet.create({
   },
   paidBadgeText: {
     fontSize: 10,
-    color: '#059669',
-    fontWeight: '500',
+    color: colors.success,
+    fontFamily: fonts.medium,
   },
   paymentMethodCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     flexDirection: 'row',
@@ -506,13 +504,13 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   paymentMethodTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   paymentMethodDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
 })

@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next'
 import MapView, {Marker, Polygon, type Region} from 'react-native-maps'
 import type {LocationFilterArea} from '../../../types/subscription'
 import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
+import {colors, fontSizes} from '@/styles/tokens'
 
 const SOFIA_REGION: Region = {
   latitude: 42.6977,
@@ -65,13 +66,13 @@ export default function AreaPickerScreen() {
     <SafeAreaView style={styles.container}>
       <MapView style={styles.map} initialRegion={SOFIA_REGION} onPress={handleMapPress}>
         {vertices.map((v, i) => (
-          <Marker key={i} coordinate={v} pinColor="#1E40AF" />
+          <Marker key={i} coordinate={v} pinColor={colors.primary} />
         ))}
         {vertices.length >= 3 && (
           <Polygon
             coordinates={vertices}
             fillColor="rgba(30, 64, 175, 0.15)"
-            strokeColor="#1E40AF"
+            strokeColor={colors.primary}
             strokeWidth={2}
           />
         )}
@@ -105,7 +106,7 @@ export default function AreaPickerScreen() {
               onPress={handleClose}
               disabled={vertices.length < 3}
             >
-              <Text style={[styles.actionBtnText, {color: '#1E40AF'}]}>
+              <Text style={[styles.actionBtnText, {color: colors.primary}]}>
                 {t('notifications.closePolygon')}
               </Text>
             </TouchableOpacity>
@@ -130,12 +131,17 @@ const styles = StyleSheet.create({
   container: {flex: 1},
   map: {flex: 1},
   panel: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: colors.border,
   },
-  hint: {fontSize: 14, color: '#6B7280', textAlign: 'center', marginBottom: 12},
+  hint: {
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
   actions: {flexDirection: 'row', gap: 8},
   actionBtn: {
     flex: 1,
@@ -143,24 +149,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   actionBtnDisabled: {opacity: 0.4},
-  undoBtn: {borderColor: '#EF4444'},
-  closeBtn: {borderColor: '#1E40AF'},
-  actionBtnText: {fontSize: 13, fontWeight: '600', color: '#EF4444'},
+  undoBtn: {borderColor: colors.error},
+  closeBtn: {borderColor: colors.primary},
+  actionBtnText: {fontSize: fontSizes.label, fontWeight: '600', color: colors.error},
   footer: {
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: colors.border,
   },
   confirmBtn: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
   },
   confirmBtnDisabled: {opacity: 0.4},
-  confirmBtnText: {color: '#ffffff', fontSize: 16, fontWeight: '700'},
+  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
 })

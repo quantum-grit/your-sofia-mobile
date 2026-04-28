@@ -4,6 +4,7 @@ import type {NewsItem} from '../types/news'
 import type {MapBounds} from '@/lib/mapBounds'
 import {estimateZoom, getBoundsFromRegion} from '@/lib/mapBounds'
 import {getCategoryColor, getCategoryIcon} from '@/lib/categories'
+import {colors} from '@/styles/tokens'
 
 interface NewsMapProps {
   news: NewsItem[]
@@ -56,7 +57,7 @@ export function NewsMap({news, onMarkerPress, onBoundsChange}: NewsMapProps) {
             >
               <View style={styles.markerContainer}>
                 <View style={[styles.markerIcon, {backgroundColor: color}]}>
-                  <Icon size={14} color="#ffffff" />
+                  <Icon size={14} color={colors.surface} />
                 </View>
                 <View style={[styles.markerPointer, {borderTopColor: color}]} />
               </View>
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: colors.surface,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.2,
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: '#1E40AF',
+    borderTopColor: colors.primary,
     marginTop: -2,
   },
 })

@@ -10,11 +10,10 @@ import {
   Trash2,
   MapPin,
   Users,
-  ChevronRight,
   Search,
 } from 'lucide-react-native'
 import {useTranslation} from 'react-i18next'
-import {commonStyles} from '../../styles/common'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 interface Service {
   id: number
@@ -157,7 +156,7 @@ export default function ServicesScreen() {
         {/* Search */}
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
-            <Search size={20} color="#6B7280" />
+            <Search size={20} color={colors.textSecondary} />
             <Text style={styles.searchPlaceholder}>{t_services('search.placeholder')}</Text>
           </View>
         </View>
@@ -210,14 +209,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h2,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   scrollView: {
     flex: 1,
@@ -229,7 +228,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -238,8 +237,8 @@ const styles = StyleSheet.create({
   },
   searchPlaceholder: {
     marginLeft: 12,
-    color: '#9CA3AF',
-    fontSize: 14,
+    color: colors.textMuted,
+    fontSize: fontSizes.bodySm,
   },
   section: {
     paddingHorizontal: 20,
@@ -247,15 +246,15 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 16,
   },
   servicesList: {
     gap: 12,
   },
   serviceCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     shadowColor: '#000',
@@ -274,9 +273,9 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   serviceTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     flex: 1,
   },
   statusBadge: {
@@ -286,18 +285,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   statusText: {
-    fontSize: 12,
-    color: '#059669',
-    fontWeight: '500',
+    fontSize: fontSizes.caption,
+    color: colors.success,
+    fontFamily: fonts.medium,
   },
   serviceDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
   },
   supportSection: {
     margin: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 20,
     alignItems: 'center',
@@ -305,26 +304,26 @@ const styles = StyleSheet.create({
   },
   supportTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   supportDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 20,
   },
   supportButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   supportButtonText: {
-    color: '#ffffff',
-    fontWeight: '600',
-    fontSize: 14,
+    color: colors.surface,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
   },
 })

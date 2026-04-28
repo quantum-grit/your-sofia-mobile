@@ -33,6 +33,7 @@ import {WasteContainerForm} from '../forms/waste-container'
 import type {WasteContainerFormData} from '../forms/waste-container'
 import {Signal} from '@/types/signal'
 import {environmentManager} from '@/lib/environment'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 interface WasteContainerCardProps {
   container: WasteContainer
@@ -299,13 +300,13 @@ export function WasteContainerCard({
   }
 
   const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      active: '#10B981',
-      full: '#EF4444',
+    const statusColors: Record<string, string> = {
+      active: colors.success,
+      full: colors.error,
       maintenance: '#F59E0B',
-      inactive: '#6B7280',
+      inactive: colors.textSecondary,
     }
-    return colors[status] || '#6B7280'
+    return statusColors[status] || colors.textSecondary
   }
 
   return (
@@ -318,7 +319,7 @@ export function WasteContainerCard({
             </Text>
             {isContainerAdmin && (
               <TouchableOpacity onPress={() => setShowEditForm(true)}>
-                <Edit size={16} color="#3B82F6" />
+                <Edit size={16} color={colors.primaryLight} />
               </TouchableOpacity>
             )}
           </View>
@@ -328,7 +329,7 @@ export function WasteContainerCard({
               {t(`wasteContainers.statuses.${container.status}`)}
             </Text>
             <View style={styles.infoRow}>
-              <Trash2 size={16} color="#6B7280" />
+              <Trash2 size={16} color={colors.textSecondary} />
               <Text style={styles.infoText}>
                 {getWasteTypeLabel(container.wasteType)} •{' '}
                 {getCapacitySizeLabel(container.capacitySize)} ({container.capacityVolume}m³)
@@ -339,7 +340,7 @@ export function WasteContainerCard({
         <View style={styles.headerButtons}>
           {onClose && (
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <X size={24} color="#6B7280" />
+              <X size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -358,14 +359,14 @@ export function WasteContainerCard({
           disabled={signalsLoading || !!signalsError}
         >
           {signalsLoading ? (
-            <ActivityIndicator size="small" color="#6B7280" />
+            <ActivityIndicator size="small" color={colors.textSecondary} />
           ) : signalsError ? (
             <AlertTriangle size={16} color="#F59E0B" />
           ) : (
             <>
               <AlertTriangle
                 size={16}
-                color={signalsActive && signalsActive > 0 ? '#EF4444' : '#6B7280'}
+                color={signalsActive && signalsActive > 0 ? colors.error : colors.textSecondary}
               />
               <Text
                 style={[
@@ -381,7 +382,7 @@ export function WasteContainerCard({
         {/* Last Observation Photos */}
         {loadingPhotos ? (
           <View style={styles.lastPhotosLoading}>
-            <ActivityIndicator size="small" color="#1E40AF" />
+            <ActivityIndicator size="small" color={colors.primary} />
           </View>
         ) : lastObservationPhotos.length > 0 ? (
           <View style={styles.lastPhotosContainer}>
@@ -424,12 +425,12 @@ export function WasteContainerCard({
           onPress={() => setShowFullInfo(!showFullInfo)}
           style={styles.fullInfoButton}
         >
-          <Info size={16} color="#1E40AF" />
+          <Info size={16} color={colors.primary} />
           <Text style={styles.fullInfoButtonText}>{t('wasteContainers.fullDetails')}</Text>
           {showFullInfo ? (
-            <ChevronUp size={16} color="#1E40AF" />
+            <ChevronUp size={16} color={colors.primary} />
           ) : (
-            <ChevronDown size={16} color="#1E40AF" />
+            <ChevronDown size={16} color={colors.primary} />
           )}
         </TouchableOpacity>
 
@@ -561,14 +562,14 @@ export function WasteContainerCard({
         )}
 
         <TouchableOpacity onPress={handleReportIssue} style={styles.reportButton}>
-          <AlertTriangle size={16} color="#ffffff" />
+          <AlertTriangle size={16} color={colors.surface} />
           <Text style={styles.reportButtonText}>{t('wasteContainers.reportIssue')}</Text>
         </TouchableOpacity>
 
         {/* Clean Container button for Container Admins */}
         {isContainerAdmin && (container.status !== 'active' || !container.lastCleaned) && (
           <TouchableOpacity style={styles.cleanButton} onPress={handleCleanContainer}>
-            <CheckCircle size={20} color="#ffffff" />
+            <CheckCircle size={20} color={colors.surface} />
             <Text style={styles.cleanButtonText}>{t('wasteContainers.cleanContainer')}</Text>
           </TouchableOpacity>
         )}
@@ -651,7 +652,7 @@ export function WasteContainerCard({
                 onPress={() => setShowEditForm(false)}
                 style={styles.formCloseButton}
               >
-                <X size={24} color="#6B7280" />
+                <X size={24} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
 
@@ -689,7 +690,7 @@ export function WasteContainerCard({
                 }}
                 style={styles.formCloseButton}
               >
-                <X size={24} color="#6B7280" />
+                <X size={24} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
 
@@ -710,7 +711,7 @@ export function WasteContainerCard({
                 </View>
               ) : (
                 <TouchableOpacity style={styles.takePhotoButton} onPress={handleTakePhoto}>
-                  <Camera size={20} color="#1E40AF" />
+                  <Camera size={20} color={colors.primary} />
                   <Text style={styles.takePhotoButtonText}>{t('wasteContainers.takePhoto')}</Text>
                 </TouchableOpacity>
               )}
@@ -756,10 +757,10 @@ export function WasteContainerCard({
                 disabled={isCleaning || !photoUri}
               >
                 {isCleaning ? (
-                  <ActivityIndicator color="#ffffff" size="small" />
+                  <ActivityIndicator color={colors.surface} size="small" />
                 ) : (
                   <>
-                    <CheckCircle size={20} color="#ffffff" />
+                    <CheckCircle size={20} color={colors.surface} />
                     <Text style={styles.formSubmitButtonText}>{t('common.confirm')}</Text>
                   </>
                 )}
@@ -774,8 +775,8 @@ export function WasteContainerCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
@@ -787,26 +788,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    padding: 16,
-    paddingBottom: 4,
+    padding: spacing.md,
+    paddingBottom: spacing['2xs'],
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
+    gap: spacing.xs,
+    marginBottom: spacing['2xs'],
   },
   editButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#3B82F6',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.caption,
+    color: colors.primary,
   },
   containerNumber: {
+    fontFamily: fonts.bold,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    color: colors.textPrimary,
   },
   statusBadge: {
     flexDirection: 'row',
@@ -816,12 +817,12 @@ const styles = StyleSheet.create({
   statusDot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
+    borderRadius: radius.full,
   },
   statusText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
   },
   signalsBadge: {
     flexDirection: 'row',
@@ -829,64 +830,66 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   signalsText: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginLeft: 4,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    marginLeft: spacing['2xs'],
   },
   signalsTextActive: {
     textDecorationLine: 'underline',
-    color: '#3B82F6',
+    color: colors.primary,
   },
   lastCleanedContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 4,
+    gap: spacing['2xs'],
   },
   lastCleanedButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: spacing['2xs'],
   },
   lastCleanedText: {
-    fontSize: 12,
-    color: '#10B981',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.caption,
+    color: colors.success,
   },
   photoIconButton: {
-    padding: 4,
-    marginLeft: 4,
+    padding: spacing['2xs'],
+    marginLeft: spacing['2xs'],
   },
   headerButtons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.xs,
   },
   reportButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#EF4444',
+    gap: spacing.xs,
+    backgroundColor: colors.error,
     padding: 14,
-    borderRadius: 8,
+    borderRadius: radius.md,
     justifyContent: 'center',
-    marginTop: 8,
+    marginTop: spacing.xs,
   },
   reportButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
+    color: colors.surface,
+    fontSize: fontSizes.bodySm,
   },
   closeButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F3F4F6',
+    borderRadius: radius.full,
+    backgroundColor: colors.surface2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   closeButtonText: {
     fontSize: 24,
-    color: '#6B7280',
+    color: colors.textSecondary,
     lineHeight: 24,
   },
   image: {
@@ -894,65 +897,68 @@ const styles = StyleSheet.create({
     height: 200,
   },
   content: {
-    padding: 16,
-    paddingTop: 4,
-    gap: 12,
+    padding: spacing.md,
+    paddingTop: spacing['2xs'],
+    gap: spacing.sm,
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.xs,
   },
   infoText: {
-    fontSize: 14,
-    color: '#4B5563',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     flex: 1,
   },
   notesContainer: {
-    marginTop: 8,
-    padding: 12,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 8,
+    marginTop: spacing.xs,
+    padding: spacing.sm,
+    backgroundColor: colors.surface2,
+    borderRadius: radius.md,
   },
   notesLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
-    marginBottom: 4,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
+    marginBottom: spacing['2xs'],
   },
   notesText: {
-    fontSize: 14,
-    color: '#4B5563',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
   },
   notesInputContainer: {
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   notesInput: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: spacing.sm,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
     textAlignVertical: 'top',
     minHeight: 80,
   },
   cleanButton: {
     flexDirection: 'row',
-    backgroundColor: '#10B981',
+    backgroundColor: colors.success,
     padding: 14,
-    borderRadius: 8,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: spacing.xs,
   },
   cleanButtonDisabled: {
     opacity: 0.6,
   },
   cleanButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
+    color: colors.surface,
+    fontSize: fontSizes.bodySm,
   },
   modalOverlay: {
     flex: 1,
@@ -981,8 +987,8 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     backgroundColor: 'rgba(0,0,0,0.5)',
-    borderRadius: 20,
-    padding: 8,
+    borderRadius: radius.xl,
+    padding: spacing.xs,
   },
   formModalOverlay: {
     flex: 1,
@@ -990,66 +996,68 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   formModalContent: {
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+    padding: spacing.md,
     maxHeight: '90%',
   },
   formHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   formTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h3,
+    color: colors.textPrimary,
   },
   formCloseButton: {
-    padding: 4,
+    padding: spacing['2xs'],
   },
   formDescription: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 20,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    marginBottom: spacing.md,
     lineHeight: 20,
   },
   formSection: {
-    marginBottom: 20,
+    marginBottom: spacing.md,
   },
   formSectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
+    marginBottom: spacing.xs,
   },
   takePhotoButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#EFF6FF',
+    gap: spacing.xs,
+    backgroundColor: colors.primaryTint,
     borderWidth: 1,
-    borderColor: '#1E40AF',
+    borderColor: colors.primary,
     borderStyle: 'dashed',
-    padding: 16,
-    borderRadius: 8,
+    padding: spacing.md,
+    borderRadius: radius.md,
   },
   takePhotoButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1E40AF',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
   },
   photoRequiredText: {
-    fontSize: 13,
-    color: '#EF4444',
-    marginTop: 8,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.label,
+    color: colors.error,
+    marginTop: spacing.xs,
   },
   photoPreview: {
     position: 'relative',
-    borderRadius: 8,
+    borderRadius: radius.md,
     overflow: 'hidden',
   },
   previewImage: {
@@ -1062,89 +1070,91 @@ const styles = StyleSheet.create({
     top: 8,
     right: 8,
     backgroundColor: 'rgba(0,0,0,0.6)',
-    borderRadius: 16,
-    padding: 8,
+    borderRadius: radius.full,
+    padding: spacing.xs,
   },
   formNotesInput: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: spacing.sm,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
     minHeight: 100,
   },
   formActions: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
+    gap: spacing.sm,
+    marginTop: spacing.xs,
   },
   formCancelButton: {
     flex: 1,
     padding: 14,
-    borderRadius: 8,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
   },
   formCancelButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   formSubmitButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#10B981',
+    backgroundColor: colors.success,
     padding: 14,
-    borderRadius: 8,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: spacing.xs,
   },
   formSubmitButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
+    color: colors.surface,
+    fontSize: fontSizes.bodySm,
   },
   fullInfoButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 8,
+    gap: spacing.xs,
   },
   fullInfoButtonText: {
-    color: '#1E40AF',
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
+    color: colors.primary,
+    fontSize: fontSizes.bodySm,
   },
   extendedInfoContainer: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 8,
-    padding: 16,
-    marginTop: 8,
-    gap: 12,
+    backgroundColor: colors.surface2,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    marginTop: spacing.xs,
+    gap: spacing.sm,
   },
   extendedInfoTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 4,
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+    marginBottom: spacing['2xs'],
   },
   extendedInfoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: spacing.sm,
   },
   extendedInfoLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.label,
+    color: colors.textSecondary,
     flex: 1,
   },
   extendedInfoValue: {
-    fontSize: 13,
-    color: '#1F2937',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.label,
+    color: colors.textPrimary,
     flex: 1,
     textAlign: 'right',
   },
@@ -1160,39 +1170,40 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   stateItem: {
-    fontSize: 13,
-    color: '#1F2937',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.label,
+    color: colors.textPrimary,
     textAlign: 'right',
   },
   lastCleanedLink: {
-    color: '#1e69af',
+    color: colors.primary,
     textDecorationLine: 'underline',
   },
   observationsList: {
-    paddingVertical: 8,
+    paddingVertical: spacing.xs,
   },
   observationItem: {
-    backgroundColor: '#F9FAFB',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: colors.surface2,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    marginBottom: spacing.md,
   },
   observationRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 12,
+    gap: spacing.sm,
   },
   observationHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.xs,
     flex: 1,
   },
   observationDate: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
     flexShrink: 1,
   },
   observationDetail: {
@@ -1201,25 +1212,27 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   observationText: {
-    fontSize: 13,
-    color: '#6B7280',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.label,
+    color: colors.textSecondary,
   },
   observationNotes: {
-    fontSize: 13,
-    color: '#4B5563',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.label,
+    color: colors.textSecondary,
     fontStyle: 'italic',
-    marginTop: 4,
+    marginTop: spacing['2xs'],
   },
   observationPhoto: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 8,
-    marginTop: 8,
+    gap: spacing.xs,
+    marginTop: spacing.xs,
   },
   observationThumbnail: {
     width: 80,
     height: 80,
-    borderRadius: 8,
+    borderRadius: radius.md,
   },
   loadingContainer: {
     padding: 40,
@@ -1232,8 +1245,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyText: {
-    fontSize: 14,
-    color: '#9CA3AF',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textMuted,
   },
   noPhotoContainer: {
     flexDirection: 'row',
@@ -1241,40 +1255,42 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   noPhotoText: {
-    fontSize: 13,
-    color: '#9CA3AF',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.label,
+    color: colors.textMuted,
     fontStyle: 'italic',
   },
   lastPhotosLoading: {
-    paddingVertical: 8,
+    paddingVertical: spacing.xs,
     alignItems: 'center',
   },
   lastPhotosContainer: {
-    marginTop: 12,
-    marginBottom: 8,
+    marginTop: spacing.sm,
+    marginBottom: spacing.xs,
   },
   lastPhotosLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.caption,
+    color: colors.textPrimary,
+    marginBottom: spacing.xs,
   },
   lastPhotosScroll: {
     flexDirection: 'row',
   },
   lastPhotoItem: {
-    marginRight: 12,
+    marginRight: spacing.sm,
     alignItems: 'center',
   },
   lastPhotoThumbnail: {
     width: 80,
     height: 80,
-    borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    borderRadius: radius.md,
+    backgroundColor: colors.surface2,
   },
   lastPhotoDate: {
+    fontFamily: fonts.regular,
     fontSize: 10,
-    color: '#6B7280',
-    marginTop: 4,
+    color: colors.textSecondary,
+    marginTop: spacing['2xs'],
   },
 })

@@ -24,6 +24,7 @@ import {
   createObjectsFromPhotos,
 } from '../../../lib/bulkPhotoUtils'
 import {getUniqueReporterId} from '../../../lib/deviceId'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 type ProcessingMode = 'create-signals' | 'close-signals' | 'create-objects'
 
@@ -235,7 +236,7 @@ export default function BulkPhotoUploadScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Images size={24} color="#1E40AF" />
+          <Images size={24} color={colors.primary} />
           <Text style={styles.headerTitle}>{t('bulkPhotoUpload.title')}</Text>
         </View>
 
@@ -301,7 +302,7 @@ export default function BulkPhotoUploadScreen() {
             onPress={handleSelectPhotos}
             disabled={loading}
           >
-            <Upload size={24} color="#1E40AF" />
+            <Upload size={24} color={colors.primary} />
             <Text style={styles.selectButtonText}>
               {loading ? t('common.loading') : t('bulkPhotoUpload.selectPhotos')}
             </Text>
@@ -313,7 +314,7 @@ export default function BulkPhotoUploadScreen() {
           <>
             <View style={styles.summaryContainer}>
               <View style={styles.summaryRow}>
-                <CheckCircle size={20} color="#10B981" />
+                <CheckCircle size={20} color={colors.success} />
                 <Text style={styles.summaryText}>
                   {t('bulkPhotoUpload.photosSelected', {count: photos.length})}
                 </Text>
@@ -394,7 +395,7 @@ export default function BulkPhotoUploadScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   scrollView: {
     flex: 1,
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     width: 72,
     height: 72,
     backgroundColor: '#fff',
@@ -440,8 +441,8 @@ const styles = StyleSheet.create({
   },
   removeThumbnailButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
     lineHeight: 20,
     textAlign: 'center',
     marginTop: -1,
@@ -458,23 +459,23 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   instructionsContainer: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     padding: 8,
     marginTop: 8,
     borderLeftWidth: 4,
-    borderLeftColor: '#1E40AF',
+    borderLeftColor: colors.primary,
   },
   instructionsText: {
-    fontSize: 14,
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
     lineHeight: 20,
   },
   section: {
@@ -483,9 +484,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sectionLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 12,
   },
   radioOption: {
@@ -494,20 +495,20 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     marginBottom: 12,
     backgroundColor: '#fff',
   },
   radioOptionSelected: {
-    borderColor: '#1E40AF',
-    backgroundColor: '#EFF6FF',
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryTint,
   },
   radioCircle: {
     width: 24,
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -517,20 +518,20 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
   },
   radioContent: {
     flex: 1,
   },
   radioTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   radioDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
   },
   selectButton: {
@@ -538,16 +539,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     borderRadius: 12,
     paddingVertical: 16,
     borderWidth: 2,
-    borderColor: '#1E40AF',
+    borderColor: colors.primary,
   },
   selectButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1E40AF',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.primary,
   },
   summaryContainer: {
     backgroundColor: '#fff',
@@ -561,12 +562,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   summaryText: {
-    fontSize: 14,
-    color: '#1F2937',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
+    fontFamily: fonts.medium,
   },
   warningText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#F59E0B',
     marginTop: 4,
     fontStyle: 'italic',
@@ -578,14 +579,14 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     flex: 1,
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
   },
   primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
     color: '#fff',
   },
   secondaryButton: {
@@ -595,12 +596,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   buttonDisabled: {
     opacity: 0.5,

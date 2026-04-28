@@ -3,6 +3,7 @@ import {TouchableOpacity, Modal, View, Text, StyleSheet, Linking, Pressable} fro
 import {GitHubIcon} from './GitHubIcon'
 import {useTranslation} from 'react-i18next'
 import {X} from 'lucide-react-native'
+import {colors, fontSizes} from '@/styles/tokens'
 
 /**
  * ImplementMeGithub Component
@@ -32,7 +33,7 @@ interface ImplementMeGithubProps {
 
 export function ImplementMeGithub({
   issueUrl,
-  backgroundColor = '#F3F4F6',
+  backgroundColor = colors.surface2,
   extendedText,
 }: ImplementMeGithubProps) {
   const {t} = useTranslation()
@@ -59,7 +60,7 @@ export function ImplementMeGithub({
         onPress={() => Linking.openURL('https://github.com/sofia-municipality/your-sofia-mobile/')}
       >
         <Text style={styles.notificationText}>{extendedText}</Text>
-        <GitHubIcon size={24} color="#1E40AF" />
+        <GitHubIcon size={24} color={colors.primary} />
       </TouchableOpacity>
     )
   }
@@ -68,19 +69,19 @@ export function ImplementMeGithub({
   return (
     <>
       <TouchableOpacity onPress={handlePress} style={[styles.iconButton, {backgroundColor}]}>
-        <GitHubIcon size={18} color="#6B7280" />
+        <GitHubIcon size={18} color={colors.textSecondary} />
       </TouchableOpacity>
 
       <Modal visible={showCallout} transparent animationType="fade" onRequestClose={handleClose}>
         <Pressable style={styles.overlay} onPress={handleClose}>
           <Pressable style={styles.callout} onPress={(e) => e.stopPropagation()}>
             <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-              <X size={20} color="#6B7280" />
+              <X size={20} color={colors.textSecondary} />
             </TouchableOpacity>
 
             <View style={styles.content}>
               <Text style={styles.message}>{t('common.implementMeMessage')}</Text>
-              <GitHubIcon size={18} color="#6B7280" />
+              <GitHubIcon size={18} color={colors.textSecondary} />
               <TouchableOpacity style={styles.linkButton} onPress={handleLinkPress}>
                 <Text style={styles.linkText}>{issueUrl}</Text>
               </TouchableOpacity>
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   callout: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 20,
     maxWidth: 400,
@@ -131,39 +132,39 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   message: {
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
     textAlign: 'center',
     lineHeight: 24,
   },
   linkButton: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   linkText: {
-    fontSize: 14,
-    color: '#1E40AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
     textDecorationLine: 'underline',
   },
   notificationBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     padding: 8,
     borderRadius: 12,
     margin: 8,
     borderLeftWidth: 4,
-    borderLeftColor: '#1E40AF',
+    borderLeftColor: colors.primary,
     gap: 12,
   },
   notificationText: {
     flex: 1,
-    fontSize: 14,
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
     padding: 0,
   },
 })

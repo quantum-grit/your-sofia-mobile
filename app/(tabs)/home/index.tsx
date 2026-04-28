@@ -9,13 +9,8 @@ import {
 } from 'react-native'
 import {useRef, useCallback, useEffect, useState} from 'react'
 import {useFocusEffect} from '@react-navigation/native'
-import {
-  useFonts,
-  Inter_400Regular,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter'
 import {useRouter} from 'expo-router'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 import {useTranslation} from 'react-i18next'
 import {AirQualityCard} from '../../../components/AirQualityCard'
 import {TopicFilter} from '../../../components/TopicFilter'
@@ -150,16 +145,6 @@ export default function HomeScreen() {
     }, [isFirstFocus, isMapView, refresh, refreshMap])
   )
 
-  const [fontsLoaded] = useFonts({
-    'Inter-Regular': Inter_400Regular,
-    'Inter-SemiBold': Inter_600SemiBold,
-    'Inter-Bold': Inter_700Bold,
-  })
-
-  if (!fontsLoaded) {
-    return null
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -266,7 +251,7 @@ export default function HomeScreen() {
                   }}
                 >
                   <View style={[styles.quickServiceIcon, { backgroundColor: service.color }]}>
-                    <IconComponent size={24} color="#ffffff" />
+                    <IconComponent size={24} color={colors.surface} />
                   </View>
                   <Text style={styles.quickServiceTitle}>{service.title}</Text>
                   <Text style={styles.quickServiceDescription}>{service.description}</Text>
@@ -290,14 +275,14 @@ export default function HomeScreen() {
                 >
                   <View style={styles.serviceCardContent}>
                     <View style={styles.serviceIconContainer}>
-                      <IconComponent size={24} color="#1E40AF" />
+                      <IconComponent size={24} color={colors.primary} />
                     </View>
                     <View style={styles.serviceInfo}>
                       <Text style={styles.serviceTitle}>{service.title}</Text>
                       <Text style={styles.serviceDescription}>{service.description}</Text>
                     </View>
                   </View>
-                  <ChevronRight size={20} color="#9CA3AF" />
+                  <ChevronRight size={20} color={colors.textMuted} />
                 </TouchableOpacity>
               );
             })}
@@ -308,7 +293,7 @@ export default function HomeScreen() {
         {/* <View style={styles.emergencySection}>
           <View style={styles.emergencyContent}>
             <View style={styles.emergencyIcon}>
-              <Phone size={24} color="#ffffff" />
+              <Phone size={24} color={colors.surface} />
             </View>
             <View>
               <Text style={styles.emergencyTitle}>{t('common.emergencyServices')}</Text>
@@ -324,7 +309,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.bg,
   },
   scrollView: {
     flex: 1,
@@ -333,23 +318,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    fontFamily: 'Inter-Bold',
+    fontFamily: fonts.extraBold,
+    fontSize: fontSizes.h2,
+    color: colors.textPrimary,
   },
   headerButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    borderRadius: radius.full,
+    backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -358,49 +342,46 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -4,
-    backgroundColor: '#DC2626',
-    borderRadius: 10,
+    backgroundColor: colors.error,
+    borderRadius: radius.full,
     minWidth: 20,
     height: 20,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 4,
     borderWidth: 2,
-    borderColor: '#ffffff',
+    borderColor: colors.surface,
   },
   notificationBadgeText: {
-    color: '#ffffff',
-    fontSize: 10,
-    fontWeight: '700',
-    fontFamily: 'Inter-Bold',
+    color: colors.surface,
+    fontFamily: fonts.extraBold,
+    fontSize: fontSizes.caption,
   },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.xs,
   },
   section: {
-    paddingHorizontal: 20,
-    marginTop: 16,
+    paddingHorizontal: spacing.md,
+    marginTop: spacing.md,
   },
   cityName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    fontFamily: 'Inter-Bold',
-    marginTop: 4,
+    fontFamily: fonts.extraBold,
+    fontSize: fontSizes.h2,
+    color: colors.surface,
+    marginTop: spacing['2xs'],
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 4,
-    fontFamily: 'Inter-Bold',
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h3,
+    color: colors.textPrimary,
+    marginBottom: spacing['2xs'],
   },
   sectionSubtitle: {
-    fontSize: 12,
-    color: '#6B7280',
-    fontFamily: 'Inter-Regular',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
   },
   quickServicesGrid: {
     flexDirection: 'row',
@@ -409,16 +390,13 @@ const styles = StyleSheet.create({
   },
   quickServiceCard: {
     width: (width - 60) / 2,
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.md,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
@@ -426,42 +404,36 @@ const styles = StyleSheet.create({
   quickServiceIcon: {
     width: 56,
     height: 56,
-    borderRadius: 16,
+    borderRadius: radius.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   quickServiceTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
     textAlign: 'center',
-    fontFamily: 'Inter-SemiBold',
-    marginBottom: 4,
+    marginBottom: spacing['2xs'],
   },
   quickServiceDescription: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
     textAlign: 'center',
-    fontFamily: 'Inter-Regular',
   },
   servicesList: {
-    gap: 12,
+    gap: spacing.sm,
   },
   serviceCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
     elevation: 1,
   },
   serviceCardContent: {
@@ -473,21 +445,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.md,
   },
   viewToggleButton: {
-    backgroundColor: '#EFF6FF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    backgroundColor: colors.primaryTint,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing['2xs'],
+    borderRadius: radius.full,
   },
   viewToggleText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1E40AF',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
   },
   newsContainer: {
-    marginTop: 16,
+    marginTop: spacing.md,
   },
   loadingContainer: {
     padding: 40,
@@ -495,52 +467,51 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: {
-    fontSize: 16,
-    color: '#6B7280',
-    fontFamily: 'Inter-Regular',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   errorContainer: {
-    padding: 20,
-    backgroundColor: '#FEE2E2',
-    borderRadius: 8,
-    marginTop: 16,
+    padding: spacing.md,
+    backgroundColor: colors.errorLight,
+    borderRadius: radius.md,
+    marginTop: spacing.md,
   },
   errorText: {
-    fontSize: 14,
-    color: '#DC2626',
-    fontFamily: 'Inter-Regular',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.error,
     textAlign: 'center',
   },
   serviceIconContainer: {
     width: 48,
     height: 48,
-    borderRadius: 12,
-    backgroundColor: '#EFF6FF',
+    borderRadius: radius.md,
+    backgroundColor: colors.primaryTint,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: spacing.md,
   },
   serviceInfo: {
     flex: 1,
   },
   serviceTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    fontFamily: 'Inter-SemiBold',
-    marginBottom: 2,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+    marginBottom: spacing['2xs'],
   },
   serviceDescription: {
-    fontSize: 14,
-    color: '#6B7280',
-    fontFamily: 'Inter-Regular',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   emergencySection: {
-    margin: 20,
-    backgroundColor: '#DC2626',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 30,
+    margin: spacing.md,
+    backgroundColor: colors.error,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.xl,
   },
   emergencyContent: {
     flexDirection: 'row',
@@ -549,37 +520,34 @@ const styles = StyleSheet.create({
   emergencyIcon: {
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: radius.md,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: spacing.md,
   },
   emergencyTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ffffff',
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.body,
+    color: colors.surface,
   },
   emergencyNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    fontFamily: 'Inter-Bold',
-    marginTop: 2,
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h3,
+    color: colors.surface,
+    marginTop: spacing['2xs'],
   },
   retryButton: {
-    backgroundColor: '#DC2626',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 12,
+    backgroundColor: colors.error,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.md,
+    marginTop: spacing.sm,
   },
   retryButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#ffffff',
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.bodySm,
+    color: colors.surface,
   },
   emptyContainer: {
     padding: 40,
@@ -587,9 +555,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyText: {
-    fontSize: 16,
-    color: '#9CA3AF',
-    fontFamily: 'Inter-Regular',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.body,
+    color: colors.textMuted,
     textAlign: 'center',
   },
 })

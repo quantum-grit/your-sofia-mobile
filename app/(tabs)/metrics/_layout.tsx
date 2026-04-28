@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next'
 import WasteCollectionDashboard from './waste-collection'
 import AbandonedCarsDashboard from './abandoned-cars'
 import PotholesDashboard from './potholes'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 type DashboardTab = 'waste' | 'cars' | 'potholes'
 
@@ -47,12 +48,12 @@ export default function MetricsLayout() {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#F9FAFB'},
+  container: {flex: 1, backgroundColor: colors.surface2},
   dashTabBar: {
     flexGrow: 0,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   dashTabBarContent: {paddingHorizontal: 12, paddingVertical: 0, gap: 4},
   dashTab: {
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
   },
-  dashTabActive: {borderBottomColor: '#1E40AF'},
-  dashTabText: {fontSize: 14, fontWeight: '500', color: '#6B7280'},
-  dashTabTextActive: {color: '#1E40AF', fontWeight: '700'},
+  dashTabActive: {borderBottomColor: colors.primary},
+  dashTabText: {fontSize: fontSizes.bodySm, fontFamily: fonts.medium, color: colors.textSecondary},
+  dashTabTextActive: {color: colors.primary, fontFamily: fonts.bold},
 })

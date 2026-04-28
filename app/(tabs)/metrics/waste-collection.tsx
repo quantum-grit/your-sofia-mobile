@@ -12,13 +12,14 @@ import {useTranslation} from 'react-i18next'
 import {CartesianChart, StackedBar, Bar} from 'victory-native'
 import {Text as SkiaText, matchFont} from '@shopify/react-native-skia'
 import {useCollectionMetrics, MetricsRange} from '../../../hooks/useCollectionMetrics'
+import {colors, fontSizes} from '@/styles/tokens'
 
 type ChartTab = 'zone' | 'district'
 
 function colorByBucketOrder(order: number): string {
-  if (order === 0) return '#059669'
+  if (order === 0) return colors.success
   if (order === 1) return '#F97316'
-  return '#DC2626'
+  return colors.error
 }
 
 export default function WasteCollectionDashboard() {
@@ -61,7 +62,7 @@ export default function WasteCollectionDashboard() {
         {
           status: t('metrics.complianceOnTime'),
           count: Math.max(0, compliance.scheduledToday - compliance.delayed),
-          color: '#059669',
+          color: colors.success,
         },
         {
           status: t('metrics.complianceDelayed'),
@@ -71,7 +72,7 @@ export default function WasteCollectionDashboard() {
         {
           status: t('metrics.complianceMissed'),
           count: compliance.missed,
-          color: '#DC2626',
+          color: colors.error,
         },
       ]
     : []
@@ -103,15 +104,17 @@ export default function WasteCollectionDashboard() {
       {data && (
         <View style={styles.summaryRow}>
           <View style={styles.summaryCard}>
-            <Text style={[styles.summaryValue, {color: '#6B7280'}]}>{totalContainers}</Text>
+            <Text style={[styles.summaryValue, {color: colors.textSecondary}]}>
+              {totalContainers}
+            </Text>
             <Text style={styles.summaryLabel}>{t('metrics.summaryTotal')}</Text>
           </View>
           <View style={styles.summaryCard}>
-            <Text style={[styles.summaryValue, {color: '#1E40AF'}]}>{totalCollected}</Text>
+            <Text style={[styles.summaryValue, {color: colors.primary}]}>{totalCollected}</Text>
             <Text style={styles.summaryLabel}>{t('metrics.summaryCollected')}</Text>
           </View>
           <View style={styles.summaryCard}>
-            <Text style={[styles.summaryValue, {color: '#059669'}]}>{data.byZone.length}</Text>
+            <Text style={[styles.summaryValue, {color: colors.success}]}>{data.byZone.length}</Text>
             <Text style={styles.summaryLabel}>{t('metrics.summaryZones')}</Text>
           </View>
           <View style={styles.summaryCard}>
@@ -144,7 +147,7 @@ export default function WasteCollectionDashboard() {
       {/* Loading */}
       {loading && (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#1E40AF" />
+          <ActivityIndicator size="large" color={colors.primary} />
           <Text style={styles.loadingText}>{t('metrics.loading')}</Text>
         </View>
       )}
@@ -165,11 +168,11 @@ export default function WasteCollectionDashboard() {
         <View style={styles.chartSection}>
           <View style={styles.legend}>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, {backgroundColor: '#D1D5DB'}]} />
+              <View style={[styles.legendDot, {backgroundColor: colors.border}]} />
               <Text style={styles.legendText}>{t('metrics.totalContainers')}</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, {backgroundColor: '#1E40AF'}]} />
+              <View style={[styles.legendDot, {backgroundColor: colors.primary}]} />
               <Text style={styles.legendText}>{t('metrics.collected')}</Text>
             </View>
           </View>
@@ -184,8 +187,8 @@ export default function WasteCollectionDashboard() {
                 axisOptions={{
                   font,
                   tickCount: {x: chartData.length, y: 5},
-                  labelColor: '#6B7280',
-                  lineColor: '#E5E7EB',
+                  labelColor: colors.textSecondary,
+                  lineColor: colors.border,
                 }}
               >
                 {({points, chartBounds}) => (
@@ -193,7 +196,7 @@ export default function WasteCollectionDashboard() {
                     <StackedBar
                       points={[points.collected, points.notCollected]}
                       chartBounds={chartBounds}
-                      colors={['#1E40AF', '#D1D5DB']}
+                      colors={[colors.primary, colors.border]}
                       barOptions={({isTop}) =>
                         isTop ? {roundedCorners: {topLeft: 3, topRight: 3}} : {}
                       }
@@ -209,7 +212,7 @@ export default function WasteCollectionDashboard() {
                           y={(point.y ?? 0) - 4}
                           text={label}
                           font={font}
-                          color="#1E40AF"
+                          color={colors.primary}
                         />
                       )
                     })}
@@ -247,8 +250,8 @@ export default function WasteCollectionDashboard() {
                   axisOptions={{
                     font,
                     tickCount: {x: histogramData.length, y: 5},
-                    labelColor: '#6B7280',
-                    lineColor: '#E5E7EB',
+                    labelColor: colors.textSecondary,
+                    lineColor: colors.border,
                   }}
                 >
                   {({points, chartBounds}) => (
@@ -298,8 +301,8 @@ export default function WasteCollectionDashboard() {
               axisOptions={{
                 font,
                 tickCount: {x: 3, y: 5},
-                labelColor: '#6B7280',
-                lineColor: '#E5E7EB',
+                labelColor: colors.textSecondary,
+                lineColor: colors.border,
               }}
             >
               {({points, chartBounds}) => (
@@ -310,12 +313,12 @@ export default function WasteCollectionDashboard() {
                       points={[point]}
                       barCount={3}
                       chartBounds={chartBounds}
-                      color={complianceData[i]?.color ?? '#6B7280'}
+                      color={complianceData[i]?.color ?? colors.textSecondary}
                       roundedCorners={{topLeft: 4, topRight: 4}}
                       labels={{
                         position: 'top',
                         font,
-                        color: complianceData[i]?.color ?? '#6B7280',
+                        color: complianceData[i]?.color ?? colors.textSecondary,
                       }}
                     />
                   ))}
@@ -344,11 +347,11 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     backgroundColor: '#fff',
   },
-  rangeBtnActive: {backgroundColor: '#1E40AF', borderColor: '#1E40AF'},
-  rangeBtnText: {fontSize: 13, color: '#374151', fontWeight: '500'},
+  rangeBtnActive: {backgroundColor: colors.primary, borderColor: colors.primary},
+  rangeBtnText: {fontSize: fontSizes.label, color: colors.textPrimary, fontWeight: '500'},
   rangeBtnTextActive: {color: '#fff', fontWeight: '600'},
   summaryRow: {
     flexDirection: 'row',
@@ -364,16 +367,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     alignItems: 'center',
   },
-  summaryValue: {fontSize: 20, fontWeight: '700'},
-  summaryLabel: {fontSize: 10, color: '#9CA3AF', marginTop: 2, textAlign: 'center'},
+  summaryValue: {fontSize: fontSizes.h3, fontWeight: '700'},
+  summaryLabel: {fontSize: 10, color: colors.textMuted, marginTop: 2, textAlign: 'center'},
   tabRow: {
     flexDirection: 'row',
     marginHorizontal: 16,
     marginBottom: 8,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.border,
     borderRadius: 8,
     padding: 2,
   },
@@ -384,24 +387,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 4,
   },
-  tabBtnText: {fontSize: 13, color: '#6B7280', fontWeight: '500'},
-  tabBtnTextActive: {color: '#1E40AF', fontWeight: '600'},
+  tabBtnText: {fontSize: fontSizes.label, color: colors.textSecondary, fontWeight: '500'},
+  tabBtnTextActive: {color: colors.primary, fontWeight: '600'},
   center: {alignItems: 'center', justifyContent: 'center', padding: 40},
-  loadingText: {marginTop: 12, color: '#6B7280', fontSize: 14},
-  errorText: {fontSize: 16, fontWeight: '600', color: '#DC2626', marginBottom: 6},
-  errorDetail: {fontSize: 13, color: '#6B7280', marginBottom: 16},
+  loadingText: {marginTop: 12, color: colors.textSecondary, fontSize: fontSizes.bodySm},
+  errorText: {fontSize: fontSizes.body, fontWeight: '600', color: colors.error, marginBottom: 6},
+  errorDetail: {fontSize: fontSizes.label, color: colors.textSecondary, marginBottom: 16},
   retryBtn: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
   },
-  retryBtnText: {color: '#fff', fontWeight: '600', fontSize: 14},
-  emptyText: {color: '#9CA3AF', fontSize: 14},
+  retryBtnText: {color: '#fff', fontWeight: '600', fontSize: fontSizes.bodySm},
+  emptyText: {color: colors.textMuted, fontSize: fontSizes.bodySm},
   chartSection: {paddingHorizontal: 16, paddingTop: 8},
-  sectionTitle: {fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 10},
+  sectionTitle: {
+    fontSize: fontSizes.bodySm,
+    fontWeight: '600',
+    color: colors.textPrimary,
+    marginBottom: 10,
+  },
   legend: {flexDirection: 'row', gap: 16, marginBottom: 8},
   legendItem: {flexDirection: 'row', alignItems: 'center', gap: 6},
   legendDot: {width: 10, height: 10, borderRadius: 2},
-  legendText: {fontSize: 12, color: '#6B7280'},
+  legendText: {fontSize: fontSizes.caption, color: colors.textSecondary},
 })

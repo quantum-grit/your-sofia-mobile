@@ -1,3 +1,5 @@
+import {colors} from '@/styles/tokens'
+
 export type WasteType =
   | 'general'
   | 'recyclables'
@@ -48,23 +50,23 @@ export const CONTAINER_STATES: ContainerState[] = [
 export function getStateColor(state: ContainerState | string): string {
   switch (state) {
     case 'full':
-      return '#DC2626' // Red
+      return colors.error
     case 'dirty':
       return '#92400E' // Brown
     case 'damaged':
-      return '#1F2937' // Black/Dark Gray
+      return colors.textPrimary
     case 'leaves':
-      return '#10B981' // Green
+      return colors.success
     case 'bagged':
-      return '#1F2937' // Black
+      return colors.textPrimary
     case 'maintenance':
       return '#F97316' // Orange
     case 'fallen':
       return '#7C3AED' // Purple
     case 'bulkyWaste':
-      return '#059669' // Emerald Green
+      return colors.success
     default:
-      return '#1E40AF' // Default Blue
+      return colors.primary
   }
 }
 

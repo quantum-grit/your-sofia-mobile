@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next'
 import {useUpdates} from '../../../hooks/useUpdates'
 import {ImplementMeGithub} from '../../../components/ImplementMeGithub'
 import {estimateZoom, getBoundsFromRegion, type MapBounds} from '../../../lib/mapBounds'
+import {colors, fontSizes} from '@/styles/tokens'
 
 export default function EventsMap() {
   const {t} = useTranslation()
@@ -69,7 +70,7 @@ export default function EventsMap() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1E40AF" />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>{t('map.loading')}</Text>
       </View>
     )
@@ -98,7 +99,7 @@ export default function EventsMap() {
               longitude: location.coords.longitude,
             }}
             title={t('common.yourLocation') || 'Your Location'}
-            pinColor="#1E40AF"
+            pinColor={colors.primary}
           />
         )}
 
@@ -136,12 +137,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   implementMeContainer: {
     position: 'absolute',

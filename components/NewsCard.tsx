@@ -2,6 +2,7 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native'
 import {useRouter} from 'expo-router'
 import type {NewsItem} from '../types/news'
 import {getCategoryColor} from '@/lib/categories'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 interface NewsCardProps {
   item: NewsItem
@@ -41,46 +42,51 @@ export function NewsCard({item}: NewsCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     overflow: 'hidden',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
     borderLeftWidth: 4,
-    borderLeftColor: '#9CA3AF',
-    elevation: 2,
+    borderLeftColor: colors.textMuted,
+    borderWidth: 1,
+    borderColor: colors.border,
+    elevation: 1,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
   },
   image: {
     width: '100%',
-    height: 332,
-    backgroundColor: '#aedcedff',
+    height: 200,
+    backgroundColor: colors.surface2,
   },
   content: {
-    padding: 16,
+    padding: spacing.md,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 8,
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h3,
+    color: colors.textPrimary,
+    marginBottom: spacing.xs,
   },
   snippet: {
-    fontSize: 14,
-    color: '#4B5563',
-    marginBottom: 8,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    marginBottom: spacing.xs,
     lineHeight: 20,
   },
   description: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 8,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    marginBottom: spacing.xs,
     lineHeight: 20,
   },
   date: {
-    fontSize: 12,
-    color: '#9CA3AF',
+    fontFamily: fonts.monoMedium,
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
   },
 })

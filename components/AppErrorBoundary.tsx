@@ -1,6 +1,7 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import i18n from '../i18n'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 interface AppErrorBoundaryProps {
   children: ReactNode
@@ -48,34 +49,34 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.bg,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
   },
   title: {
     fontSize: 22,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 12,
     textAlign: 'center',
   },
   message: {
-    fontSize: 16,
-    color: '#4B5563',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
 })

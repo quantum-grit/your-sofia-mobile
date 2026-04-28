@@ -18,6 +18,7 @@ import {loadNearbyContainers} from '../../../lib/containerUtils'
 import {getDistanceFromLatLonInMeters} from '../../../lib/mapUtils'
 import {useDeviceHeading} from '../../../hooks/useDeviceHeading'
 import {type WasteContainer} from '../../../types/wasteContainer'
+import {colors} from '@/styles/tokens'
 
 const HORIZONTAL_FOV = 60 // degrees — approximate phone camera horizontal FOV
 const AR_RADIUS_METERS = 150
@@ -137,10 +138,11 @@ function getExpectedCleanLabel(
 }
 
 function getPinColor(container: WasteContainer): string {
-  if (container.state?.includes('full') || container.status === 'full') return '#EF4444'
-  if (container.state?.includes('damaged') || container.state?.includes('bagged')) return '#374151'
+  if (container.state?.includes('full') || container.status === 'full') return colors.error
+  if (container.state?.includes('damaged') || container.state?.includes('bagged'))
+    return colors.textPrimary
   if (container.state && container.state.length > 0) return '#F97316'
-  return '#10B981'
+  return colors.success
 }
 
 /** Haversine bearing from point A to point B, in degrees (0=N, clockwise). */
@@ -361,7 +363,7 @@ export default function ArView() {
   if (!permission) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator color="#1E40AF" />
+        <ActivityIndicator color={colors.primary} />
       </View>
     )
   }
@@ -477,19 +479,19 @@ const styles = StyleSheet.create({
   permTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1F2937',
+    color: colors.textPrimary,
     marginBottom: 12,
     textAlign: 'center',
   },
   permMessage: {
     fontSize: 16,
-    color: '#6B7280',
+    color: colors.textSecondary,
     marginBottom: 24,
     textAlign: 'center',
     lineHeight: 24,
   },
   permButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
@@ -528,7 +530,7 @@ const styles = StyleSheet.create({
   },
   overlayRow: {
     fontSize: 11,
-    color: '#D1D5DB',
+    color: colors.border,
     marginBottom: 1,
   },
   overlayDistance: {

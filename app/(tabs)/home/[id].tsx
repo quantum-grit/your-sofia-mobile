@@ -4,6 +4,7 @@ import {useLocalSearchParams} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import Markdown from 'react-native-markdown-display'
 import {useUpdateById} from '@/hooks/useUpdateById'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function NewsDetail() {
   const {id} = useLocalSearchParams<{id: string}>()
@@ -13,7 +14,7 @@ export default function NewsDetail() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1E40AF" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     )
   }
@@ -67,7 +68,7 @@ export default function NewsDetail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   header: {
     flexDirection: 'row',
@@ -76,17 +77,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   headerBackButton: {
     padding: 8,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   headerSpacer: {
     width: 40,
@@ -103,31 +104,31 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: fontSizes.h2,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 8,
     lineHeight: 32,
   },
   date: {
-    fontSize: 14,
-    color: '#9CA3AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.textMuted,
     marginBottom: 16,
   },
   description: {
-    fontSize: 16,
-    color: '#4B5563',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     lineHeight: 24,
     marginBottom: 24,
   },
   contentText: {
     fontSize: 15,
-    color: '#374151',
+    color: colors.textPrimary,
     lineHeight: 24,
   },
   sourceLink: {
-    fontSize: 13,
-    color: '#1E40AF',
+    fontSize: fontSizes.label,
+    color: colors.primary,
     marginTop: 16,
     textDecorationLine: 'underline',
   },
@@ -135,18 +136,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   errorText: {
-    fontSize: 16,
-    color: '#EF4444',
+    fontSize: fontSizes.body,
+    color: colors.error,
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
 const markdownStyles = StyleSheet.create({
   body: {
     fontSize: 15,
-    color: '#374151',
+    color: colors.textPrimary,
     lineHeight: 24,
   },
   paragraph: {
@@ -163,24 +164,23 @@ const markdownStyles = StyleSheet.create({
     marginBottom: 12,
   },
   heading1: {
-    fontSize: 24,
+    fontSize: fontSizes.h2,
     lineHeight: 32,
-    color: '#1F2937',
-    fontWeight: '700',
+    color: colors.textPrimary,
+    fontFamily: fonts.bold,
     marginBottom: 12,
   },
   heading2: {
-    fontSize: 20,
+    fontSize: fontSizes.h3,
     lineHeight: 28,
-    color: '#1F2937',
-    fontWeight: '700',
+    color: colors.textPrimary,
     marginBottom: 10,
   },
   heading3: {
     fontSize: 17,
     lineHeight: 24,
-    color: '#1F2937',
-    fontWeight: '600',
+    color: colors.textPrimary,
+    fontFamily: fonts.semiBold,
     marginBottom: 8,
   },
   bullet_list: {
@@ -190,15 +190,15 @@ const markdownStyles = StyleSheet.create({
     marginBottom: 12,
   },
   list_item: {
-    color: '#374151',
+    color: colors.textPrimary,
     lineHeight: 24,
   },
   link: {
-    color: '#1E40AF',
+    color: colors.primary,
     textDecorationLine: 'underline',
   },
   strong: {
-    fontWeight: '700',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
 })

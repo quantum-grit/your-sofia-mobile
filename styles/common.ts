@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export const commonStyles = StyleSheet.create({
   header: {
@@ -8,20 +9,20 @@ export const commonStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   headerButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
   },

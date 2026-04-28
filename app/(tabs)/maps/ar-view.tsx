@@ -17,6 +17,7 @@ import {loadNearbyContainers} from '../../../lib/containerUtils'
 import {getDistanceFromLatLonInMeters} from '../../../lib/mapUtils'
 import {useDeviceHeading} from '../../../hooks/useDeviceHeading'
 import {type WasteContainer} from '../../../types/wasteContainer'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const HORIZONTAL_FOV = 60 // degrees — approximate phone camera horizontal FOV
 const AR_RADIUS_METERS = 150
@@ -136,10 +137,11 @@ function getExpectedCleanLabel(
 }
 
 function getPinColor(container: WasteContainer): string {
-  if (container.state?.includes('full') || container.status === 'full') return '#EF4444'
-  if (container.state?.includes('damaged') || container.state?.includes('bagged')) return '#374151'
+  if (container.state?.includes('full') || container.status === 'full') return colors.error
+  if (container.state?.includes('damaged') || container.state?.includes('bagged'))
+    return colors.textPrimary
   if (container.state && container.state.length > 0) return '#F97316'
-  return '#10B981'
+  return colors.success
 }
 
 /** Haversine bearing from point A to point B, in degrees (0=N, clockwise). */
@@ -363,7 +365,7 @@ export default function ArView({onClose}: ArViewProps) {
   if (!permission) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator color="#1E40AF" />
+        <ActivityIndicator color={colors.primary} />
       </View>
     )
   }
@@ -477,29 +479,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   permTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 12,
     textAlign: 'center',
   },
   permMessage: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     marginBottom: 24,
     textAlign: 'center',
     lineHeight: 24,
   },
   permButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   permButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   overlayWrapper: {
     position: 'absolute',
@@ -523,19 +525,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlayTitle: {
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: fontSizes.label,
+    fontFamily: fonts.bold,
     color: '#fff',
     marginBottom: 2,
   },
   overlayRow: {
     fontSize: 11,
-    color: '#D1D5DB',
+    color: colors.border,
     marginBottom: 1,
   },
   overlayDistance: {
     fontSize: 11,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     marginTop: 4,
   },
   compassWarning: {
@@ -550,8 +552,8 @@ const styles = StyleSheet.create({
   },
   compassWarningText: {
     color: '#fff',
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: fontSizes.label,
+    fontFamily: fonts.semiBold,
   },
   loadingBadge: {
     position: 'absolute',
@@ -580,8 +582,8 @@ const styles = StyleSheet.create({
   },
   debugText: {
     color: '#FBBF24',
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.bold,
     fontVariant: ['tabular-nums'],
   },
   modalOverlay: {

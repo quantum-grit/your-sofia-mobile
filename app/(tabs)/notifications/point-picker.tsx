@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next'
 import MapView, {Marker, type Region} from 'react-native-maps'
 import type {LocationFilterPoint} from '../../../types/subscription'
 import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
+import {colors, fontSizes} from '@/styles/tokens'
 
 // Sofia center
 const SOFIA_REGION: Region = {
@@ -96,34 +97,44 @@ export default function PointPickerScreen() {
 const styles = StyleSheet.create({
   container: {flex: 1},
   map: {flex: 1},
-  panel: {maxHeight: 200, backgroundColor: '#ffffff'},
+  panel: {maxHeight: 200, backgroundColor: colors.surface},
   panelContent: {padding: 16},
-  hint: {fontSize: 13, color: '#6B7280', marginBottom: 12, textAlign: 'center'},
-  radiusLabel: {fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 8},
+  hint: {
+    fontSize: fontSizes.label,
+    color: colors.textSecondary,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  radiusLabel: {
+    fontSize: fontSizes.bodySm,
+    fontWeight: '600',
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
   radiusOptions: {flexDirection: 'row', flexWrap: 'wrap', gap: 8},
   radiusChip: {
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 20,
     borderWidth: 1.5,
-    borderColor: '#1E40AF',
-    backgroundColor: '#ffffff',
+    borderColor: colors.primary,
+    backgroundColor: colors.surface,
   },
-  radiusChipSelected: {backgroundColor: '#1E40AF'},
-  radiusChipText: {fontSize: 13, color: '#1E40AF', fontWeight: '600'},
-  radiusChipTextSelected: {color: '#ffffff'},
+  radiusChipSelected: {backgroundColor: colors.primary},
+  radiusChipText: {fontSize: fontSizes.label, color: colors.primary, fontWeight: '600'},
+  radiusChipTextSelected: {color: colors.surface},
   footer: {
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: colors.border,
   },
   confirmBtn: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
   },
   confirmBtnDisabled: {opacity: 0.4},
-  confirmBtnText: {color: '#ffffff', fontSize: 16, fontWeight: '700'},
+  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
 })

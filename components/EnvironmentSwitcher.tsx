@@ -4,6 +4,7 @@ import * as Notifications from 'expo-notifications'
 import {useEnvironment} from '@/contexts/EnvironmentContext'
 import {Environment} from '@/lib/environment'
 import {useTranslation} from 'react-i18next'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export function EnvironmentSwitcher() {
   const {environment, config, setEnvironment, canSwitch, allEnvironments} = useEnvironment()
@@ -103,22 +104,22 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#666',
     marginBottom: 12,
   },
   current: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
     marginBottom: 4,
   },
   url: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#666',
     marginBottom: 12,
   },
@@ -137,20 +138,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonActive: {
-    backgroundColor: '#1E40AF',
-    borderColor: '#1E40AF',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#333',
   },
   buttonTextActive: {
     color: '#FFF',
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   testTitle: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: fontSizes.label,
     marginTop: 16,
     marginBottom: 8,
   },
@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   testButtonText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#4338CA',
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
 })

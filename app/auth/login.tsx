@@ -15,6 +15,7 @@ import {useRouter} from 'expo-router'
 import {useAuth} from '../../contexts/AuthContext'
 import {useTranslation} from 'react-i18next'
 import {LogIn} from 'lucide-react-native'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function LoginScreen() {
   const {t} = useTranslation()
@@ -49,7 +50,7 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <LogIn size={48} color="#1E40AF" />
+          <LogIn size={48} color={colors.primary} />
           <Text style={styles.title}>{t('auth.login')}</Text>
           <Text style={styles.subtitle}>{t('auth.loginSubtitle')}</Text>
         </View>
@@ -92,7 +93,7 @@ export default function LoginScreen() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="#ffffff" />
+              <ActivityIndicator color={colors.surface} />
             ) : (
               <Text style={styles.loginButtonText}>{t('auth.login')}</Text>
             )}
@@ -117,7 +118,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   scrollContent: {
     flexGrow: 1,
@@ -130,13 +131,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginTop: 16,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     marginTop: 8,
     textAlign: 'center',
   },
@@ -147,22 +148,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     borderRadius: 8,
     padding: 12,
-    fontSize: 16,
-    color: '#1F2937',
-    backgroundColor: '#F9FAFB',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface2,
   },
   loginButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
@@ -172,20 +173,20 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   loginButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   registerLink: {
     marginTop: 24,
     alignItems: 'center',
   },
   registerLinkText: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   registerLinkHighlight: {
-    color: '#1E40AF',
-    fontWeight: '600',
+    color: colors.primary,
+    fontFamily: fonts.semiBold,
   },
 })
