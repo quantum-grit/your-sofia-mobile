@@ -2,6 +2,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native'
 import {Bell, LucideIcon} from 'lucide-react-native'
 import {useNotifications} from '../hooks/useNotifications'
 import {useBellAction} from '../contexts/BellActionContext'
+import {colors, fonts, fontSizes, radius} from '@/styles/tokens'
 
 interface TabHeaderProps {
   title: string
@@ -36,7 +37,7 @@ export function TabHeader({
       <Text style={styles.title}>{title}</Text>
       {showActionIcon && (
         <TouchableOpacity style={styles.actionButton} onPress={handleActionPress}>
-          <Icon size={24} color="#6B7280" />
+          <Icon size={24} color={colors.textMuted} />
           {ActionIcon === Bell && unreadCount > 0 && (
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>
@@ -59,16 +60,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    fontFamily: 'Inter-Bold',
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h3,
+    color: colors.textPrimary,
   },
   actionButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    borderRadius: radius.full,
+    backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -78,20 +78,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -4,
-    backgroundColor: '#DC2626',
-    borderRadius: 10,
+    backgroundColor: colors.error,
+    borderRadius: radius.full,
     minWidth: 20,
     height: 20,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 4,
     borderWidth: 2,
-    borderColor: '#ffffff',
+    borderColor: colors.surface,
   },
   notificationBadgeText: {
-    color: '#ffffff',
-    fontSize: 10,
-    fontWeight: '700',
-    fontFamily: 'Inter-Bold',
+    color: colors.surface,
+    fontFamily: fonts.extraBold,
+    fontSize: fontSizes.caption,
   },
 })

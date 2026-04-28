@@ -23,6 +23,7 @@ import {
   calculateAssignmentProgress,
 } from '../../lib/payload'
 import type {Assignment} from '../../types/assignment'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 import {
   CONTAINER_STATES,
   type ContainerState,
@@ -161,7 +162,7 @@ export default function AssignmentsScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#3B82F6" />
+          <ActivityIndicator size="large" color={colors.primaryLight} />
           <Text style={styles.loadingText}>{t('common.loading')}</Text>
         </View>
       </View>
@@ -251,14 +252,14 @@ export default function AssignmentsScreen() {
 
                 <View style={styles.assignmentInfo}>
                   <View style={styles.infoItem}>
-                    <CheckSquare size={16} color="#6B7280" />
+                    <CheckSquare size={16} color={colors.textSecondary} />
                     <Text style={styles.infoText}>
                       {t('assignments.containerCount', {count: containerCount})}
                     </Text>
                   </View>
                   {assignedToName && (
                     <View style={styles.infoItem}>
-                      <Users size={16} color="#6B7280" />
+                      <Users size={16} color={colors.textSecondary} />
                       <Text style={styles.infoText} numberOfLines={1}>
                         {assignedToName}
                       </Text>
@@ -266,7 +267,7 @@ export default function AssignmentsScreen() {
                   )}
                   {item.dueDate && (
                     <View style={styles.infoItem}>
-                      <Calendar size={16} color="#6B7280" />
+                      <Calendar size={16} color={colors.textSecondary} />
                       <Text style={styles.infoText}>
                         {new Date(item.dueDate).toLocaleDateString('bg-BG', {
                           day: 'numeric',
@@ -325,15 +326,15 @@ export default function AssignmentsScreen() {
                 >
                   <View style={styles.containerCardContent}>
                     {isSelected ? (
-                      <CheckSquare size={24} color="#3B82F6" />
+                      <CheckSquare size={24} color={colors.primaryLight} />
                     ) : (
-                      <Square size={24} color="#9CA3AF" />
+                      <Square size={24} color={colors.textMuted} />
                     )}
                     <Text style={styles.containerNumber}>{item.publicNumber}</Text>
                     <View style={styles.signalsBadge}>
                       <AlertTriangle
                         size={16}
-                        color={item.activeSignalCount > 0 ? '#EF4444' : '#6B7280'}
+                        color={item.activeSignalCount > 0 ? colors.error : colors.textSecondary}
                       />
                       <Text
                         style={[
@@ -361,7 +362,7 @@ export default function AssignmentsScreen() {
           activeOpacity={0.8}
         >
           <View style={styles.fabContent}>
-            <Plus size={20} color="#ffffff" />
+            <Plus size={20} color={colors.surface} />
             <Text style={styles.fabText}>{selectedCount}</Text>
           </View>
         </TouchableOpacity>
@@ -378,7 +379,7 @@ export default function AssignmentsScreen() {
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>{t('assignments.createNew')}</Text>
             <TouchableOpacity onPress={() => setShowCreateModal(false)}>
-              <X size={24} color="#1F2937" />
+              <X size={24} color={colors.textPrimary} />
             </TouchableOpacity>
           </View>
 
@@ -389,7 +390,7 @@ export default function AssignmentsScreen() {
               value={formData.title}
               onChangeText={(text) => setFormData((prev) => ({...prev, title: text}))}
               placeholder={t('assignments.titlePlaceholder')}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={colors.textMuted}
             />
 
             <Text style={styles.label}>{t('assignments.description')}</Text>
@@ -398,7 +399,7 @@ export default function AssignmentsScreen() {
               value={formData.description}
               onChangeText={(text) => setFormData((prev) => ({...prev, description: text}))}
               placeholder={t('assignments.descriptionPlaceholder')}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={colors.textMuted}
               multiline
               numberOfLines={4}
             />
@@ -415,9 +416,9 @@ export default function AssignmentsScreen() {
                     activeOpacity={0.7}
                   >
                     {isSelected ? (
-                      <CheckSquare size={20} color="#3B82F6" />
+                      <CheckSquare size={20} color={colors.primaryLight} />
                     ) : (
-                      <Square size={20} color="#9CA3AF" />
+                      <Square size={20} color={colors.textMuted} />
                     )}
                     <Text style={styles.activityLabel}>
                       {t(`signals.containerStates.${activity}`)}
@@ -444,7 +445,7 @@ export default function AssignmentsScreen() {
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <ActivityIndicator color="#ffffff" />
+                <ActivityIndicator color={colors.surface} />
               ) : (
                 <Text style={styles.submitButtonText}>{t('common.new')}</Text>
               )}
@@ -465,7 +466,7 @@ export default function AssignmentsScreen() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{selectedAssignment.title}</Text>
               <TouchableOpacity onPress={() => setSelectedAssignment(null)}>
-                <X size={24} color="#1F2937" />
+                <X size={24} color={colors.textPrimary} />
               </TouchableOpacity>
             </View>
 
@@ -571,7 +572,7 @@ export default function AssignmentsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   loadingContainer: {
     flex: 1,
@@ -580,35 +581,35 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   viewSwitcher: {
     flexDirection: 'row',
     padding: 16,
     gap: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   viewButton: {
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     alignItems: 'center',
   },
   viewButtonActive: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: colors.primaryLight,
   },
   viewButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   viewButtonTextActive: {
-    color: '#ffffff',
+    color: colors.surface,
   },
   emptyState: {
     flex: 1,
@@ -617,23 +618,23 @@ const styles = StyleSheet.create({
     paddingVertical: 48,
   },
   emptyText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
     marginBottom: 8,
   },
   emptySubtext: {
-    fontSize: 14,
-    color: '#9CA3AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.textMuted,
   },
   assignmentCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginVertical: 8,
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   assignmentCardHeader: {
     flexDirection: 'row',
@@ -644,13 +645,13 @@ const styles = StyleSheet.create({
   },
   assignmentTitle: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   assignmentDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     marginBottom: 12,
     lineHeight: 20,
   },
@@ -666,8 +667,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   infoText: {
-    fontSize: 13,
-    color: '#6B7280',
+    fontSize: fontSizes.label,
+    color: colors.textSecondary,
   },
   progressContainer: {
     marginTop: 4,
@@ -679,59 +680,58 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   progressLabel: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.medium,
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   progressPercentage: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.label,
+    color: colors.textPrimary,
   },
   progressBarBackground: {
     height: 6,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.border,
     borderRadius: 3,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#3B82F6',
+    backgroundColor: colors.primaryLight,
     borderRadius: 3,
   },
   progressBarFillComplete: {
-    backgroundColor: '#10B981',
+    backgroundColor: colors.success,
   },
   statusBadgeSmall: {
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
   },
   statusTextSmall: {
     fontSize: 11,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   assignmentMeta: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   containerCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginVertical: 4,
     padding: 8,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   containerCardSelected: {
-    borderColor: '#3B82F6',
+    borderColor: colors.primaryLight,
     borderWidth: 1,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
   },
   containerCardContent: {
     flexDirection: 'row',
@@ -740,21 +740,21 @@ const styles = StyleSheet.create({
   },
   containerNumber: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   selectionBar: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#BFDBFE',
   },
   selectionText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1E40AF',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.primary,
   },
   signalsBadge: {
     flexDirection: 'row',
@@ -762,12 +762,12 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   signalsCount: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   signalsCountActive: {
-    color: '#EF4444',
-    fontWeight: '600',
+    color: colors.error,
+    fontFamily: fonts.semiBold,
   },
   fab: {
     position: 'absolute',
@@ -776,7 +776,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderRadius: 28,
-    backgroundColor: '#3B82F6',
+    backgroundColor: colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
@@ -791,13 +791,13 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   fabText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -806,32 +806,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   modalContent: {
     flex: 1,
     padding: 20,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 8,
     marginTop: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     borderRadius: 8,
     padding: 12,
-    fontSize: 16,
-    color: '#1F2937',
-    backgroundColor: '#ffffff',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
   },
   textArea: {
     height: 100,
@@ -846,72 +846,71 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 4,
     borderRadius: 8,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   activityLabel: {
-    fontSize: 14,
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
   },
   selectedInfo: {
     marginTop: 24,
     padding: 16,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     borderRadius: 8,
   },
   selectedInfoText: {
-    fontSize: 14,
-    color: '#1E40AF',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
+    fontFamily: fonts.medium,
   },
   modalFooter: {
     flexDirection: 'row',
     gap: 12,
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: colors.border,
   },
   cancelButton: {
     flex: 1,
     padding: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     alignItems: 'center',
   },
   cancelButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   submitButton: {
     flex: 1,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: '#3B82F6',
+    backgroundColor: colors.primaryLight,
     alignItems: 'center',
   },
   submitButtonDisabled: {
     backgroundColor: '#93C5FD',
   },
   submitButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ffffff',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.surface,
   },
   detailSection: {
     marginBottom: 24,
   },
   detailLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     marginBottom: 8,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   detailText: {
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
     lineHeight: 24,
   },
   statusBadge: {
@@ -919,27 +918,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
   },
   statusBadgePending: {
     backgroundColor: '#FEF3C7',
   },
   statusBadgeInProgress: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: colors.primaryTint,
   },
   statusBadgeCompleted: {
-    backgroundColor: '#D1FAE5',
+    backgroundColor: colors.successLight,
   },
   statusText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   statusTextPending: {
     color: '#92400E',
   },
   statusTextInProgress: {
-    color: '#1E40AF',
+    color: colors.primary,
   },
   statusTextCompleted: {
     color: '#065F46',
@@ -950,7 +949,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   activityTag: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
@@ -958,9 +957,9 @@ const styles = StyleSheet.create({
     borderColor: '#BFDBFE',
   },
   activityTagText: {
-    fontSize: 14,
-    color: '#1E40AF',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
+    fontFamily: fonts.medium,
   },
   containersList: {
     flexDirection: 'row',
@@ -968,16 +967,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   containerTag: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   containerTagText: {
-    fontSize: 14,
-    color: '#1F2937',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
+    fontFamily: fonts.medium,
   },
 })

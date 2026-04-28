@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {useTranslation} from 'react-i18next'
+import {colors, fontSizes} from '@/styles/tokens'
 
 export default function PotholesDashboard() {
   const {t} = useTranslation()
@@ -14,6 +15,6 @@ export default function PotholesDashboard() {
 
 const styles = StyleSheet.create({
   container: {flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40},
-  title: {fontSize: 20, fontWeight: '700', color: '#111827', marginBottom: 8},
-  text: {fontSize: 15, color: '#9CA3AF'},
+  title: {fontSize: fontSizes.h3, fontWeight: '700', color: colors.textPrimary, marginBottom: 8},
+  text: {fontSize: 15, color: colors.textMuted},
 })

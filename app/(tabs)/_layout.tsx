@@ -19,6 +19,7 @@ import {BellActionProvider} from '../../contexts/BellActionContext'
 import {TabHeader} from '../../components/TabHeader'
 import {useAuth} from '../../contexts/AuthContext'
 import {useNotifications} from '../../hooks/useNotifications'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function TabLayout() {
   const {t} = useTranslation()
@@ -44,18 +45,18 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
         headerTitleAlign: 'left',
         lazy: false,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: colors.surface,
           borderTopWidth: 1,
-          borderTopColor: '#e5e7eb',
+          borderTopColor: colors.border,
           paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 8,
           height: 64 + Math.max(insets.bottom, 8),
         },
-        tabBarActiveTintColor: '#1E40AF',
-        tabBarInactiveTintColor: '#6B7280',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '600',
+          fontSize: fontSizes.caption,
+          fontFamily: fonts.semiBold,
         },
       }}
     >

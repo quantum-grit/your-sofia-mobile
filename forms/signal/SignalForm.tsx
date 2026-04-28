@@ -9,6 +9,7 @@ import {signalFormSchema, type SignalFormData, type SignalFormProps} from './sch
 import {styles} from './signal.styles'
 import {CONTAINER_STATES, getStateColor} from '../../types/wasteContainer'
 import type {Signal} from '../../types/signal'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 export const SignalForm = forwardRef<any, SignalFormProps>(
   ({signal, onSubmit, onCancel, isSubmitting = false, isEditing = true, canEdit = false}, ref) => {
@@ -122,24 +123,24 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
         case 'pending':
           return <AlertCircle {...iconProps} color="#F59E0B" />
         case 'in-progress':
-          return <AlertCircle {...iconProps} color="#3B82F6" />
+          return <AlertCircle {...iconProps} color={colors.primaryLight} />
         case 'resolved':
-          return <AlertCircle {...iconProps} color="#10B981" />
+          return <AlertCircle {...iconProps} color={colors.success} />
         case 'rejected':
-          return <AlertCircle {...iconProps} color="#EF4444" />
+          return <AlertCircle {...iconProps} color={colors.error} />
         default:
           return null
       }
     }
 
     const getStatusColor = (status: Signal['status']) => {
-      const colors = {
+      const colorMap = {
         pending: '#F59E0B',
-        'in-progress': '#3B82F6',
-        resolved: '#10B981',
-        rejected: '#EF4444',
+        'in-progress': colors.primaryLight,
+        resolved: colors.success,
+        rejected: colors.error,
       }
-      return colors[status] || '#6B7280'
+      return colorMap[status] || colors.textSecondary
     }
 
     return (
@@ -163,7 +164,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
             </Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-            <Calendar size={16} color="#6B7280" />
+            <Calendar size={16} color={colors.textSecondary} />
             <Text style={styles.metaText}>
               {new Date(signal.createdAt).toLocaleDateString(i18n.language, {
                 year: 'numeric',
@@ -180,7 +181,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
           <View style={styles.section}>
             <View style={styles.metaRow}>
               {/* City Object */}
-              <MapPin size={16} color="#6B7280" />
+              <MapPin size={16} color={colors.textSecondary} />
               <Text style={styles.metaText}>{signal.cityObject.name}</Text>
             </View>
           </View>
@@ -279,7 +280,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                         onPress={() => photo.id && removePhoto(photo.id)}
                         disabled={isSubmitting}
                       >
-                        <X size={16} color="#ffffff" />
+                        <X size={16} color={colors.surface} />
                       </TouchableOpacity>
                     )}
                   </View>
@@ -295,7 +296,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                 onPress={takePhoto}
                 disabled={isSubmitting}
               >
-                <Camera size={20} color="#1E40AF" />
+                <Camera size={20} color={colors.primary} />
                 <Text style={styles.photoButtonText}>{t('signals.form.takePhoto')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -303,7 +304,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
                 onPress={pickFromGallery}
                 disabled={isSubmitting}
               >
-                <Upload size={20} color="#1E40AF" />
+                <Upload size={20} color={colors.primary} />
                 <Text style={styles.photoButtonText}>{t('signals.form.chooseFromGallery')}</Text>
               </TouchableOpacity>
             </View>
@@ -314,7 +315,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
         {signal.cityObject?.name && (
           <View style={styles.section}>
             <View style={styles.metaRow}>
-              <MapPin size={16} color="#6B7280" />
+              <MapPin size={16} color={colors.textSecondary} />
               <Text style={styles.metaText}>{signal.cityObject.name}</Text>
             </View>
           </View>
@@ -324,7 +325,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
         {signal.location?.address && (
           <View style={styles.section}>
             <View style={styles.metaRow}>
-              <MapPin size={16} color="#6B7280" />
+              <MapPin size={16} color={colors.textSecondary} />
               <Text style={styles.metaText}>{signal.location.address}</Text>
             </View>
           </View>
@@ -363,7 +364,7 @@ export const SignalForm = forwardRef<any, SignalFormProps>(
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>{t('signals.adminNotes')}</Text>
             <View style={styles.adminNotesContainer}>
-              <FileText size={16} color="#1E40AF" />
+              <FileText size={16} color={colors.primary} />
               <Text style={styles.adminNotesText}>{signal.adminNotes}</Text>
             </View>
           </View>

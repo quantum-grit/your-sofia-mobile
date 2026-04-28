@@ -8,6 +8,7 @@ import NewsMap from './news'
 import EventsMap from './events'
 import BgsmetView from './bgsmet-view'
 import ArView from './ar-view'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 type MapFilter = 'wasteContainers' | 'bgsmetView' | 'transport' | 'news' | 'events' | 'arView'
 
@@ -85,10 +86,10 @@ export default function MapsLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   filtersContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
     paddingVertical: 12,
@@ -102,22 +103,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     marginRight: 8,
   },
   filterChipActive: {
-    backgroundColor: '#1E40AF',
-    borderColor: '#1E40AF',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   filterChipText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   filterChipTextActive: {
-    color: '#ffffff',
+    color: colors.surface,
   },
   mapContainer: {
     flex: 1,

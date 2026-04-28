@@ -9,6 +9,7 @@ import {useUpdateCategories} from '../../../hooks/useUpdateCategories'
 import {estimateZoom, getBoundsFromRegion, type MapBounds} from '../../../lib/mapBounds'
 import {getCategoryColor, getCategoryIcon} from '../../../lib/categories'
 import {TopicFilter} from '../../../components/TopicFilter'
+import {colors, fontSizes} from '@/styles/tokens'
 
 export default function NewsMap() {
   const {t} = useTranslation()
@@ -79,7 +80,7 @@ export default function NewsMap() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1E40AF" />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>{t('map.loading')}</Text>
       </View>
     )
@@ -117,7 +118,7 @@ export default function NewsMap() {
             >
               <View style={styles.markerContainer}>
                 <View style={[styles.markerIcon, {backgroundColor: color}]}>
-                  <Icon size={14} color="#ffffff" />
+                  <Icon size={14} color={colors.surface} />
                 </View>
                 <View style={[styles.markerPointer, {borderTopColor: color}]} />
               </View>
@@ -148,12 +149,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   filterOverlay: {
     position: 'absolute',
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: colors.surface,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.2,
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: '#1E40AF',
+    borderTopColor: colors.primary,
     marginTop: -2,
   },
 })

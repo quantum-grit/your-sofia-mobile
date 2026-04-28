@@ -11,6 +11,7 @@ import {
 } from './schema'
 import {styles} from './wasteContainer.styles'
 import type {WasteType, CapacitySize} from '../../types/wasteContainer'
+import {colors} from '@/styles/tokens'
 
 export const WasteContainerForm = forwardRef<any, WasteContainerFormProps>(
   (
@@ -111,7 +112,7 @@ export const WasteContainerForm = forwardRef<any, WasteContainerFormProps>(
                       options?.multiline && styles.textArea,
                     ]}
                     placeholder={placeholder}
-                    placeholderTextColor="#9CA3AF"
+                    placeholderTextColor={colors.textMuted}
                     value={value?.toString() || ''}
                     onChangeText={(text) => {
                       if (
@@ -243,7 +244,7 @@ export const WasteContainerForm = forwardRef<any, WasteContainerFormProps>(
           {/* Info about location */}
           {isEditing && canEdit && (
             <View style={styles.infoRow}>
-              <Info size={16} color="#1E40AF" />
+              <Info size={16} color={colors.primary} />
               <Text style={styles.infoText}>{t('newCityObject.locationInfo')}</Text>
             </View>
           )}

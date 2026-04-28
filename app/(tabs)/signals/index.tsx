@@ -17,6 +17,7 @@ import {getUniqueReporterId} from '../../../lib/deviceId'
 import {useNotifications} from '../../../hooks/useNotifications'
 import type {Signal} from '../../../types/signal'
 import {AlertCircle, Clock, CheckCircle, XCircle} from 'lucide-react-native'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function SignalsScreen() {
   const {t, i18n} = useTranslation()
@@ -102,24 +103,24 @@ export default function SignalsScreen() {
       case 'pending':
         return <Clock {...iconProps} color="#F59E0B" />
       case 'in-progress':
-        return <AlertCircle {...iconProps} color="#3B82F6" />
+        return <AlertCircle {...iconProps} color={colors.primaryLight} />
       case 'resolved':
-        return <CheckCircle {...iconProps} color="#10B981" />
+        return <CheckCircle {...iconProps} color={colors.success} />
       case 'rejected':
-        return <XCircle {...iconProps} color="#EF4444" />
+        return <XCircle {...iconProps} color={colors.error} />
       default:
         return null
     }
   }
 
   const getStatusColor = (status: Signal['status']) => {
-    const colors = {
+    const colorMap = {
       pending: '#F59E0B',
-      'in-progress': '#3B82F6',
-      resolved: '#10B981',
-      rejected: '#EF4444',
+      'in-progress': colors.primaryLight,
+      resolved: colors.success,
+      rejected: colors.error,
     }
-    return colors[status] || '#6B7280'
+    return colorMap[status] || colors.textSecondary
   }
 
   const renderSignalItem = ({item}: {item: Signal}) => (
@@ -159,7 +160,7 @@ export default function SignalsScreen() {
   if (loading && !refreshing) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#1E40AF" />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>{t('common.loading')}</Text>
       </View>
     )
@@ -234,7 +235,11 @@ export default function SignalsScreen() {
           </View>
         }
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#1E40AF" />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary}
+          />
         }
       />
     </View>
@@ -244,42 +249,42 @@ export default function SignalsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   errorText: {
-    fontSize: 16,
-    color: '#EF4444',
+    fontSize: fontSizes.body,
+    color: colors.error,
     textAlign: 'center',
     marginBottom: 16,
   },
   retryButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   retryButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   listContainer: {
     padding: 16,
   },
   signalCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -301,50 +306,50 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   statusText: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.semiBold,
     textTransform: 'uppercase',
   },
   categoryBadge: {
-    fontSize: 12,
-    color: '#6B7280',
-    backgroundColor: '#F3F4F6',
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
+    backgroundColor: colors.surface2,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
   signalTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   signalDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
     marginBottom: 8,
   },
   signalObject: {
-    fontSize: 13,
-    color: '#1E40AF',
+    fontSize: fontSizes.label,
+    color: colors.primary,
     marginBottom: 8,
   },
   signalDate: {
-    fontSize: 12,
-    color: '#9CA3AF',
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
   },
   emptyContainer: {
     padding: 40,
     alignItems: 'center',
   },
   emptyText: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   filterBanner: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
@@ -353,21 +358,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   filterText: {
-    fontSize: 13,
-    color: '#1E40AF',
+    fontSize: fontSizes.label,
+    color: colors.primary,
     flex: 1,
   },
   filterClearButton: {
     marginLeft: 12,
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 6,
   },
   filterClearButtonText: {
     color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.semiBold,
   },
   filterRow: {
     flexDirection: 'row',
@@ -379,20 +384,20 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
-    backgroundColor: '#ffffff',
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     alignItems: 'center',
   },
   filterChipActive: {
-    backgroundColor: '#1E40AF',
-    borderColor: '#1E40AF',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   filterChipText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   filterChipTextActive: {
-    color: '#ffffff',
+    color: colors.surface,
   },
 })

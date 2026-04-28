@@ -1,6 +1,7 @@
 import {View, Text, ScrollView, TouchableOpacity, StyleSheet} from 'react-native'
 import type {NewsFilterChip} from '../types/news'
 import {getCategoryColor} from '@/lib/categories'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 interface TopicFilterProps {
   selectedTopics: Set<string>
@@ -38,7 +39,7 @@ export function TopicFilter({selectedTopics, onTopicsChange, topics}: TopicFilte
       {topics.map((topic) => {
         const isSelected = topic.id === 'all' ? allSelected : selectedTopics.has(topic.id)
         const Icon = topic.icon
-        const categoryColor = topic.id === 'all' ? '#1E40AF' : getCategoryColor(topic.id)
+        const categoryColor = topic.id === 'all' ? colors.primary : getCategoryColor(topic.id)
 
         return (
           <TouchableOpacity
@@ -51,7 +52,7 @@ export function TopicFilter({selectedTopics, onTopicsChange, topics}: TopicFilte
           >
             {Icon && (
               <View style={styles.icon}>
-                <Icon size={14} color={isSelected ? '#FFFFFF' : categoryColor} />
+                <Icon size={14} color={isSelected ? colors.surface : categoryColor} />
               </View>
             )}
             <Text style={[styles.label, isSelected ? styles.selectedLabel : styles.defaultLabel]}>
@@ -66,30 +67,30 @@ export function TopicFilter({selectedTopics, onTopicsChange, topics}: TopicFilte
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    gap: 8,
+    paddingHorizontal: spacing.md,
+    gap: spacing.xs,
   },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   icon: {
-    marginRight: 4,
+    marginRight: spacing['2xs'],
   },
   label: {
-    fontSize: 13,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.label,
   },
   defaultLabel: {
-    color: '#4B5563',
+    color: colors.textSecondary,
   },
   selectedLabel: {
-    color: '#FFFFFF',
+    color: colors.surface,
   },
 })

@@ -28,6 +28,7 @@ import {WasteContainerMarker} from '../../../components/WasteContainerMarker'
 import {fetchWasteContainerById} from '../../../lib/payload'
 import {loadNearbyContainers} from '../../../lib/containerUtils'
 import {getDistanceFromLatLonInMeters} from '../../../lib/mapUtils'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 import {
   type WasteContainer,
   type ContainerState,
@@ -565,9 +566,9 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
           >
             <Text style={styles.filterHeaderText}>{t('wasteContainers.filterByState')}</Text>
             {showStateFilters ? (
-              <ChevronUp size={20} color="#1F2937" />
+              <ChevronUp size={20} color={colors.textPrimary} />
             ) : (
-              <ChevronDown size={20} color="#1F2937" />
+              <ChevronDown size={20} color={colors.textPrimary} />
             )}
           </TouchableOpacity>
           {showStateFilters && (
@@ -607,9 +608,9 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
           >
             <Text style={styles.filterHeaderText}>{t('wasteContainers.filterByType')}</Text>
             {showTypeFilters ? (
-              <ChevronUp size={20} color="#1F2937" />
+              <ChevronUp size={20} color={colors.textPrimary} />
             ) : (
-              <ChevronDown size={20} color="#1F2937" />
+              <ChevronDown size={20} color={colors.textPrimary} />
             )}
           </TouchableOpacity>
           {showTypeFilters && (
@@ -656,23 +657,23 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
           onPress={toggleFollowMe}
         >
           {followMe ? (
-            <Navigation size={20} color="#ffffff" />
+            <Navigation size={20} color={colors.surface} />
           ) : (
-            <NavigationOff size={20} color="#6B7280" />
+            <NavigationOff size={20} color={colors.textSecondary} />
           )}
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton} onPress={zoomIn}>
-          <ZoomIn size={20} color="#6B7280" />
+          <ZoomIn size={20} color={colors.textSecondary} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton} onPress={zoomOut}>
-          <ZoomOut size={20} color="#6B7280" />
+          <ZoomOut size={20} color={colors.textSecondary} />
         </TouchableOpacity>
       </View>
 
       {/* AR View Button */}
       {onOpenAR && (
         <TouchableOpacity style={styles.arButton} onPress={onOpenAR}>
-          <ScanSearch size={22} color="#1E40AF" />
+          <ScanSearch size={22} color={colors.primary} />
         </TouchableOpacity>
       )}
 
@@ -699,7 +700,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
       {/* Loading overlay for containers */}
       {containersLoading && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="small" color="#1E40AF" />
+          <ActivityIndicator size="small" color={colors.primary} />
         </View>
       )}
 
@@ -743,44 +744,44 @@ function getContainerPinColor(container: WasteContainer, uncollectedMode = false
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   permissionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 12,
     textAlign: 'center',
   },
   permissionMessage: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     marginBottom: 24,
     textAlign: 'center',
     lineHeight: 24,
   },
   permissionButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   permissionButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   filtersRow: {
     position: 'absolute',
@@ -809,12 +810,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   filterHeaderText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   filterOptionsContent: {
     padding: 8,
@@ -844,40 +845,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   filterChipActive: {
-    backgroundColor: '#1E40AF',
-    borderColor: '#1E40AF',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   filterChipText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   filterChipTextActive: {
-    color: '#ffffff',
+    color: colors.surface,
   },
   map: {
     flex: 1,
   },
   callout: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     padding: 8,
     borderRadius: 8,
     minWidth: 120,
   },
   calloutTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 2,
   },
   calloutText: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
   },
   modalOverlay: {
     flex: 1,
@@ -892,7 +893,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 70,
     right: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     padding: 8,
     borderRadius: 8,
     shadowColor: '#000',
@@ -906,7 +907,7 @@ const styles = StyleSheet.create({
     top: 70,
     left: 16,
     right: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -924,13 +925,13 @@ const styles = StyleSheet.create({
   },
   errorOverlayText: {
     flex: 1,
-    fontSize: 13,
+    fontSize: fontSizes.label,
     color: '#B91C1C',
   },
   errorOverlayDismiss: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#1E40AF',
+    fontSize: fontSizes.caption,
+    fontFamily: fonts.semiBold,
+    color: colors.primary,
   },
   actionButtonsContainer: {
     position: 'absolute',
@@ -939,8 +940,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   actionButton: {
-    color: '#6B7280',
-    backgroundColor: '#F3F4F6',
+    color: colors.textSecondary,
+    backgroundColor: colors.surface2,
     width: 48,
     height: 48,
     borderRadius: 24,
@@ -953,13 +954,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   actionButtonActive: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
   },
   arButton: {
     position: 'absolute',
     bottom: 20,
     left: 16,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     width: 48,
     height: 48,
     borderRadius: 24,

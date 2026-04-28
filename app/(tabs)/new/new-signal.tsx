@@ -26,6 +26,7 @@ import {CONTAINER_STATES, getStateColor} from '../../../types/wasteContainer'
 import {useNearbyObjects} from '../../../hooks/useNearbyObjects'
 import {useSignalForm} from '../../../hooks/useSignalForm'
 import {FullScreenPhotoViewer} from '../../../components/FullScreenPhotoViewer'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const {height} = Dimensions.get('window')
 
@@ -457,7 +458,7 @@ export default function NewScreen() {
                     onPress={() => removePhoto(photo.id)}
                     style={styles.photoRemoveButton}
                   >
-                    <X size={18} color="#EF4444" />
+                    <X size={18} color={colors.error} />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -475,7 +476,7 @@ export default function NewScreen() {
             onPress={() => setSelectedObject(null)}
           >
             <View style={styles.objectInfo}>
-              <MapPinIcon size={20} color="#1E40AF" />
+              <MapPinIcon size={20} color={colors.primary} />
               <Text style={styles.objectName}>{t('newSignal.newObject')}</Text>
             </View>
           </TouchableOpacity>
@@ -483,7 +484,7 @@ export default function NewScreen() {
           {/* Nearby Objects List */}
           {loadingNearbyObjects ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color="#1E40AF" />
+              <ActivityIndicator size="small" color={colors.primary} />
               <Text style={styles.loadingText}>{t('newSignal.loadingNearbyObjects')}</Text>
             </View>
           ) : nearbyObjects.length > 0 ? (
@@ -500,7 +501,7 @@ export default function NewScreen() {
                 }}
               >
                 <View style={styles.objectInfo}>
-                  <MapPinIcon size={20} color="#6B7280" />
+                  <MapPinIcon size={20} color={colors.textSecondary} />
                   <View>
                     <Text style={styles.objectName}>{obj.name}</Text>
                     <Text style={styles.objectDistance}>
@@ -582,7 +583,7 @@ export default function NewScreen() {
           <TextInput
             style={styles.descriptionInput}
             placeholder={t('newSignal.descriptionPlaceholder')}
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={colors.textMuted}
             value={description}
             onChangeText={setDescription}
             multiline
@@ -651,7 +652,7 @@ export default function NewScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   scrollView: {
     flex: 1,
@@ -663,8 +664,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   messageText: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -735,7 +736,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
   },
   photoThumbnailContainer: {
     width: 80,
@@ -754,9 +755,9 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   photoChipText: {
-    fontSize: 14,
-    color: '#1F2937',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
+    fontFamily: fonts.medium,
   },
   coordinatesOverlay: {
     position: 'absolute',
@@ -770,9 +771,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   coordinatesText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   dateTimeOverlay: {
     position: 'absolute',
@@ -783,9 +784,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   dateTimeText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     textAlign: 'right',
   },
   section: {
@@ -793,8 +794,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1F2937',
+    color: colors.textPrimary,
     marginBottom: 12,
   },
   objectCard: {
@@ -806,8 +806,8 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   objectCardSelected: {
-    borderColor: '#1E40AF',
-    backgroundColor: '#EFF6FF',
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryTint,
   },
   objectInfo: {
     flexDirection: 'row',
@@ -815,18 +815,18 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   objectName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
   },
   objectDistance: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   emptyText: {
-    fontSize: 14,
-    color: '#9CA3AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.textMuted,
     textAlign: 'center',
     paddingVertical: 20,
   },
@@ -838,8 +838,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   loadingText: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   typeChipsContainer: {
     flexDirection: 'row',
@@ -850,30 +850,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     minWidth: 100,
     alignItems: 'center',
   },
   typeChipSelected: {
-    backgroundColor: '#EFF6FF',
-    borderColor: '#1E40AF',
+    backgroundColor: colors.primaryTint,
+    borderColor: colors.primary,
   },
   typeChipDisabled: {
     opacity: 0.4,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   typeChipText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   typeChipTextSelected: {
-    color: '#1E40AF',
+    color: colors.primary,
   },
   typeChipTextDisabled: {
-    color: '#9CA3AF',
+    color: colors.textMuted,
   },
   stateTagsContainer: {
     flexDirection: 'row',
@@ -884,53 +884,53 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     minWidth: 100,
     alignItems: 'center',
   },
   stateTagText: {
-    fontSize: 14,
-    color: '#6B7280',
-    fontWeight: '600',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    fontFamily: fonts.semiBold,
   },
   stateTagTextActive: {
-    color: '#ffffff',
+    color: colors.surface,
   },
   descriptionInput: {
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
     minHeight: 120,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   progressContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
     borderRadius: 12,
     marginHorizontal: 16,
     marginBottom: 8,
   },
   progressText: {
-    fontSize: 14,
-    color: '#1E40AF',
-    fontWeight: '600',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
+    fontFamily: fonts.semiBold,
     marginBottom: 8,
   },
   progressBarContainer: {
     height: 6,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.border,
     borderRadius: 3,
     overflow: 'hidden',
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 3,
   },
   actionsContainer: {
@@ -940,14 +940,14 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     flex: 1,
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
   },
   primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
     color: '#fff',
   },
   secondaryButton: {
@@ -957,12 +957,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -977,13 +977,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
     backgroundColor: '#fff',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   closeButton: {
     position: 'absolute',

@@ -4,6 +4,7 @@ import {Wind} from 'lucide-react-native'
 import {AirQualityData} from '../types/airQuality'
 import {useTranslation} from 'react-i18next'
 import {ImplementMeGithub} from './ImplementMeGithub'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 interface Props {
   data: AirQualityData
@@ -16,7 +17,7 @@ export function AirQualityCard({data}: Props) {
     if (aqi <= 50) return '#22C55E' // green-500
     if (aqi <= 100) return '#EAB308' // yellow-500
     if (aqi <= 150) return '#F97316' // orange-500
-    if (aqi <= 200) return '#EF4444' // red-500
+    if (aqi <= 200) return colors.error // red-500
     return '#A855F7' // purple-500
   }
 
@@ -24,7 +25,7 @@ export function AirQualityCard({data}: Props) {
     if (aqi <= 50) return '#DCFCE7' // green-100
     if (aqi <= 100) return '#FEF9C3' // yellow-100
     if (aqi <= 150) return '#FFEDD5' // orange-100
-    if (aqi <= 200) return '#FEE2E2' // red-100
+    if (aqi <= 200) return colors.errorLight // red-100
     return '#F3E8FF' // purple-100
   }
 
@@ -62,29 +63,29 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 100, // Very high value for pill shape
-    padding: 12,
+    borderRadius: radius.full,
+    padding: spacing.sm,
   },
   iconContainer: {
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    borderRadius: radius.full,
+    backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: spacing.sm,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontSize: 14,
-    color: '#4B5563',
-    fontFamily: 'Inter-Medium',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   status: {
-    fontSize: 16,
-    fontFamily: 'Inter-SemiBold',
-    marginTop: 2,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.body,
+    marginTop: spacing['2xs'],
   },
 })

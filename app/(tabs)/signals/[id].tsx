@@ -9,6 +9,7 @@ import {getUniqueReporterId} from '../../../lib/deviceId'
 import type {Signal} from '../../../types/signal'
 import {type ContainerState} from '../../../types/wasteContainer'
 import {SignalForm, type SignalFormData, styles} from '../../../forms/signal'
+import {colors} from '@/styles/tokens'
 
 export default function SignalDetailsScreen() {
   const {t, i18n} = useTranslation()
@@ -125,23 +126,23 @@ export default function SignalDetailsScreen() {
           {isEditing ? (
             <>
               <TouchableOpacity onPress={handleCancelEdit} style={{padding: 8}} disabled={saving}>
-                <X size={24} color="#6B7280" />
+                <X size={24} color={colors.textSecondary} />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSave}
-                style={{padding: 8, backgroundColor: '#1E40AF', borderRadius: 8}}
+                style={{padding: 8, backgroundColor: colors.primary, borderRadius: 8}}
                 disabled={saving}
               >
                 {saving ? (
-                  <ActivityIndicator size="small" color="#ffffff" />
+                  <ActivityIndicator size="small" color={colors.surface} />
                 ) : (
-                  <Save size={24} color="#ffffff" />
+                  <Save size={24} color={colors.surface} />
                 )}
               </TouchableOpacity>
             </>
           ) : canEdit ? (
             <TouchableOpacity onPress={handleEdit} style={{padding: 8}}>
-              <Edit3 size={24} color="#1E40AF" />
+              <Edit3 size={24} color={colors.primary} />
             </TouchableOpacity>
           ) : null}
         </View>
@@ -153,7 +154,7 @@ export default function SignalDetailsScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#1E40AF" />
+          <ActivityIndicator size="large" color={colors.primary} />
           <Text style={styles.loadingText}>{t('common.loading')}</Text>
         </View>
       </SafeAreaView>

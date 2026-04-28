@@ -14,6 +14,7 @@ import {Check} from 'lucide-react-native'
 import {fetchCityDistricts} from '../../../lib/payload'
 import type {CityDistrict, LocationFilterDistrict} from '../../../types/subscription'
 import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function DistrictPickerScreen() {
   const {t} = useTranslation()
@@ -43,7 +44,7 @@ export default function DistrictPickerScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color="#1E40AF" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </SafeAreaView>
     )
   }
@@ -65,7 +66,7 @@ export default function DistrictPickerScreen() {
                 <Text style={styles.districtId}>{item.districtId}</Text>
                 <Text style={styles.districtName}>{item.name}</Text>
               </View>
-              {isSelected && <Check size={18} color="#1E40AF" />}
+              {isSelected && <Check size={18} color={colors.primary} />}
             </TouchableOpacity>
           )
         }}
@@ -85,7 +86,7 @@ export default function DistrictPickerScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#F9FAFB'},
+  container: {flex: 1, backgroundColor: colors.surface2},
   centered: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   list: {paddingVertical: 8},
   row: {
@@ -94,31 +95,31 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
   },
-  rowSelected: {backgroundColor: '#EFF6FF'},
+  rowSelected: {backgroundColor: colors.primaryTint},
   rowLeft: {flexDirection: 'row', alignItems: 'center', gap: 12},
   districtId: {
     width: 28,
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#1E40AF',
+    fontSize: fontSizes.label,
+    fontFamily: fonts.bold,
+    color: colors.primary,
     textAlign: 'right',
   },
-  districtName: {fontSize: 15, color: '#111827'},
-  separator: {height: 1, backgroundColor: '#F3F4F6', marginLeft: 60},
+  districtName: {fontSize: 15, color: colors.textPrimary},
+  separator: {height: 1, backgroundColor: colors.surface2, marginLeft: 60},
   footer: {
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: colors.border,
   },
   confirmBtn: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
   },
   confirmBtnDisabled: {opacity: 0.4},
-  confirmBtnText: {color: '#ffffff', fontSize: 16, fontWeight: '700'},
+  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
 })

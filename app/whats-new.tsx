@@ -11,34 +11,20 @@ import {
 import {useRouter} from 'expo-router'
 import {useTranslation} from 'react-i18next'
 import {Newspaper} from 'lucide-react-native'
-import {
-  useFonts,
-  Inter_400Regular,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter'
 import {markWhatsNewSeen, getCurrentAppVersion} from '@/lib/whatsNew'
 import {useWhatsNew} from '@/hooks/useWhatsNew'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 export default function WhatsNewScreen() {
   const {t} = useTranslation()
   const router = useRouter()
   const version = getCurrentAppVersion()
   const {items, loading} = useWhatsNew()
-  const [fontsLoaded] = useFonts({
-    'Inter-Regular': Inter_400Regular,
-    'Inter-SemiBold': Inter_600SemiBold,
-    'Inter-Bold': Inter_700Bold,
-  })
 
   const handleContinue = useCallback(async () => {
     await markWhatsNewSeen()
     router.replace('/(tabs)/home')
   }, [router])
-
-  if (!fontsLoaded) {
-    return null
-  }
 
   return (
     <View style={styles.overlay}>
@@ -118,64 +104,64 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   sheet: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     height: '67%',
-    paddingTop: 12,
+    paddingTop: spacing.sm,
   },
   handle: {
     width: 40,
     height: 4,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: colors.border,
     borderRadius: 2,
     alignSelf: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.md,
   },
   scroll: {
-    paddingHorizontal: 24,
-    paddingTop: 8,
-    paddingBottom: 16,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.xs,
+    paddingBottom: spacing.md,
     flexGrow: 1,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.lg,
   },
   logo: {
     width: 72,
     height: 72,
-    borderRadius: 36,
-    marginBottom: 12,
+    borderRadius: radius.full,
+    marginBottom: spacing.sm,
   },
   wordmark: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 20,
-    color: '#111827',
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h3,
+    color: colors.textPrimary,
     letterSpacing: 0.2,
   },
   versionTag: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
+    marginTop: spacing['2xs'],
   },
   title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: '#111827',
-    marginBottom: 28,
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.h2,
+    color: colors.textPrimary,
+    marginBottom: spacing.lg,
   },
   features: {
-    gap: 20,
+    gap: spacing.md,
   },
   loader: {
-    marginTop: 24,
+    marginTop: spacing.lg,
   },
   featureRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: spacing.sm,
   },
   featureIcon: {
     marginTop: 2,
@@ -185,36 +171,36 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   featureTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#111827',
-    marginBottom: 2,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
+    marginBottom: spacing['2xs'],
   },
   featureDescription: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#4B5563',
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
   },
   footer: {
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-    paddingTop: 16,
-    gap: 16,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.xl,
+    paddingTop: spacing.md,
+    gap: spacing.md,
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   continueButton: {
-    backgroundColor: '#2F54C5',
-    borderRadius: 10,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
     paddingVertical: 14,
     width: '100%',
     alignItems: 'center',
   },
   continueText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.body,
+    color: colors.surface,
     letterSpacing: 0.1,
   },
 })

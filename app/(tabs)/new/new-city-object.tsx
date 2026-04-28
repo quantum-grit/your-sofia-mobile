@@ -28,6 +28,7 @@ import {useAuth} from '../../../contexts/AuthContext'
 import {FullScreenPhotoViewer} from '../../../components/FullScreenPhotoViewer'
 import * as ImagePicker from 'expo-image-picker'
 import type {WasteContainer} from '../../../types/wasteContainer'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const {height} = Dimensions.get('window')
 
@@ -262,7 +263,7 @@ export default function NewCityObjectScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#1E40AF" />
+          <ActivityIndicator size="large" color={colors.primary} />
           <Text style={styles.messageText}>{t('common.loading')}</Text>
         </View>
       </SafeAreaView>
@@ -364,7 +365,7 @@ export default function NewCityObjectScreen() {
                     onPress={() => removePhoto(photo.id)}
                     style={styles.photoRemoveButton}
                   >
-                    <X size={18} color="#EF4444" />
+                    <X size={18} color={colors.error} />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -397,7 +398,7 @@ export default function NewCityObjectScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   scrollView: {
     flex: 1,
@@ -409,8 +410,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   messageText: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     textAlign: 'center',
     marginTop: 12,
   },
@@ -481,7 +482,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
   },
   photoThumbnailContainer: {
     width: 80,
@@ -511,9 +512,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   coordinatesText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   dateTimeOverlay: {
     position: 'absolute',
@@ -524,13 +525,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   dateTimeText: {
-    fontSize: 12,
+    fontSize: fontSizes.caption,
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     textAlign: 'right',
   },
   primaryButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 32,
@@ -538,8 +539,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
     color: '#fff',
   },
 })

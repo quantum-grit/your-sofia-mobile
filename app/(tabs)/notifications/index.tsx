@@ -22,6 +22,7 @@ import {useAuth} from '../../../contexts/AuthContext'
 import {registerNotificationFilterListener} from '../../../lib/notificationFilterBridge'
 import type {LocationFilter, SubscriptionCategory} from '../../../types/subscription'
 import {formatLocationFilter} from '../../../lib/formatLocationFilter'
+import {colors, fontSizes} from '@/styles/tokens'
 
 export default function NotificationsScreen() {
   const {t} = useTranslation()
@@ -149,7 +150,7 @@ export default function NotificationsScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color="#1E40AF" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </SafeAreaView>
     )
   }
@@ -165,8 +166,8 @@ export default function NotificationsScreen() {
           <Switch
             value={notificationsEnabled}
             onValueChange={setNotificationsEnabled}
-            trackColor={{false: '#D1D5DB', true: '#93C5FD'}}
-            thumbColor={notificationsEnabled ? '#1E40AF' : '#9CA3AF'}
+            trackColor={{false: colors.border, true: '#93C5FD'}}
+            thumbColor={notificationsEnabled ? colors.primary : colors.textMuted}
           />
         </View>
 
@@ -203,7 +204,7 @@ export default function NotificationsScreen() {
                     !selected && {borderColor: color},
                   ]}
                 >
-                  <Icon size={16} color={selected ? '#ffffff' : color} />
+                  <Icon size={16} color={selected ? colors.surface : color} />
                   <Text
                     style={[styles.categoryChipText, selected && styles.categoryChipTextSelected]}
                     numberOfLines={2}
@@ -228,7 +229,7 @@ export default function NotificationsScreen() {
           ) : (
             locationFilters.map((filter, index) => (
               <View key={index} style={styles.filterRow}>
-                <MapPin size={16} color="#1E40AF" style={styles.filterIcon} />
+                <MapPin size={16} color={colors.primary} style={styles.filterIcon} />
                 <Text style={styles.filterLabel} numberOfLines={1}>
                   {formatLocationFilter(filter as LocationFilter, t)}
                 </Text>
@@ -236,16 +237,16 @@ export default function NotificationsScreen() {
                   onPress={() => removeLocationFilter(index)}
                   style={styles.removeBtn}
                 >
-                  <Trash2 size={16} color="#EF4444" />
+                  <Trash2 size={16} color={colors.error} />
                 </TouchableOpacity>
               </View>
             ))
           )}
 
           <TouchableOpacity style={styles.addFilterBtn} onPress={handleAddLocation}>
-            <Plus size={18} color="#1E40AF" />
+            <Plus size={18} color={colors.primary} />
             <Text style={styles.addFilterText}>{t('notifications.addLocation')}</Text>
-            <ChevronRight size={16} color="#9CA3AF" style={{marginLeft: 'auto'}} />
+            <ChevronRight size={16} color={colors.textMuted} style={{marginLeft: 'auto'}} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -258,7 +259,7 @@ export default function NotificationsScreen() {
           disabled={isSaving || !pushTokenString}
         >
           {isSaving ? (
-            <ActivityIndicator color="#ffffff" size="small" />
+            <ActivityIndicator color={colors.surface} size="small" />
           ) : (
             <Text style={styles.saveButtonText}>{t('notifications.save')}</Text>
           )}
@@ -269,7 +270,7 @@ export default function NotificationsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#F9FAFB'},
+  container: {flex: 1, backgroundColor: colors.surface2},
   centered: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   scrollContent: {padding: 16, paddingBottom: 24},
   noPushTokenBanner: {
@@ -283,9 +284,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FDE68A',
   },
-  noPushTokenText: {flex: 1, fontSize: 13, color: '#92400E', lineHeight: 18},
+  noPushTokenText: {flex: 1, fontSize: fontSizes.label, color: '#92400E', lineHeight: 18},
   section: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -301,9 +302,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  sectionTitle: {fontSize: 16, fontWeight: '700', color: '#111827'},
-  sectionSubtitle: {fontSize: 13, color: '#6B7280', marginBottom: 12},
-  toggleAll: {fontSize: 13, color: '#1E40AF', fontWeight: '600'},
+  sectionTitle: {fontSize: fontSizes.body, fontWeight: '700', color: colors.textPrimary},
+  sectionSubtitle: {fontSize: fontSizes.label, color: colors.textSecondary, marginBottom: 12},
+  toggleAll: {fontSize: fontSizes.label, color: colors.primary, fontWeight: '600'},
   categoryGrid: {flexDirection: 'row', flexWrap: 'wrap', gap: 8},
   categoryChip: {
     flexDirection: 'row',
@@ -313,21 +314,31 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 20,
     borderWidth: 1.5,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     maxWidth: '48%',
   },
-  categoryChipText: {fontSize: 12, color: '#374151', fontWeight: '500', flexShrink: 1},
-  categoryChipTextSelected: {color: '#ffffff'},
-  emptyFilters: {fontSize: 13, color: '#9CA3AF', marginBottom: 12, fontStyle: 'italic'},
+  categoryChipText: {
+    fontSize: fontSizes.caption,
+    color: colors.textPrimary,
+    fontWeight: '500',
+    flexShrink: 1,
+  },
+  categoryChipTextSelected: {color: colors.surface},
+  emptyFilters: {
+    fontSize: fontSizes.label,
+    color: colors.textMuted,
+    marginBottom: 12,
+    fontStyle: 'italic',
+  },
   filterRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: colors.surface2,
   },
   filterIcon: {marginRight: 8},
-  filterLabel: {flex: 1, fontSize: 14, color: '#374151'},
+  filterLabel: {flex: 1, fontSize: fontSizes.bodySm, color: colors.textPrimary},
   removeBtn: {padding: 4},
   addFilterBtn: {
     flexDirection: 'row',
@@ -336,26 +347,26 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 4,
   },
-  addFilterText: {fontSize: 14, color: '#1E40AF', fontWeight: '600'},
+  addFilterText: {fontSize: fontSizes.bodySm, color: colors.primary, fontWeight: '600'},
   footer: {
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: colors.border,
   },
   saveButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
   },
   saveButtonDisabled: {opacity: 0.6},
-  saveButtonText: {color: '#ffffff', fontSize: 16, fontWeight: '700'},
+  saveButtonText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
   enableToggleSection: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -365,6 +376,6 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     elevation: 2,
   },
-  enableToggleLabel: {fontSize: 16, fontWeight: '700', color: '#111827'},
+  enableToggleLabel: {fontSize: fontSizes.body, fontWeight: '700', color: colors.textPrimary},
   sectionDisabled: {opacity: 0.4},
 })

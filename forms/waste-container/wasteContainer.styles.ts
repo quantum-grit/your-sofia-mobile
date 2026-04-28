@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 export const styles = StyleSheet.create({
   container: {
@@ -8,30 +9,30 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   input: {
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   inputError: {
-    borderColor: '#EF4444',
+    borderColor: colors.error,
   },
   textArea: {
     minHeight: 100,
     textAlignVertical: 'top',
   },
   errorText: {
-    fontSize: 12,
-    color: '#EF4444',
+    fontSize: fontSizes.caption,
+    color: colors.error,
     marginTop: 4,
   },
   selectContainer: {
@@ -43,23 +44,23 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     minWidth: 100,
     alignItems: 'center',
   },
   selectOptionSelected: {
-    backgroundColor: '#EFF6FF',
-    borderColor: '#1E40AF',
+    backgroundColor: colors.primaryTint,
+    borderColor: colors.primary,
   },
   selectOptionText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   selectOptionTextSelected: {
-    color: '#1E40AF',
+    color: colors.primary,
   },
   locationRow: {
     flexDirection: 'row',
@@ -73,18 +74,18 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     padding: 12,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     borderRadius: 8,
     marginTop: 8,
   },
   infoText: {
     flex: 1,
-    fontSize: 14,
-    color: '#1E40AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
   },
   readOnlyValue: {
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
     paddingVertical: 8,
   },
   actionsContainer: {
@@ -94,14 +95,14 @@ export const styles = StyleSheet.create({
   },
   primaryButton: {
     flex: 1,
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
   },
   primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
     color: '#fff',
   },
   secondaryButton: {
@@ -111,12 +112,12 @@ export const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   buttonDisabled: {
     opacity: 0.5,

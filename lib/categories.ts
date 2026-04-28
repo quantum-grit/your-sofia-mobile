@@ -1,3 +1,4 @@
+import {colors} from '@/styles/tokens'
 import {
   Bike,
   Bus,
@@ -81,7 +82,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   art: '#F43F5E',
   sports: '#22C55E',
   bicycles: '#0EA5E9',
-  uncategorized: '#9CA3AF',
+  uncategorized: colors.textMuted,
 }
 
 export function getCategoryIcon(slug: string): LucideIcon {
@@ -89,5 +90,5 @@ export function getCategoryIcon(slug: string): LucideIcon {
 }
 
 export function getCategoryColor(slug: string): string {
-  return CATEGORY_COLORS[slug] ?? '#9CA3AF'
+  return CATEGORY_COLORS[slug] ?? colors.textMuted
 }

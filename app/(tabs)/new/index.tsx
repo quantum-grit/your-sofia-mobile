@@ -2,7 +2,8 @@ import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native'
 import {useTranslation} from 'react-i18next'
 import {useRouter} from 'expo-router'
-import {AlertTriangle, MapPin, Images, ScanSearch} from 'lucide-react-native'
+import {AlertTriangle, MapPin, Images} from 'lucide-react-native'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function NewScreen() {
   const {t} = useTranslation()
@@ -18,7 +19,7 @@ export default function NewScreen() {
               onPress={() => router.push('../(tabs)/new/new-signal')}
             >
               <View style={styles.iconContainer}>
-                <AlertTriangle size={36} color="#1E40AF" />
+                <AlertTriangle size={36} color={colors.primary} />
               </View>
               <Text style={styles.buttonTitle}>{t('new.newSignal')}</Text>
               <Text style={styles.buttonDescription}>{t('new.newSignalDescription')}</Text>
@@ -29,7 +30,7 @@ export default function NewScreen() {
               onPress={() => router.push('../(tabs)/new/new-city-object')}
             >
               <View style={styles.iconContainer}>
-                <MapPin size={36} color="#1E40AF" />
+                <MapPin size={36} color={colors.primary} />
               </View>
               <Text style={[styles.buttonTitle]}>{t('new.newCityObject')}</Text>
               <Text style={[styles.buttonDescription]}>{t('new.newCityObjectDescription')}</Text>
@@ -40,7 +41,7 @@ export default function NewScreen() {
               onPress={() => router.push('../(tabs)/new/bulk-photo-upload')}
             >
               <View style={styles.iconContainer}>
-                <Images size={36} color="#1E40AF" />
+                <Images size={36} color={colors.primary} />
               </View>
               <Text style={styles.buttonTitle}>{t('new.bulkPhotoUpload')}</Text>
               <Text style={styles.buttonDescription}>{t('new.bulkPhotoUploadDescription')}</Text>
@@ -55,7 +56,7 @@ export default function NewScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   scrollView: {
     flex: 1,
@@ -66,13 +67,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     marginBottom: 24,
   },
   buttonsContainer: {
@@ -84,36 +85,36 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   iconContainer: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
   },
   buttonTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   buttonDescription: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   buttonDisabled: {
     opacity: 0.5,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   buttonTitleDisabled: {
-    color: '#9CA3AF',
+    color: colors.textMuted,
   },
   buttonDescriptionDisabled: {
-    color: '#D1D5DB',
+    color: colors.border,
   },
 })

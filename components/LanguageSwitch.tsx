@@ -1,6 +1,7 @@
-import {TouchableOpacity, View, Text, StyleSheet} from 'react-native'
+import {TouchableOpacity, Text, StyleSheet} from 'react-native'
 import {useTranslation} from 'react-i18next'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export function LanguageSwitch() {
   const {i18n} = useTranslation()
@@ -24,8 +25,8 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   language: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1E40AF',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.primary,
   },
 })

@@ -35,6 +35,7 @@ import {fetchSignalStats} from '../../lib/payload'
 import {EnvironmentSwitcher} from '@/components/EnvironmentSwitcher'
 import {LanguageSwitch} from '@/components/LanguageSwitch'
 import {useAuth} from '@/contexts/AuthContext'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const getProfileSections = (t: (key: string) => string) => [
   {
@@ -226,18 +227,18 @@ export default function ProfileScreen() {
 
         <TouchableOpacity style={styles.notificationBar}>
           <Text style={styles.notificationText}>{t('profile.anonymity')}</Text>
-          <AlertCircle size={24} color="#1E40AF" />
+          <AlertCircle size={24} color={colors.primary} />
         </TouchableOpacity>
 
         {/* Profile Card */}
         <View style={styles.profileCard}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-              <User size={32} color="#1E40AF" />
+              <User size={32} color={colors.primary} />
             </View>
             {isAuthenticated && (
               <View style={styles.verifiedBadge}>
-                <Shield size={16} color="#ffffff" />
+                <Shield size={16} color={colors.surface} />
               </View>
             )}
           </View>
@@ -255,7 +256,7 @@ export default function ProfileScreen() {
             <View style={styles.profileDetails}>
               {isAuthenticated && user?.email && (
                 <View style={styles.profileDetailItem}>
-                  <Mail size={14} color="#6B7280" />
+                  <Mail size={14} color={colors.textSecondary} />
                   <Text style={styles.profileDetailText}>{user.email}</Text>
                 </View>
               )}
@@ -290,14 +291,14 @@ export default function ProfileScreen() {
                 style={styles.loginButton}
                 onPress={() => router.push('/auth/login' as any)}
               >
-                <LogInIcon size={20} color="#ffffff" />
+                <LogInIcon size={20} color={colors.surface} />
                 <Text style={styles.loginButtonText}>{t('auth.login')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.registerButton}
                 onPress={() => router.push('/auth/register' as any)}
               >
-                <UserPlus size={20} color="#1E40AF" />
+                <UserPlus size={20} color={colors.primary} />
                 <Text style={styles.registerButtonText}>{t('auth.register')}</Text>
               </TouchableOpacity>
             </View>
@@ -305,7 +306,7 @@ export default function ProfileScreen() {
         ) : (
           <>
             <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-              <LogOut size={20} color="#EF4444" />
+              <LogOut size={20} color={colors.error} />
               <Text style={styles.logoutButtonText}>{t('auth.logout')}</Text>
             </TouchableOpacity>
 
@@ -314,7 +315,7 @@ export default function ProfileScreen() {
               style={styles.forgetMeButton}
               onPress={() => setShowForgetMeModal(true)}
             >
-              <UserX size={20} color="#DC2626" />
+              <UserX size={20} color={colors.error} />
               <Text style={styles.forgetMeButtonText}>{t('auth.forgetMe')}</Text>
             </TouchableOpacity>
           </>
@@ -330,7 +331,7 @@ export default function ProfileScreen() {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <View style={styles.modalHeader}>
-                <UserX size={48} color="#DC2626" />
+                <UserX size={48} color={colors.error} />
                 <Text style={styles.modalTitle}>{t('auth.forgetMeTitle')}</Text>
               </View>
               <Text style={styles.modalMessage}>{t('auth.forgetMeMessage')}</Text>
@@ -379,7 +380,7 @@ export default function ProfileScreen() {
           }
         >
           <Text style={styles.notificationText}>{t('profile.staticScreenNotice')}</Text>
-          <GitHubIcon size={24} color="#1E40AF" />
+          <GitHubIcon size={24} color={colors.primary} />
         </TouchableOpacity>
 
         {/* Profile Sections */}
@@ -395,14 +396,14 @@ export default function ProfileScreen() {
                   <TouchableOpacity key={item.id} style={styles.menuItem} onPress={onPress}>
                     <View style={styles.menuItemContent}>
                       <View style={styles.menuItemIcon}>
-                        <IconComponent size={20} color="#1E40AF" />
+                        <IconComponent size={20} color={colors.primary} />
                       </View>
                       <View style={styles.menuItemInfo}>
                         <Text style={styles.menuItemTitle}>{item.title}</Text>
                         <Text style={styles.menuItemDescription}>{item.description}</Text>
                       </View>
                     </View>
-                    <ChevronRight size={20} color="#9CA3AF" />
+                    <ChevronRight size={20} color={colors.textMuted} />
                   </TouchableOpacity>
                 )
               })}
@@ -415,21 +416,21 @@ export default function ProfileScreen() {
           <TouchableOpacity style={styles.menuItem}>
             <View style={styles.menuItemContent}>
               <View style={styles.menuItemIcon}>
-                <Settings size={20} color="#6B7280" />
+                <Settings size={20} color={colors.textSecondary} />
               </View>
               <View style={styles.menuItemInfo}>
                 <Text style={styles.menuItemTitle}>{t('profile.appPreferences')}</Text>
                 <Text style={styles.menuItemDescription}>{t('profile.languageAndTheme')}</Text>
               </View>
             </View>
-            <ChevronRight size={20} color="#9CA3AF" />
+            <ChevronRight size={20} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
 
         {/* Sign Out */}
         <View style={styles.section}>
           <TouchableOpacity style={styles.signOutButton}>
-            <LogOut size={20} color="#DC2626" />
+            <LogOut size={20} color={colors.error} />
             <Text style={styles.signOutText}>{t('common.signOut')}</Text>
           </TouchableOpacity>
         </View>
@@ -452,18 +453,18 @@ const styles = StyleSheet.create({
   notificationBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     padding: 16,
     margin: 16,
     borderRadius: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#1E40AF',
+    borderLeftColor: colors.primary,
     gap: 12,
   },
   notificationText: {
     flex: 1,
-    fontSize: 14,
-    color: '#1F2937',
+    fontSize: fontSizes.bodySm,
+    color: colors.textPrimary,
     lineHeight: 20,
   },
   githubIcon: {
@@ -476,20 +477,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h2,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
   },
   editButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -497,7 +498,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     marginHorizontal: 20,
     marginTop: 20,
     borderRadius: 16,
@@ -527,7 +528,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -538,25 +539,24 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#059669',
+    backgroundColor: colors.success,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#ffffff',
+    borderColor: colors.surface,
   },
   profileInfo: {
     alignItems: 'center',
   },
   profileName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   profileStatus: {
-    fontSize: 14,
+    fontSize: fontSizes.bodySm,
     color: '#055796ff',
-    fontWeight: '500',
     marginBottom: 16,
   },
   profileDetails: {
@@ -569,21 +569,21 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   profileDetailText: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   section: {
     paddingHorizontal: 20,
     marginTop: 24,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginBottom: 12,
   },
   sectionItems: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     overflow: 'hidden',
   },
@@ -613,14 +613,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   menuItemTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    fontFamily: fonts.medium,
+    color: colors.textPrimary,
     marginBottom: 2,
   },
   menuItemDescription: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
   },
   statsSection: {
     paddingHorizontal: 20,
@@ -632,7 +632,7 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -646,31 +646,31 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   statNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1E40AF',
+    fontSize: fontSizes.h2,
+    fontFamily: fonts.bold,
+    color: colors.primary,
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 12,
-    color: '#6B7280',
+    fontSize: fontSizes.caption,
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   signOutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     paddingVertical: 16,
     gap: 8,
     borderWidth: 1,
-    borderColor: '#FEE2E2',
+    borderColor: colors.errorLight,
   },
   signOutText: {
-    color: '#DC2626',
-    fontWeight: '500',
-    fontSize: 16,
+    color: colors.error,
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.body,
   },
   versionContainer: {
     alignItems: 'center',
@@ -678,25 +678,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   versionText: {
-    fontSize: 12,
-    color: '#9CA3AF',
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
     marginBottom: 4,
   },
   copyrightText: {
-    fontSize: 12,
-    color: '#9CA3AF',
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
   },
   authSection: {
     marginHorizontal: 20,
     marginTop: 16,
     padding: 20,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     borderRadius: 12,
     alignItems: 'center',
   },
   authTitle: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     marginBottom: 16,
     textAlign: 'center',
   },
@@ -708,7 +708,7 @@ const styles = StyleSheet.create({
   loginButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -717,14 +717,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   loginButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
   },
   registerButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -732,12 +732,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     borderWidth: 1,
-    borderColor: '#1E40AF',
+    borderColor: colors.primary,
   },
   registerButtonText: {
-    color: '#1E40AF',
-    fontSize: 14,
-    fontWeight: '600',
+    color: colors.primary,
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
   },
   logoutButton: {
     flexDirection: 'row',
@@ -750,30 +750,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     borderWidth: 1,
-    borderColor: '#FEE2E2',
+    borderColor: colors.errorLight,
   },
   logoutButtonText: {
-    color: '#EF4444',
-    fontSize: 14,
-    fontWeight: '600',
+    color: colors.error,
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
   },
   forgetMeButton: {
     flexDirection: 'row',
     marginHorizontal: 20,
     marginTop: 8,
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     borderWidth: 1,
-    borderColor: '#FEE2E2',
+    borderColor: colors.errorLight,
   },
   forgetMeButtonText: {
-    color: '#DC2626',
-    fontSize: 14,
-    fontWeight: '600',
+    color: colors.error,
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
   },
   modalOverlay: {
     flex: 1,
@@ -783,7 +783,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContent: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 24,
     width: '100%',
@@ -802,15 +802,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
     marginTop: 12,
     textAlign: 'center',
   },
   modalMessage: {
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
     lineHeight: 22,
     marginBottom: 16,
     textAlign: 'center',
@@ -820,8 +820,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   modalInfoLinkText: {
-    fontSize: 14,
-    color: '#1E40AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
     textDecorationLine: 'underline',
     textAlign: 'center',
   },
@@ -836,24 +836,24 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
     alignItems: 'center',
   },
   modalCancelButtonText: {
-    color: '#1F2937',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.textPrimary,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   modalConfirmButton: {
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 8,
-    backgroundColor: '#DC2626',
+    backgroundColor: colors.error,
     alignItems: 'center',
   },
   modalConfirmButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
 })

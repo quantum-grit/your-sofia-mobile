@@ -1,9 +1,10 @@
 import {StyleSheet} from 'react-native'
+import {colors, fonts, fontSizes, radius, spacing} from '@/styles/tokens'
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surface2,
   },
   loadingContainer: {
     flex: 1,
@@ -12,8 +13,8 @@ export const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
   },
   errorContainer: {
     flex: 1,
@@ -22,20 +23,20 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   errorText: {
-    fontSize: 12,
-    color: '#EF4444',
+    fontSize: fontSizes.caption,
+    color: colors.error,
     marginTop: 4,
   },
   retryButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   retryButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.surface,
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
   },
   header: {
     flexDirection: 'row',
@@ -43,9 +44,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: colors.border,
   },
   backButton: {
     padding: 8,
@@ -53,8 +54,8 @@ export const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontFamily: fonts.semiBold,
+    color: colors.textPrimary,
     marginLeft: 12,
   },
   headerActions: {
@@ -66,7 +67,7 @@ export const styles = StyleSheet.create({
     padding: 8,
   },
   saveButton: {
-    backgroundColor: '#1E40AF',
+    backgroundColor: colors.primary,
     borderRadius: 8,
   },
   scrollView: {
@@ -86,8 +87,8 @@ export const styles = StyleSheet.create({
     gap: 6,
   },
   statusText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
   },
   metaRow: {
     flexDirection: 'row',
@@ -95,14 +96,13 @@ export const styles = StyleSheet.create({
     marginTop: 4,
   },
   categoryText: {
-    fontSize: 14,
-    color: '#6B7280',
-    fontWeight: '500',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
+    fontFamily: fonts.medium,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: fontSizes.h2,
+    color: colors.textPrimary,
     paddingHorizontal: 16,
     marginTop: 16,
     lineHeight: 32,
@@ -116,11 +116,11 @@ export const styles = StyleSheet.create({
     width: 200,
     height: 150,
     borderRadius: 12,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surface2,
   },
   descriptionText: {
-    fontSize: 16,
-    color: '#4B5563',
+    fontSize: fontSizes.body,
+    color: colors.textSecondary,
     lineHeight: 24,
   },
   section: {
@@ -128,23 +128,23 @@ export const styles = StyleSheet.create({
     marginTop: 4,
   },
   sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.border,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 16,
-    color: '#1F2937',
+    fontSize: fontSizes.body,
+    color: colors.textPrimary,
   },
   inputError: {
-    borderColor: '#EF4444',
+    borderColor: colors.error,
   },
   textArea: {
     minHeight: 100,
@@ -160,35 +160,35 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: '#D1D5DB',
-    backgroundColor: '#ffffff',
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   stateTagText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.textSecondary,
   },
   stateTagTextSelected: {
-    color: '#ffffff',
+    color: colors.surface,
   },
   metaText: {
     paddingLeft: 4,
-    fontSize: 14,
-    color: '#6B7280',
+    fontSize: fontSizes.bodySm,
+    color: colors.textSecondary,
   },
   adminNotesContainer: {
     flexDirection: 'row',
     gap: 12,
     padding: 12,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: colors.primaryTint,
     borderRadius: 8,
     borderLeftWidth: 4,
-    borderLeftColor: '#1E40AF',
+    borderLeftColor: colors.primary,
   },
   adminNotesText: {
     flex: 1,
-    fontSize: 14,
-    color: '#1E40AF',
+    fontSize: fontSizes.bodySm,
+    color: colors.primary,
     lineHeight: 20,
   },
   infoBox: {
@@ -202,7 +202,7 @@ export const styles = StyleSheet.create({
     borderLeftColor: '#F59E0B',
   },
   infoText: {
-    fontSize: 14,
+    fontSize: fontSizes.bodySm,
     color: '#92400E',
     lineHeight: 20,
   },
@@ -213,7 +213,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     right: 8,
-    backgroundColor: '#EF4444',
+    backgroundColor: colors.error,
     borderRadius: 12,
     padding: 4,
   },
@@ -222,16 +222,16 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: '#1E40AF',
+    borderColor: colors.primary,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   photoButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1E40AF',
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.semiBold,
+    color: colors.primary,
   },
 })
