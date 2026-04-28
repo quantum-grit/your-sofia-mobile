@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next'
 import MapView, {Marker, Polygon, type Region} from 'react-native-maps'
 import type {LocationFilterArea} from '../../../types/subscription'
 import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
-import {colors, fontSizes} from '@/styles/tokens'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const SOFIA_REGION: Region = {
   latitude: 42.6977,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   actionBtnDisabled: {opacity: 0.4},
   undoBtn: {borderColor: colors.error},
   closeBtn: {borderColor: colors.primary},
-  actionBtnText: {fontSize: fontSizes.label, fontWeight: '600', color: colors.error},
+  actionBtnText: {fontSize: fontSizes.label, fontFamily: fonts.semiBold, color: colors.error},
   footer: {
     padding: 16,
     backgroundColor: colors.surface,
@@ -168,5 +168,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmBtnDisabled: {opacity: 0.4},
-  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
+  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontFamily: fonts.bold},
 })

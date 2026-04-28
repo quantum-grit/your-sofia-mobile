@@ -1,6 +1,6 @@
 import {Stack} from 'expo-router'
 import {useTranslation} from 'react-i18next'
-import {colors} from '@/styles/tokens'
+import {colors, fonts} from '@/styles/tokens'
 
 export default function NotificationsLayout() {
   const {t} = useTranslation()
@@ -10,7 +10,7 @@ export default function NotificationsLayout() {
       screenOptions={{
         headerStyle: {backgroundColor: colors.primary},
         headerTintColor: colors.surface,
-        headerTitleStyle: {fontWeight: '600'},
+        headerTitleStyle: {fontFamily: fonts.semiBold},
       }}
     >
       <Stack.Screen name="index" options={{title: t('notifications.title')}} />

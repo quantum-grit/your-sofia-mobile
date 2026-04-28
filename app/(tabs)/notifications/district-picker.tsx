@@ -121,5 +121,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmBtnDisabled: {opacity: 0.4},
-  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
+  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontFamily: fonts.bold},
 })

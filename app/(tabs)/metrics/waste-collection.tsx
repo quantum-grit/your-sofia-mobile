@@ -12,7 +12,7 @@ import {useTranslation} from 'react-i18next'
 import {CartesianChart, StackedBar, Bar} from 'victory-native'
 import {Text as SkiaText, matchFont} from '@shopify/react-native-skia'
 import {useCollectionMetrics, MetricsRange} from '../../../hooks/useCollectionMetrics'
-import {colors, fontSizes} from '@/styles/tokens'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 type ChartTab = 'zone' | 'district'
 
@@ -351,8 +351,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   rangeBtnActive: {backgroundColor: colors.primary, borderColor: colors.primary},
-  rangeBtnText: {fontSize: fontSizes.label, color: colors.textPrimary, fontWeight: '500'},
-  rangeBtnTextActive: {color: '#fff', fontWeight: '600'},
+  rangeBtnText: {fontSize: fontSizes.label, color: colors.textPrimary, fontFamily: fonts.medium},
+  rangeBtnTextActive: {color: colors.surface, fontFamily: fonts.semiBold},
   summaryRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: 'center',
   },
-  summaryValue: {fontSize: fontSizes.h3, fontWeight: '700'},
+  summaryValue: {fontSize: fontSizes.h3, fontFamily: fonts.bold},
   summaryLabel: {fontSize: 10, color: colors.textMuted, marginTop: 2, textAlign: 'center'},
   tabRow: {
     flexDirection: 'row',
@@ -387,11 +387,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 4,
   },
-  tabBtnText: {fontSize: fontSizes.label, color: colors.textSecondary, fontWeight: '500'},
-  tabBtnTextActive: {color: colors.primary, fontWeight: '600'},
+  tabBtnText: {fontSize: fontSizes.label, color: colors.textSecondary, fontFamily: fonts.medium},
+  tabBtnTextActive: {color: colors.primary, fontFamily: fonts.semiBold},
   center: {alignItems: 'center', justifyContent: 'center', padding: 40},
   loadingText: {marginTop: 12, color: colors.textSecondary, fontSize: fontSizes.bodySm},
-  errorText: {fontSize: fontSizes.body, fontWeight: '600', color: colors.error, marginBottom: 6},
+  errorText: {
+    fontSize: fontSizes.body,
+    fontFamily: fonts.semiBold,
+    color: colors.error,
+    marginBottom: 6,
+  },
   errorDetail: {fontSize: fontSizes.label, color: colors.textSecondary, marginBottom: 16},
   retryBtn: {
     backgroundColor: colors.primary,
@@ -399,12 +404,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
-  retryBtnText: {color: '#fff', fontWeight: '600', fontSize: fontSizes.bodySm},
+  retryBtnText: {color: colors.surface, fontFamily: fonts.semiBold, fontSize: fontSizes.bodySm},
   emptyText: {color: colors.textMuted, fontSize: fontSizes.bodySm},
   chartSection: {paddingHorizontal: 16, paddingTop: 8},
   sectionTitle: {
     fontSize: fontSizes.bodySm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     marginBottom: 10,
   },

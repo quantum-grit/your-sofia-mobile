@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next'
 import MapView, {Marker, type Region} from 'react-native-maps'
 import type {LocationFilterPoint} from '../../../types/subscription'
 import {emitNotificationFilter} from '../../../lib/notificationFilterBridge'
-import {colors, fontSizes} from '@/styles/tokens'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 // Sofia center
 const SOFIA_REGION: Region = {
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   radiusLabel: {
     fontSize: fontSizes.bodySm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     marginBottom: 8,
   },
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   radiusChipSelected: {backgroundColor: colors.primary},
-  radiusChipText: {fontSize: fontSizes.label, color: colors.primary, fontWeight: '600'},
+  radiusChipText: {fontSize: fontSizes.label, color: colors.primary, fontFamily: fonts.semiBold},
   radiusChipTextSelected: {color: colors.surface},
   footer: {
     padding: 16,
@@ -136,5 +136,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmBtnDisabled: {opacity: 0.4},
-  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
+  confirmBtnText: {color: colors.surface, fontSize: fontSizes.body, fontFamily: fonts.bold},
 })

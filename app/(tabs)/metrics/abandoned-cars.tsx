@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {useTranslation} from 'react-i18next'
-import {colors, fontSizes} from '@/styles/tokens'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function AbandonedCarsDashboard() {
   const {t} = useTranslation()
@@ -15,6 +15,11 @@ export default function AbandonedCarsDashboard() {
 
 const styles = StyleSheet.create({
   container: {flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40},
-  title: {fontSize: fontSizes.h3, fontWeight: '700', color: colors.textPrimary, marginBottom: 8},
+  title: {
+    fontSize: fontSizes.h3,
+    fontFamily: fonts.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
   text: {fontSize: 15, color: colors.textMuted},
 })

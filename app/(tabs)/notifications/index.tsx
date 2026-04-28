@@ -22,7 +22,7 @@ import {useAuth} from '../../../contexts/AuthContext'
 import {registerNotificationFilterListener} from '../../../lib/notificationFilterBridge'
 import type {LocationFilter, SubscriptionCategory} from '../../../types/subscription'
 import {formatLocationFilter} from '../../../lib/formatLocationFilter'
-import {colors, fontSizes} from '@/styles/tokens'
+import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function NotificationsScreen() {
   const {t} = useTranslation()
@@ -302,9 +302,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  sectionTitle: {fontSize: fontSizes.body, fontWeight: '700', color: colors.textPrimary},
+  sectionTitle: {fontSize: fontSizes.body, fontFamily: fonts.bold, color: colors.textPrimary},
   sectionSubtitle: {fontSize: fontSizes.label, color: colors.textSecondary, marginBottom: 12},
-  toggleAll: {fontSize: fontSizes.label, color: colors.primary, fontWeight: '600'},
+  toggleAll: {fontSize: fontSizes.label, color: colors.primary, fontFamily: fonts.semiBold},
   categoryGrid: {flexDirection: 'row', flexWrap: 'wrap', gap: 8},
   categoryChip: {
     flexDirection: 'row',
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   categoryChipText: {
     fontSize: fontSizes.caption,
     color: colors.textPrimary,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     flexShrink: 1,
   },
   categoryChipTextSelected: {color: colors.surface},
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 4,
   },
-  addFilterText: {fontSize: fontSizes.bodySm, color: colors.primary, fontWeight: '600'},
+  addFilterText: {fontSize: fontSizes.bodySm, color: colors.primary, fontFamily: fonts.semiBold},
   footer: {
     padding: 16,
     backgroundColor: colors.surface,
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonDisabled: {opacity: 0.6},
-  saveButtonText: {color: colors.surface, fontSize: fontSizes.body, fontWeight: '700'},
+  saveButtonText: {color: colors.surface, fontSize: fontSizes.body, fontFamily: fonts.bold},
   enableToggleSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -376,6 +376,6 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     elevation: 2,
   },
-  enableToggleLabel: {fontSize: fontSizes.body, fontWeight: '700', color: colors.textPrimary},
+  enableToggleLabel: {fontSize: fontSizes.body, fontFamily: fonts.bold, color: colors.textPrimary},
   sectionDisabled: {opacity: 0.4},
 })
