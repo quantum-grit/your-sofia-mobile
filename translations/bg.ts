@@ -654,4 +654,10 @@ export default {
     createdOn: 'Създадена на',
     dueOn: 'Краен срок',
   },
+  whatsNew: {
+    title: 'Какво ново?',
+    version: 'Версия',
+    continue: 'Напред',
+    skip: 'Пропусни',
+  },
 }
