@@ -18,8 +18,19 @@ export function NewsCard({item}: NewsCardProps) {
       style={[styles.container, {borderLeftColor: borderColor}]}
       onPress={() => router.push(`/(tabs)/home/${item.id}`)}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={item.title ?? item.date}
+      accessibilityHint="Отваря новинарска статия"
     >
-      {item.image && <Image source={{uri: item.image}} style={styles.image} resizeMode="contain" />}
+      {item.image && (
+        <Image
+          source={{uri: item.image}}
+          style={styles.image}
+          resizeMode="contain"
+          accessibilityElementsHidden
+          importantForAccessibility="no"
+        />
+      )}
       <View style={styles.content}>
         {item.title ? (
           <Text style={styles.title} numberOfLines={2}>

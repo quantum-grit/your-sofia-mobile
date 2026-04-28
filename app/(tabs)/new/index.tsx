@@ -17,6 +17,8 @@ export default function NewScreen() {
             <TouchableOpacity
               style={styles.button}
               onPress={() => router.push('../(tabs)/new/new-signal')}
+              accessibilityRole="button"
+              accessibilityLabel={t('new.newSignal')}
             >
               <View style={styles.iconContainer}>
                 <AlertTriangle size={36} color={colors.primary} />
@@ -28,6 +30,8 @@ export default function NewScreen() {
             <TouchableOpacity
               style={[styles.button]}
               onPress={() => router.push('../(tabs)/new/new-city-object')}
+              accessibilityRole="button"
+              accessibilityLabel={t('new.newCityObject')}
             >
               <View style={styles.iconContainer}>
                 <MapPin size={36} color={colors.primary} />
@@ -39,6 +43,8 @@ export default function NewScreen() {
             <TouchableOpacity
               style={styles.button}
               onPress={() => router.push('../(tabs)/new/bulk-photo-upload')}
+              accessibilityRole="button"
+              accessibilityLabel={t('new.bulkPhotoUpload')}
             >
               <View style={styles.iconContainer}>
                 <Images size={36} color={colors.primary} />

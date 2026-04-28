@@ -14,7 +14,12 @@ export function LanguageSwitch() {
   }
 
   return (
-    <TouchableOpacity onPress={toggleLanguage} style={styles.container}>
+    <TouchableOpacity
+      onPress={toggleLanguage}
+      style={styles.container}
+      accessibilityRole="button"
+      accessibilityLabel={currentLanguage === 'bg' ? 'Switch to English' : 'Превключи на Български'}
+    >
       <Text style={styles.language}>{currentLanguage === 'bg' ? 'EN' : 'БГ'}</Text>
     </TouchableOpacity>
   )

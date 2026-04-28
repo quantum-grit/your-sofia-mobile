@@ -167,6 +167,8 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.viewToggleButton}
               onPress={() => setIsMapView(!isMapView)}
+              accessibilityRole="button"
+              accessibilityLabel={isMapView ? t('common.seeList') : t('common.seeMap')}
             >
               <Text style={styles.viewToggleText}>
                 {isMapView ? t('common.seeList') : t('common.seeMap')}
@@ -202,7 +204,12 @@ export default function HomeScreen() {
               {mapError ? (
                 <View style={styles.errorContainer}>
                   <Text style={styles.errorText}>{mapError}</Text>
-                  <TouchableOpacity style={styles.retryButton} onPress={refreshMap}>
+                  <TouchableOpacity
+                    style={styles.retryButton}
+                    onPress={refreshMap}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('common.retry')}
+                  >
                     <Text style={styles.retryButtonText}>{t('common.retry') || 'Retry'}</Text>
                   </TouchableOpacity>
                 </View>
@@ -215,7 +222,12 @@ export default function HomeScreen() {
           ) : newsError ? (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{newsError}</Text>
-              <TouchableOpacity style={styles.retryButton} onPress={refresh}>
+              <TouchableOpacity
+                style={styles.retryButton}
+                onPress={refresh}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.retry')}
+              >
                 <Text style={styles.retryButtonText}>{t('common.retry') || 'Retry'}</Text>
               </TouchableOpacity>
             </View>

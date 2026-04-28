@@ -49,6 +49,9 @@ export function TopicFilter({selectedTopics, onTopicsChange, topics}: TopicFilte
               isSelected && {backgroundColor: categoryColor, borderColor: categoryColor},
             ]}
             onPress={() => handlePress(topic.id)}
+            accessibilityRole="button"
+            accessibilityLabel={topic.label}
+            accessibilityState={{selected: isSelected}}
           >
             {Icon && (
               <View style={styles.icon}>

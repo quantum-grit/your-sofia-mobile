@@ -182,7 +182,13 @@ export default function NotificationsScreen() {
         <View style={[styles.section, !notificationsEnabled && styles.sectionDisabled]}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('notifications.categories')}</Text>
-            <TouchableOpacity onPress={toggleAll}>
+            <TouchableOpacity
+              onPress={toggleAll}
+              accessibilityRole="button"
+              accessibilityLabel={
+                allSelected ? t('notifications.deselectAll') : t('notifications.selectAll')
+              }
+            >
               <Text style={styles.toggleAll}>
                 {allSelected ? t('notifications.deselectAll') : t('notifications.selectAll')}
               </Text>
@@ -203,6 +209,9 @@ export default function NotificationsScreen() {
                     selected && {backgroundColor: color, borderColor: color},
                     !selected && {borderColor: color},
                   ]}
+                  accessibilityRole="button"
+                  accessibilityLabel={t(`categories.${slug}`)}
+                  accessibilityState={{selected}}
                 >
                   <Icon size={16} color={selected ? colors.surface : color} />
                   <Text
@@ -236,6 +245,8 @@ export default function NotificationsScreen() {
                 <TouchableOpacity
                   onPress={() => removeLocationFilter(index)}
                   style={styles.removeBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('notifications.removeFilter')}
                 >
                   <Trash2 size={16} color={colors.error} />
                 </TouchableOpacity>
@@ -243,7 +254,12 @@ export default function NotificationsScreen() {
             ))
           )}
 
-          <TouchableOpacity style={styles.addFilterBtn} onPress={handleAddLocation}>
+          <TouchableOpacity
+            style={styles.addFilterBtn}
+            onPress={handleAddLocation}
+            accessibilityRole="button"
+            accessibilityLabel={t('notifications.addLocation')}
+          >
             <Plus size={18} color={colors.primary} />
             <Text style={styles.addFilterText}>{t('notifications.addLocation')}</Text>
             <ChevronRight size={16} color={colors.textMuted} style={{marginLeft: 'auto'}} />
@@ -257,6 +273,9 @@ export default function NotificationsScreen() {
           style={[styles.saveButton, (isSaving || !pushTokenString) && styles.saveButtonDisabled]}
           onPress={handleSave}
           disabled={isSaving || !pushTokenString}
+          accessibilityRole="button"
+          accessibilityLabel={t('notifications.save')}
+          accessibilityState={{disabled: isSaving || !pushTokenString}}
         >
           {isSaving ? (
             <ActivityIndicator color={colors.surface} size="small" />

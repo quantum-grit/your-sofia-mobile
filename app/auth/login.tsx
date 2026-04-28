@@ -69,6 +69,7 @@ export default function LoginScreen() {
               textContentType="username"
               importantForAutofill="yes"
               editable={!isLoading}
+              accessibilityLabel={t('auth.email')}
             />
           </View>
 
@@ -84,6 +85,7 @@ export default function LoginScreen() {
               textContentType="password"
               importantForAutofill="yes"
               editable={!isLoading}
+              accessibilityLabel={t('auth.password')}
             />
           </View>
 
@@ -91,6 +93,9 @@ export default function LoginScreen() {
             style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
             onPress={handleLogin}
             disabled={isLoading}
+            accessibilityRole="button"
+            accessibilityLabel={t('auth.login')}
+            accessibilityState={{disabled: isLoading}}
           >
             {isLoading ? (
               <ActivityIndicator color={colors.surface} />
@@ -103,6 +108,8 @@ export default function LoginScreen() {
             style={styles.registerLink}
             onPress={() => router.push('/auth/register')}
             disabled={isLoading}
+            accessibilityRole="button"
+            accessibilityLabel={t('auth.register')}
           >
             <Text style={styles.registerLinkText}>
               {t('auth.dontHaveAccount')}{' '}

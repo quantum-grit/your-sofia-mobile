@@ -61,6 +61,9 @@ export default function DistrictPickerScreen() {
             <TouchableOpacity
               style={[styles.row, isSelected && styles.rowSelected]}
               onPress={() => setSelected(isSelected ? null : item)}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.districtId} ${item.name}`}
+              accessibilityState={{selected: isSelected}}
             >
               <View style={styles.rowLeft}>
                 <Text style={styles.districtId}>{item.districtId}</Text>
@@ -77,6 +80,9 @@ export default function DistrictPickerScreen() {
           style={[styles.confirmBtn, !selected && styles.confirmBtnDisabled]}
           onPress={handleConfirm}
           disabled={!selected}
+          accessibilityRole="button"
+          accessibilityLabel={t('notifications.confirmLocation')}
+          accessibilityState={{disabled: !selected}}
         >
           <Text style={styles.confirmBtnText}>{t('notifications.confirmLocation')}</Text>
         </TouchableOpacity>

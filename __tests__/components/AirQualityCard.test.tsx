@@ -63,4 +63,17 @@ describe('AirQualityCard', () => {
     const container = getByTestId('air-quality-card-container')
     expect(container.props.style[1].backgroundColor).toBe('#FEF9C3') // yellow-100
   })
+
+  describe('accessibility', () => {
+    it('renders status as text not color-only', () => {
+      const {getByText} = render(<AirQualityCard data={mockData} />)
+      // Status must be conveyed via visible text, not color alone
+      expect(getByText('45 - airQuality.status.good')).toBeTruthy()
+    })
+
+    it('renders status text for moderate quality', () => {
+      const {getByText} = render(<AirQualityCard data={mockDataModerate} />)
+      expect(getByText('75 - airQuality.status.moderate')).toBeTruthy()
+    })
+  })
 })

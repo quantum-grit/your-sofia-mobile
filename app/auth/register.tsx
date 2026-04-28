@@ -81,6 +81,7 @@ export default function RegisterScreen() {
               autoComplete="name"
               textContentType="name"
               editable={!isLoading}
+              accessibilityLabel={t('auth.name')}
             />
           </View>
 
@@ -97,6 +98,7 @@ export default function RegisterScreen() {
               textContentType="username"
               importantForAutofill="yes"
               editable={!isLoading}
+              accessibilityLabel={t('auth.email')}
             />
           </View>
 
@@ -112,6 +114,7 @@ export default function RegisterScreen() {
               textContentType="newPassword"
               importantForAutofill="yes"
               editable={!isLoading}
+              accessibilityLabel={t('auth.password')}
             />
           </View>
 
@@ -127,6 +130,7 @@ export default function RegisterScreen() {
               textContentType="newPassword"
               importantForAutofill="yes"
               editable={!isLoading}
+              accessibilityLabel={t('auth.confirmPassword')}
             />
           </View>
 
@@ -134,6 +138,9 @@ export default function RegisterScreen() {
             style={[styles.registerButton, isLoading && styles.registerButtonDisabled]}
             onPress={handleRegister}
             disabled={isLoading}
+            accessibilityRole="button"
+            accessibilityLabel={t('auth.register')}
+            accessibilityState={{disabled: isLoading}}
           >
             {isLoading ? (
               <ActivityIndicator color={colors.surface} />
@@ -146,6 +153,8 @@ export default function RegisterScreen() {
             style={styles.loginLink}
             onPress={() => router.back()}
             disabled={isLoading}
+            accessibilityRole="button"
+            accessibilityLabel={t('auth.login')}
           >
             <Text style={styles.loginLinkText}>
               {t('auth.alreadyHaveAccount')}{' '}

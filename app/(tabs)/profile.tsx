@@ -290,6 +290,8 @@ export default function ProfileScreen() {
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={() => router.push('/auth/login' as any)}
+                accessibilityRole="button"
+                accessibilityLabel={t('auth.login')}
               >
                 <LogInIcon size={20} color={colors.surface} />
                 <Text style={styles.loginButtonText}>{t('auth.login')}</Text>
@@ -297,6 +299,8 @@ export default function ProfileScreen() {
               <TouchableOpacity
                 style={styles.registerButton}
                 onPress={() => router.push('/auth/register' as any)}
+                accessibilityRole="button"
+                accessibilityLabel={t('auth.register')}
               >
                 <UserPlus size={20} color={colors.primary} />
                 <Text style={styles.registerButtonText}>{t('auth.register')}</Text>
@@ -305,7 +309,12 @@ export default function ProfileScreen() {
           </View>
         ) : (
           <>
-            <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={logout}
+              accessibilityRole="button"
+              accessibilityLabel={t('auth.logout')}
+            >
               <LogOut size={20} color={colors.error} />
               <Text style={styles.logoutButtonText}>{t('auth.logout')}</Text>
             </TouchableOpacity>
@@ -314,6 +323,8 @@ export default function ProfileScreen() {
             <TouchableOpacity
               style={styles.forgetMeButton}
               onPress={() => setShowForgetMeModal(true)}
+              accessibilityRole="button"
+              accessibilityLabel={t('auth.forgetMe')}
             >
               <UserX size={20} color={colors.error} />
               <Text style={styles.forgetMeButtonText}>{t('auth.forgetMe')}</Text>
@@ -344,6 +355,8 @@ export default function ProfileScreen() {
                   Linking.openURL('https://your.sofia.bg/forget-me')
                 }}
                 disabled={isDeleting}
+                accessibilityRole="link"
+                accessibilityLabel={t('auth.forgetMeInfo')}
               >
                 <Text style={styles.modalInfoLinkText}>{t('auth.forgetMeInfo')}</Text>
               </TouchableOpacity>
@@ -353,6 +366,9 @@ export default function ProfileScreen() {
                   style={[styles.modalCancelButton, isDeleting && styles.modalButtonDisabled]}
                   onPress={() => setShowForgetMeModal(false)}
                   disabled={isDeleting}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('auth.forgetMeCancel')}
+                  accessibilityState={{disabled: isDeleting}}
                 >
                   <Text style={styles.modalCancelButtonText}>{t('auth.forgetMeCancel')}</Text>
                 </TouchableOpacity>
@@ -360,6 +376,9 @@ export default function ProfileScreen() {
                   style={[styles.modalConfirmButton, isDeleting && styles.modalButtonDisabled]}
                   onPress={handleForgetMe}
                   disabled={isDeleting}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('auth.forgetMeConfirm')}
+                  accessibilityState={{disabled: isDeleting}}
                 >
                   <Text style={styles.modalConfirmButtonText}>
                     {isDeleting ? t('common.loading') : t('auth.forgetMeConfirm')}
@@ -393,7 +412,13 @@ export default function ProfileScreen() {
                 const onPress =
                   item.id === 12 ? () => router.push('/(tabs)/notifications' as any) : undefined
                 return (
-                  <TouchableOpacity key={item.id} style={styles.menuItem} onPress={onPress}>
+                  <TouchableOpacity
+                    key={item.id}
+                    style={styles.menuItem}
+                    onPress={onPress}
+                    accessibilityRole="button"
+                    accessibilityLabel={item.title}
+                  >
                     <View style={styles.menuItemContent}>
                       <View style={styles.menuItemIcon}>
                         <IconComponent size={20} color={colors.primary} />

@@ -48,6 +48,7 @@ export default {
     yourLocation: 'Вашето местоположение',
     error: 'Грешка',
     cancel: 'Остави',
+    close: 'Затвори',
     success: 'Успех',
     confirm: 'Потвърди',
     back: 'Назад',

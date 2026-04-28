@@ -47,6 +47,7 @@ export default {
     noNews: 'No news available',
     payments: 'Payments',
     cancel: 'Cancel',
+    close: 'Close',
     success: 'Success',
     confirm: 'Confirm',
     back: 'Back',
