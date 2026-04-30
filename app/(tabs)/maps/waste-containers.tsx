@@ -719,7 +719,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
 // Helper function to get pin color based on container status.
 // Pass uncollectedMode=true to colour by time since last collection instead.
 function getContainerPinColor(container: WasteContainer, uncollectedMode = false): string {
-  if (uncollectedMode) {
+  if (uncollectedMode && container.publicNumber.startsWith('RTR-')) {
     if (!container.lastCleaned) return 'red'
     // PostgreSQL timestamps use a space separator and short tz offset: "2026-03-11 07:46:30+00"
     // Normalise to valid ISO 8601: space → T, and expand +HH / -HH offsets to +HH:00.
