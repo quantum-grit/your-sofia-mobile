@@ -40,6 +40,14 @@ export default function MetricsLayout() {
         ))}
       </ScrollView>
 
+      {dashboard === 'waste' && (
+        <View style={styles.infoBanner}>
+          <Text style={styles.infoBannerText}>
+            ℹ️ Метриките са активирани тестово само за район Триадица.
+          </Text>
+        </View>
+      )}
+
       {dashboard === 'waste' && <WasteCollectionDashboard />}
       {dashboard === 'cars' && <AbandonedCarsDashboard />}
       {dashboard === 'potholes' && <PotholesDashboard />}
@@ -65,4 +73,17 @@ const styles = StyleSheet.create({
   dashTabActive: {borderBottomColor: colors.primary},
   dashTabText: {fontSize: fontSizes.bodySm, fontFamily: fonts.medium, color: colors.textSecondary},
   dashTabTextActive: {color: colors.primary, fontFamily: fonts.bold},
+  infoBanner: {
+    backgroundColor: '#FEF3C0',
+    borderLeftWidth: 4,
+    borderLeftColor: '#E0B340',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  infoBannerText: {
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.regular,
+    color: '#92400E',
+    lineHeight: 18,
+  },
 })

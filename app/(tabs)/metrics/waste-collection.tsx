@@ -25,7 +25,7 @@ function colorByBucketOrder(order: number): string {
 export default function WasteCollectionDashboard() {
   const {t} = useTranslation()
   const [range, setRange] = useState<MetricsRange>('week')
-  const [chartTab, setChartTab] = useState<ChartTab>('zone')
+  const [chartTab, setChartTab] = useState<ChartTab>('district')
   const {data, loading, error, refresh} = useCollectionMetrics(range)
   const font = matchFont({fontSize: 10})
 
@@ -130,17 +130,6 @@ export default function WasteCollectionDashboard() {
       {/* Chart tab toggle */}
       <View style={styles.tabRow}>
         <Pressable
-          style={[styles.tabBtn, chartTab === 'zone' && styles.tabBtnActive]}
-          onPress={() => setChartTab('zone')}
-          accessibilityRole="button"
-          accessibilityLabel={t('metrics.byZone')}
-          accessibilityState={{selected: chartTab === 'zone'}}
-        >
-          <Text style={[styles.tabBtnText, chartTab === 'zone' && styles.tabBtnTextActive]}>
-            {t('metrics.byZone')}
-          </Text>
-        </Pressable>
-        <Pressable
           style={[styles.tabBtn, chartTab === 'district' && styles.tabBtnActive]}
           onPress={() => setChartTab('district')}
           accessibilityRole="button"
@@ -149,6 +138,17 @@ export default function WasteCollectionDashboard() {
         >
           <Text style={[styles.tabBtnText, chartTab === 'district' && styles.tabBtnTextActive]}>
             {t('metrics.byDistrict')}
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.tabBtn, chartTab === 'zone' && styles.tabBtnActive]}
+          onPress={() => setChartTab('zone')}
+          accessibilityRole="button"
+          accessibilityLabel={t('metrics.byZone')}
+          accessibilityState={{selected: chartTab === 'zone'}}
+        >
+          <Text style={[styles.tabBtnText, chartTab === 'zone' && styles.tabBtnTextActive]}>
+            {t('metrics.byZone')}
           </Text>
         </Pressable>
       </View>
