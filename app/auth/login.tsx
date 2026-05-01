@@ -35,7 +35,6 @@ export default function LoginScreen() {
     setIsLoading(true)
     try {
       await login(email, password)
-      Alert.alert(t('common.success'), t('auth.loginSuccess'))
       if (returnTo) {
         router.replace(returnTo as any)
       } else {

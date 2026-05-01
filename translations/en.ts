@@ -440,7 +440,6 @@ export default {
     fillAllFields: 'Please fill all fields',
     passwordsDoNotMatch: 'Passwords do not match',
     passwordTooShort: 'Password must be at least 6 characters',
-    loginSuccess: 'Logged in successfully',
     loginFailed: 'Login failed',
     registerSuccess: 'Registered successfully',
     registerFailed: 'Registration failed',

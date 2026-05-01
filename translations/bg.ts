@@ -442,7 +442,6 @@ export default {
     fillAllFields: 'Моля, попълнете всички полета',
     passwordsDoNotMatch: 'Паролите не съвпадат',
     passwordTooShort: 'Паролата трябва да бъде поне 6 символа',
-    loginSuccess: 'Успешен вход',
     loginFailed: 'Неуспешен вход',
     registerSuccess: 'Успешна регистрация',
     registerFailed: 'Неуспешна регистрация',
