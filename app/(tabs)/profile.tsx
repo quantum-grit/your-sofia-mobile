@@ -35,6 +35,7 @@ import {fetchSignalStats} from '../../lib/payload'
 import {EnvironmentSwitcher} from '@/components/EnvironmentSwitcher'
 import {LanguageSwitch} from '@/components/LanguageSwitch'
 import {useAuth} from '@/contexts/AuthContext'
+import {useNotifications} from '@/hooks/useNotifications'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const getProfileSections = (t: (key: string) => string) => [
@@ -115,6 +116,7 @@ export default function ProfileScreen() {
   const {t, i18n} = useTranslation()
   const router = useRouter()
   const {user, isAuthenticated, isContainerAdmin, logout, deleteAccount} = useAuth()
+  const {expoPushToken} = useNotifications()
   const [deviceId, setDeviceId] = useState<string>('')
   const [signalStats, setSignalStats] = useState<{
     total: number
@@ -265,6 +267,14 @@ export default function ProfileScreen() {
           <View style={styles.languageSwitchContainer}>
             <LanguageSwitch />
           </View>
+          {
+            <View style={styles.pushTokenContainer}>
+              <Text style={styles.pushTokenLabel}>Push Token</Text>
+              <Text style={styles.pushTokenText} selectable>
+                {expoPushToken}
+              </Text>
+            </View>
+          }
         </View>
 
         {/* Quick Stats */}
@@ -596,6 +606,22 @@ const styles = StyleSheet.create({
   profileDetailText: {
     fontSize: fontSizes.bodySm,
     color: colors.textSecondary,
+  },
+  pushTokenContainer: {
+    marginTop: 16,
+    alignItems: 'center',
+    gap: 4,
+  },
+  pushTokenLabel: {
+    fontSize: fontSizes.caption,
+    color: colors.textMuted,
+    fontFamily: fonts.medium,
+  },
+  pushTokenText: {
+    fontSize: 10,
+    color: colors.textSecondary,
+    fontFamily: fonts.monoRegular,
+    textAlign: 'center',
   },
   section: {
     paddingHorizontal: 20,
