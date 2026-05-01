@@ -25,7 +25,12 @@ import {
 import {useRouter, useLocalSearchParams} from 'expo-router'
 import {WasteContainerCard} from '../../../components/WasteContainerCard'
 import {WasteContainerMarker} from '../../../components/WasteContainerMarker'
-import {fetchWasteContainerById} from '../../../lib/payload'
+import {WasteContainerCluster} from '../../../components/WasteContainerCluster'
+import {
+  fetchWasteContainerById,
+  fetchContainerClusters,
+  type ContainerCluster,
+} from '../../../lib/payload'
 import {loadNearbyContainers} from '../../../lib/containerUtils'
 import {getDistanceFromLatLonInMeters} from '../../../lib/mapUtils'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
@@ -34,6 +39,14 @@ import {
   type ContainerState,
   type WasteType,
 } from '../../../types/wasteContainer'
+
+/** Derive an approximate integer zoom level from a MapView latitudeDelta. */
+function latDeltaToZoom(latitudeDelta: number): number {
+  return Math.round(Math.log2(360 / Math.max(latitudeDelta, 0.0001)))
+}
+
+/** Zoom level at which we switch from clusters to individual markers (matches server). */
+const INDIVIDUAL_ZOOM = 16
 
 type ContainerFilter = 'all' | 'uncollected' | ContainerState
 
@@ -51,6 +64,8 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
   const [selectedContainer, setSelectedContainer] = useState<WasteContainer | null>(null)
   const [showContainerCard, setShowContainerCard] = useState(false)
   const [containers, setContainers] = useState<WasteContainer[]>([])
+  const [clusters, setClusters] = useState<ContainerCluster[]>([])
+  const [zoom, setZoom] = useState<number>(latDeltaToZoom(0.01)) // matches default latitudeDelta
   const [containersLoading, setContainersLoading] = useState(false)
   const [containersError, setContainersError] = useState<string | null>(null)
   const [mapCenter, setMapCenter] = useState<{latitude: number; longitude: number} | null>(null)
@@ -65,6 +80,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   })
+  const clusterDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Cleanup on unmount
   useEffect(() => {
@@ -76,8 +92,44 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
         watchRef.current.remove()
         watchRef.current = null
       }
+      if (clusterDebounceRef.current) clearTimeout(clusterDebounceRef.current)
     }
   }, [])
+
+  // Fetch server-side clusters for the current viewport (zoom < INDIVIDUAL_ZOOM)
+  const fetchClusters = useCallback(
+    async (region: {
+      latitude: number
+      longitude: number
+      latitudeDelta: number
+      longitudeDelta: number
+    }) => {
+      const z = latDeltaToZoom(region.latitudeDelta)
+      setZoom(z)
+
+      if (z >= INDIVIDUAL_ZOOM) {
+        // Individual marker mode — clusters not needed
+        setClusters([])
+        return
+      }
+
+      try {
+        const bounds = {
+          minLat: region.latitude - region.latitudeDelta / 2,
+          maxLat: region.latitude + region.latitudeDelta / 2,
+          minLng: region.longitude - region.longitudeDelta / 2,
+          maxLng: region.longitude + region.longitudeDelta / 2,
+        }
+        const data = await fetchContainerClusters({zoom: z, ...bounds})
+        if (isMountedRef.current && data.type === 'clusters') {
+          setClusters(data.docs)
+        }
+      } catch (err) {
+        console.error('[fetchClusters] Error:', err)
+      }
+    },
+    []
+  )
 
   // Load nearby containers based on map center position
   const loadContainers = useCallback(async () => {
@@ -171,6 +223,17 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapCenter, location])
+
+  // Initial cluster fetch using the default region (before the user pans)
+  useEffect(() => {
+    const center = mapCenter || {
+      latitude: location?.coords.latitude ?? 42.6977,
+      longitude: location?.coords.longitude ?? 23.3219,
+    }
+    const {latitudeDelta, longitudeDelta} = regionDeltaRef.current
+    fetchClusters({...center, latitudeDelta, longitudeDelta})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
 
   useEffect(() => {
     ;(async () => {
@@ -528,28 +591,63 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
             latitudeDelta: region.latitudeDelta,
             longitudeDelta: region.longitudeDelta,
           }
+          // Debounce cluster fetch on every viewport change
+          if (clusterDebounceRef.current) clearTimeout(clusterDebounceRef.current)
+          clusterDebounceRef.current = setTimeout(() => fetchClusters(region), 300)
         }}
         provider={PROVIDER_DEFAULT}
         style={styles.map}
         initialRegion={region}
         showsUserLocation={true}
       >
-        {/* Waste container markers */}
-        {containerMarkers.map((marker) => (
-          <Marker
-            key={marker.id}
-            coordinate={marker.coordinate}
-            onPress={() => handleContainerPress(marker.container)}
-            tracksViewChanges={false}
-            pinColor={marker.pinColor}
-          >
-            <WasteContainerMarker
-              color={marker.pinColor}
-              wasteType={marker.container.wasteType}
-              state={marker.container.state}
-            />
-          </Marker>
-        ))}
+        {/* Cluster markers — shown when zoomed out (zoom < INDIVIDUAL_ZOOM) */}
+        {zoom < INDIVIDUAL_ZOOM &&
+          clusters.map((cluster, i) => (
+            <Marker
+              key={`cluster-${i}-${cluster.lat}-${cluster.lng}`}
+              coordinate={{latitude: cluster.lat, longitude: cluster.lng}}
+              tracksViewChanges={false}
+              onPress={() => {
+                // Zoom into the cluster on tap
+                if (mapRef.current) {
+                  const {latitudeDelta, longitudeDelta} = regionDeltaRef.current
+                  mapRef.current.animateToRegion(
+                    {
+                      latitude: cluster.lat,
+                      longitude: cluster.lng,
+                      latitudeDelta: latitudeDelta / 3,
+                      longitudeDelta: longitudeDelta / 3,
+                    },
+                    300
+                  )
+                }
+              }}
+            >
+              <WasteContainerCluster
+                count={cluster.count}
+                dominantStatus={cluster.dominantStatus}
+                activeSignalCount={cluster.activeSignalCount}
+              />
+            </Marker>
+          ))}
+
+        {/* Individual markers — shown when zoomed in (zoom >= INDIVIDUAL_ZOOM) */}
+        {zoom >= INDIVIDUAL_ZOOM &&
+          containerMarkers.map((marker) => (
+            <Marker
+              key={marker.id}
+              coordinate={marker.coordinate}
+              onPress={() => handleContainerPress(marker.container)}
+              tracksViewChanges={false}
+              pinColor={marker.pinColor}
+            >
+              <WasteContainerMarker
+                color={marker.pinColor}
+                wasteType={marker.container.wasteType}
+                state={marker.container.state}
+              />
+            </Marker>
+          ))}
       </MapView>
 
       {/* Expandable filter row - overlay */}

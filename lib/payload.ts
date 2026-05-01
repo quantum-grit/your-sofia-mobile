@@ -186,6 +186,39 @@ export async function fetchContainersWithSignals(options?: {
   return data
 }
 
+export interface ContainerCluster {
+  type: 'cluster'
+  lat: number
+  lng: number
+  count: number
+  dominantStatus: string
+  activeSignalCount: number
+}
+
+/**
+ * Fetch server-side clustered container data for a viewport.
+ * Returns clusters when zoom < 16, individual markers when zoom >= 16.
+ */
+export async function fetchContainerClusters(options: {
+  zoom: number
+  minLat: number
+  maxLat: number
+  minLng: number
+  maxLng: number
+}): Promise<{type: 'clusters'; docs: ContainerCluster[]; zoom: number}> {
+  const params = new URLSearchParams({
+    zoom: String(options.zoom),
+    minLat: String(options.minLat),
+    maxLat: String(options.maxLat),
+    minLng: String(options.minLng),
+    maxLng: String(options.maxLng),
+  })
+  const url = `${getApiUrl()}/api/waste-containers/containers-with-signal-count?${params}`
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`Failed to fetch clusters: ${response.statusText}`)
+  return response.json()
+}
+
 /**
  * Fetch waste containers from Payload CMS
  */
