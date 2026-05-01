@@ -94,6 +94,22 @@ function AppShell() {
             >
               <Stack.Screen name="(tabs)" options={{headerShown: true}} />
               <Stack.Screen
+                name="auth/login"
+                options={{
+                  headerTitle: t('auth.login'),
+                  headerLeft: undefined,
+                  headerBackVisible: true,
+                }}
+              />
+              <Stack.Screen
+                name="auth/register"
+                options={{
+                  headerTitle: t('auth.register'),
+                  headerLeft: undefined,
+                  headerBackVisible: true,
+                }}
+              />
+              <Stack.Screen
                 name="whats-new"
                 options={{
                   headerShown: false,

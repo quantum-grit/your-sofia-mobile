@@ -10,7 +10,7 @@ interface User {
   id: number
   email: string
   name?: string
-  role: 'user' | 'admin' | 'containerAdmin'
+  role: 'user' | 'admin' | 'containerAdmin' | 'inspector' | 'wasteCollector'
 }
 
 interface AuthContextType {
@@ -23,6 +23,7 @@ interface AuthContextType {
   deleteAccount: () => Promise<void>
   isAuthenticated: boolean
   isContainerAdmin: boolean
+  isBulkUploadAllowed: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -207,6 +208,7 @@ export function AuthProvider({children}: {children: ReactNode}) {
     deleteAccount,
     isAuthenticated: !!user && !!token && !isTokenExpired(token),
     isContainerAdmin: user?.role === 'containerAdmin' || user?.role === 'admin',
+    isBulkUploadAllowed: user?.role === 'admin' || user?.role === 'inspector',
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
