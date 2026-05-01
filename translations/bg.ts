@@ -112,8 +112,9 @@ export default {
     managePayments: 'Управление на плащанията',
     serviceHistory: 'История на услугите',
     viewRequests: 'Преглед на заявките',
-    helpCenter: 'Помощен център',
-    getHelp: 'Получи помощ',
+    contact: 'Контакти',
+    technicalIssues: 'За технически проблеми',
+    technicalIssuesDescription: 'Докладвай проблем в GitHub',
     contactUs: 'Свържи се с нас',
     reachSupport: 'Свържи се с екипа ни',
     stats: {
