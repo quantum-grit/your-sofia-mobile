@@ -112,8 +112,9 @@ export default {
     managePayments: 'Manage your payment options',
     serviceHistory: 'Service History',
     viewRequests: 'View your service requests',
-    helpCenter: 'Help Center',
-    getHelp: 'Get help and support',
+    contact: 'Contact',
+    technicalIssues: 'Technical issues',
+    technicalIssuesDescription: 'Report an issue on GitHub',
     contactUs: 'Contact Us',
     reachSupport: 'Reach out to our support team',
     stats: {

@@ -55,41 +55,17 @@ const getProfileSections = (t: (key: string) => string) => [
         icon: Bell,
         description: t('profile.manageNotifications'),
       },
-      {
-        id: 13,
-        title: t('profile.security'),
-        icon: Shield,
-        description: t('profile.securitySettings'),
-      },
     ],
   },
   {
     id: 2,
-    title: 'Services',
-    items: [
-      {
-        id: 21,
-        title: t('profile.paymentMethods'),
-        icon: CreditCard,
-        description: t('profile.managePayments'),
-      },
-      {
-        id: 22,
-        title: t('profile.serviceHistory'),
-        icon: FileText,
-        description: t('profile.viewRequests'),
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: 'Support',
+    title: t('profile.contact'),
     items: [
       {
         id: 31,
-        title: t('profile.helpCenter'),
+        title: t('profile.technicalIssues'),
         icon: HelpCircle,
-        description: t('profile.getHelp'),
+        description: t('profile.technicalIssuesDescription'),
       },
       {
         id: 32,
@@ -296,21 +272,6 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Quick Stats */}
-        <View style={styles.statsSection}>
-          <Text style={styles.sectionTitle}>{t('profile.stats.title')}</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>{loadingStats ? '-' : signalStats.total}</Text>
-              <Text style={styles.statLabel}>{t('profile.stats.signalsCreated')}</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>{loadingStats ? '-' : signalStats.active}</Text>
-              <Text style={styles.statLabel}>{t('profile.stats.signalsActive')}</Text>
-            </View>
-          </View>
-        </View>
-
         {/* Authentication Section */}
         {!isAuthenticated ? (
           <View style={styles.authSection}>
@@ -360,6 +321,21 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           </>
         )}
+
+        {/* Quick Stats */}
+        <View style={styles.statsSection}>
+          <Text style={styles.sectionTitle}>{t('profile.stats.title')}</Text>
+          <View style={styles.statsGrid}>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>{loadingStats ? '-' : signalStats.total}</Text>
+              <Text style={styles.statLabel}>{t('profile.stats.signalsCreated')}</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>{loadingStats ? '-' : signalStats.active}</Text>
+              <Text style={styles.statLabel}>{t('profile.stats.signalsActive')}</Text>
+            </View>
+          </View>
+        </View>
 
         {/* Forget Me Modal */}
         <Modal
@@ -439,7 +415,16 @@ export default function ProfileScreen() {
               {section.items.map((item) => {
                 const IconComponent = item.icon
                 const onPress =
-                  item.id === 12 ? () => router.push('/(tabs)/notifications' as any) : undefined
+                  item.id === 12
+                    ? () => router.push('/(tabs)/notifications' as any)
+                    : item.id === 31
+                      ? () =>
+                          Linking.openURL(
+                            'https://github.com/sofia-municipality/your-sofia-mobile/issues'
+                          )
+                      : item.id === 32
+                        ? () => Linking.openURL('https://call.sofia.bg')
+                        : undefined
                 return (
                   <TouchableOpacity
                     key={item.id}
@@ -464,30 +449,6 @@ export default function ProfileScreen() {
             </View>
           </View>
         ))}
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('profile.appSettings')}</Text>
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuItemContent}>
-              <View style={styles.menuItemIcon}>
-                <Settings size={20} color={colors.textSecondary} />
-              </View>
-              <View style={styles.menuItemInfo}>
-                <Text style={styles.menuItemTitle}>{t('profile.appPreferences')}</Text>
-                <Text style={styles.menuItemDescription}>{t('profile.languageAndTheme')}</Text>
-              </View>
-            </View>
-            <ChevronRight size={20} color={colors.textMuted} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Sign Out */}
-        <View style={styles.section}>
-          <TouchableOpacity style={styles.signOutButton}>
-            <LogOut size={20} color={colors.error} />
-            <Text style={styles.signOutText}>{t('common.signOut')}</Text>
-          </TouchableOpacity>
-        </View>
 
         {/* App Version */}
         <View style={styles.versionContainer}>
