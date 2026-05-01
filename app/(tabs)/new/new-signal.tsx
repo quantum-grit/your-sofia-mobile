@@ -19,6 +19,7 @@ import {useRouter, useLocalSearchParams} from 'expo-router'
 import {useFocusEffect} from '@react-navigation/native'
 import {CameraView, useCameraPermissions} from 'expo-camera'
 import {X, MapPin as MapPinIcon, Upload} from 'lucide-react-native'
+import * as Location from 'expo-location'
 import {createSignal} from '../../../lib/payload'
 import {getUniqueReporterId} from '../../../lib/deviceId'
 import type {CreateSignalInput} from '../../../types/signal'
@@ -26,6 +27,8 @@ import {CONTAINER_STATES, getStateColor} from '../../../types/wasteContainer'
 import {useNearbyObjects} from '../../../hooks/useNearbyObjects'
 import {useSignalForm} from '../../../hooks/useSignalForm'
 import {FullScreenPhotoViewer} from '../../../components/FullScreenPhotoViewer'
+import {useAuth} from '@/contexts/AuthContext'
+import {getDistanceFromLatLonInMeters} from '@/lib/mapUtils'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 const {height} = Dimensions.get('window')
@@ -41,6 +44,7 @@ export default function NewScreen() {
   const {t} = useTranslation()
   const router = useRouter()
   const params = useLocalSearchParams()
+  const {isContainerAdmin} = useAuth()
   const cameraRef = useRef<CameraView>(null)
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -233,6 +237,37 @@ export default function NewScreen() {
     if (!currentLocation) {
       Alert.alert(t('common.error'), t('signals.locationPermissionRequired'))
       return
+    }
+
+    // Proximity check: waste-container signals require user to be within 30m
+    if (selectedObjectType === 'waste-container' && selectedObject && !isContainerAdmin) {
+      if (containerLocation) {
+        // Prefilled from map — containerLocation is known, get fresh GPS
+        try {
+          const {status} = await Location.requestForegroundPermissionsAsync()
+          if (status === 'granted') {
+            const gps = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.Balanced,
+            })
+            const dist = getDistanceFromLatLonInMeters(
+              gps.coords.latitude,
+              gps.coords.longitude,
+              containerLocation.latitude,
+              containerLocation.longitude
+            )
+            if (dist > 30) {
+              Alert.alert(t('common.error'), t('signals.proximityError'))
+              return
+            }
+          }
+        } catch {
+          // GPS unavailable — backend will enforce
+        }
+      } else if (selectedObject.distance > 0 && selectedObject.distance > 30) {
+        // Selected from nearby list — distance was calculated at load time
+        Alert.alert(t('common.error'), t('signals.proximityError'))
+        return
+      }
     }
 
     setLoading(true)
