@@ -158,38 +158,22 @@ export default function ProfileScreen() {
   }
 
   const handleForgetMe = async () => {
-    // Final confirmation before deletion
-    Alert.alert(t('auth.forgetMeAreYouSure'), t('auth.forgetMeAreYouSureMessage'), [
-      {
-        text: t('common.no'),
-        style: 'cancel',
-      },
-      {
-        text: t('common.yes'),
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            setIsDeleting(true)
-            await deleteAccount()
-            setShowForgetMeModal(false)
-            Alert.alert(t('common.success'), t('auth.forgetMeSuccess'), [
-              {
-                text: 'OK',
-                onPress: () => router.push('/(tabs)' as any),
-              },
-            ])
-          } catch (error) {
-            console.error('Error deleting account:', error)
-            Alert.alert(
-              t('common.error'),
-              `${t('auth.forgetMeFailed')}: ${(error as Error).message}`
-            )
-          } finally {
-            setIsDeleting(false)
-          }
+    try {
+      setIsDeleting(true)
+      await deleteAccount()
+      setShowForgetMeModal(false)
+      Alert.alert(t('common.success'), t('auth.forgetMeSuccess'), [
+        {
+          text: 'OK',
+          onPress: () => router.push('/(tabs)' as any),
         },
-      },
-    ])
+      ])
+    } catch (error) {
+      console.error('Error deleting account:', error)
+      Alert.alert(t('common.error'), `${t('auth.forgetMeFailed')}: ${(error as Error).message}`)
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   const profileSections = getProfileSections(t)
@@ -374,7 +358,7 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.modalConfirmButton, isDeleting && styles.modalButtonDisabled]}
-                  onPress={handleForgetMe}
+                  onPress={handleForgetMeConfirm}
                   disabled={isDeleting}
                   accessibilityRole="button"
                   accessibilityLabel={t('auth.forgetMeConfirm')}
