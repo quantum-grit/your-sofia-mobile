@@ -5,6 +5,7 @@
 import type {Signal, CreateSignalInput} from '../types/signal'
 import {type WasteContainer} from '../types/wasteContainer'
 import {fetchNearbyWasteContainers, fetchSignals, updateSignal, cleanContainer} from './payload'
+import {environmentManager} from './environment'
 
 export interface PhotoWithMetadata {
   uri: string
@@ -199,13 +200,10 @@ export async function uploadPhotos(
         })
       )
 
-      const uploadResponse = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'}/api/media`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      )
+      const uploadResponse = await fetch(`${environmentManager.getApiUrl()}/api/media`, {
+        method: 'POST',
+        body: formData,
+      })
 
       if (uploadResponse.ok) {
         const uploadedImage = await uploadResponse.json()
@@ -277,20 +275,17 @@ export async function createSignalsFromPhotos(
         reporterUniqueId,
       }
 
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'}/api/signals`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...signalData,
-            location: [signalData.location!.longitude, signalData.location!.latitude],
-            images: imageIds,
-          }),
-        }
-      )
+      const response = await fetch(`${environmentManager.getApiUrl()}/api/signals`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...signalData,
+          location: [signalData.location!.longitude, signalData.location!.latitude],
+          images: imageIds,
+        }),
+      })
 
       if (response.ok) {
         created++
@@ -415,7 +410,7 @@ export async function createObjectsFromPhotos(
       }
 
       const containerResponse = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'}/api/waste-containers`,
+        `${environmentManager.getApiUrl()}/api/waste-containers`,
         {
           method: 'POST',
           headers: {

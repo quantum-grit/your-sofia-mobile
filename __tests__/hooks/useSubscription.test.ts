@@ -10,15 +10,11 @@ import * as payload from '../../lib/payload'
 
 jest.mock('../../lib/payload', () => ({
   fetchMySubscription: jest.fn(),
-  createSubscription: jest.fn(),
   updateSubscription: jest.fn(),
-  fetchPushTokenId: jest.fn(),
 }))
 
 const mockFetch = payload.fetchMySubscription as jest.Mock
-const mockCreate = payload.createSubscription as jest.Mock
 const mockUpdate = payload.updateSubscription as jest.Mock
-const mockFetchTokenId = payload.fetchPushTokenId as jest.Mock
 
 const PUSH_TOKEN = 'ExponentPushToken[test123]'
 const SUB_ID = 'sub-1'
@@ -82,10 +78,12 @@ describe('useSubscription — load()', () => {
   it('sets error when fetch throws', async () => {
     await setToken(PUSH_TOKEN)
     mockFetch.mockRejectedValue(new Error('network error'))
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
     const {result} = renderHook(() => useSubscription())
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
+    consoleSpy.mockRestore()
     expect(result.current.error).toBe('network error')
     expect(result.current.subscription).toBeNull()
   })
