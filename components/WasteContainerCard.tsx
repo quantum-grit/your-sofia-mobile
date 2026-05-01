@@ -73,7 +73,7 @@ export function WasteContainerCard({
 }: WasteContainerCardProps) {
   const {t} = useTranslation()
   const router = useRouter()
-  const {isContainerAdmin, token} = useAuth()
+  const {isContainerAdmin, token, isAuthenticated} = useAuth()
   const {
     total: signalsTotal,
     active: signalsActive,
@@ -95,6 +95,12 @@ export function WasteContainerCard({
   const [loadingPhotos, setLoadingPhotos] = useState(true)
 
   const handleReportIssue = () => {
+    if (!isAuthenticated) {
+      if (onClose) onClose()
+      router.push('/auth/login' as any)
+      return
+    }
+
     // Close the card first
     if (onClose) {
       onClose()
@@ -1176,13 +1182,16 @@ const styles = StyleSheet.create({
   fullInfoButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
     gap: spacing.xs,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
   },
   fullInfoButtonText: {
     fontFamily: fonts.semiBold,
     color: colors.primary,
-    fontSize: fontSizes.bodySm,
+    fontSize: fontSizes.body,
   },
   extendedInfoContainer: {
     backgroundColor: colors.surface2,

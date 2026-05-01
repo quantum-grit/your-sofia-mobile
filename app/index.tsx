@@ -8,9 +8,10 @@ export default function Index() {
 
   useEffect(() => {
     shouldShowWhatsNew().then((show) => {
-      router.replace('/(tabs)/home')
       if (show) {
-        router.push('/whats-new')
+        router.replace('/whats-new')
+      } else {
+        router.replace('/(tabs)/home')
       }
     })
   }, [])

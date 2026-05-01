@@ -126,7 +126,6 @@ export default function BulkPhotoUploadScreen() {
       setProcessProgress({current: 0, total: photoGroups.length})
 
       const reporterUniqueId = await getUniqueReporterId()
-      const locale = i18n.language as 'bg' | 'en'
 
       const handleResult = (result: any, mode: ProcessingMode) => {
         let messageKey = ''

@@ -3,11 +3,21 @@ import {View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from
 import {useTranslation} from 'react-i18next'
 import {useRouter} from 'expo-router'
 import {AlertTriangle, MapPin, Images} from 'lucide-react-native'
+import {useAuth} from '@/contexts/AuthContext'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
 
 export default function NewScreen() {
   const {t} = useTranslation()
   const router = useRouter()
+  const {isAuthenticated, isBulkUploadAllowed} = useAuth()
+
+  const requireAuth = (destination: string) => {
+    if (!isAuthenticated) {
+      router.push({pathname: '/auth/login', params: {returnTo: destination}} as any)
+      return false
+    }
+    return true
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -16,7 +26,9 @@ export default function NewScreen() {
           <View style={styles.buttonsContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => router.push('../(tabs)/new/new-signal')}
+              onPress={() => {
+                if (requireAuth('/(tabs)/new/new-signal')) router.push('../(tabs)/new/new-signal')
+              }}
               accessibilityRole="button"
               accessibilityLabel={t('new.newSignal')}
             >
@@ -29,7 +41,10 @@ export default function NewScreen() {
 
             <TouchableOpacity
               style={[styles.button]}
-              onPress={() => router.push('../(tabs)/new/new-city-object')}
+              onPress={() => {
+                if (requireAuth('/(tabs)/new/new-city-object'))
+                  router.push('../(tabs)/new/new-city-object')
+              }}
               accessibilityRole="button"
               accessibilityLabel={t('new.newCityObject')}
             >
@@ -40,18 +55,23 @@ export default function NewScreen() {
               <Text style={[styles.buttonDescription]}>{t('new.newCityObjectDescription')}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => router.push('../(tabs)/new/bulk-photo-upload')}
-              accessibilityRole="button"
-              accessibilityLabel={t('new.bulkPhotoUpload')}
-            >
-              <View style={styles.iconContainer}>
-                <Images size={36} color={colors.primary} />
-              </View>
-              <Text style={styles.buttonTitle}>{t('new.bulkPhotoUpload')}</Text>
-              <Text style={styles.buttonDescription}>{t('new.bulkPhotoUploadDescription')}</Text>
-            </TouchableOpacity>
+            {isBulkUploadAllowed && (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  if (requireAuth('/(tabs)/new/bulk-photo-upload'))
+                    router.push('../(tabs)/new/bulk-photo-upload')
+                }}
+                accessibilityRole="button"
+                accessibilityLabel={t('new.bulkPhotoUpload')}
+              >
+                <View style={styles.iconContainer}>
+                  <Images size={36} color={colors.primary} />
+                </View>
+                <Text style={styles.buttonTitle}>{t('new.bulkPhotoUpload')}</Text>
+                <Text style={styles.buttonDescription}>{t('new.bulkPhotoUploadDescription')}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </ScrollView>

@@ -11,7 +11,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native'
-import {useRouter} from 'expo-router'
+import {useRouter, useLocalSearchParams} from 'expo-router'
 import {useAuth} from '../../contexts/AuthContext'
 import {useTranslation} from 'react-i18next'
 import {LogIn} from 'lucide-react-native'
@@ -20,6 +20,7 @@ import {colors, fonts, fontSizes} from '@/styles/tokens'
 export default function LoginScreen() {
   const {t} = useTranslation()
   const router = useRouter()
+  const {returnTo} = useLocalSearchParams<{returnTo?: string}>()
   const {login} = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -35,7 +36,11 @@ export default function LoginScreen() {
     try {
       await login(email, password)
       Alert.alert(t('common.success'), t('auth.loginSuccess'))
-      router.back()
+      if (returnTo) {
+        router.replace(returnTo as any)
+      } else {
+        router.back()
+      }
     } catch (error) {
       Alert.alert(t('common.error'), error instanceof Error ? error.message : t('auth.loginFailed'))
     } finally {

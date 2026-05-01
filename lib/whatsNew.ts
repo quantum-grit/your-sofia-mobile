@@ -15,11 +15,6 @@ function getCurrentVersion(): string {
 export async function shouldShowWhatsNew(): Promise<boolean> {
   try {
     const lastSeen = await AsyncStorage.getItem(STORAGE_KEY)
-    if (lastSeen === null) {
-      // First install — save current version silently, skip splash
-      await AsyncStorage.setItem(STORAGE_KEY, getCurrentVersion())
-      return false
-    }
     return lastSeen !== getCurrentVersion()
   } catch {
     return false

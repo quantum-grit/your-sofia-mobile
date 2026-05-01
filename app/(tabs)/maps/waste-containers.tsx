@@ -34,6 +34,7 @@ import {
 import {loadNearbyContainers} from '../../../lib/containerUtils'
 import {getDistanceFromLatLonInMeters} from '../../../lib/mapUtils'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
+import {useAuth} from '../../../contexts/AuthContext'
 import {
   type WasteContainer,
   type ContainerState,
@@ -53,6 +54,7 @@ type ContainerFilter = 'all' | 'uncollected' | ContainerState
 export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
   const {t} = useTranslation()
   const router = useRouter()
+  const {isAuthenticated} = useAuth()
   const params = useLocalSearchParams()
   const mapRef = useRef<MapView>(null)
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
@@ -741,12 +743,16 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
       <View style={styles.actionButtonsContainer}>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() =>
+          onPress={() => {
+            if (!isAuthenticated) {
+              router.push('/auth/login' as any)
+              return
+            }
             router.push({
               pathname: '/(tabs)/new/new-signal' as any,
               params: {returnTo: '/(tabs)/maps'},
             })
-          }
+          }}
         >
           <Plus size={28} />
         </TouchableOpacity>
