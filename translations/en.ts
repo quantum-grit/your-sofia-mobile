@@ -37,7 +37,7 @@ export default {
     edit: 'Edit',
     verifiedCitizen: 'Verified Citizen',
     signOut: 'Sign Out',
-    version: 'Your Sofia v1.0.0',
+    version: 'Your Sofia',
     copyright: '© 2026 Sofia Municipality',
     yourLocation: 'Your Location',
     error: 'Error',

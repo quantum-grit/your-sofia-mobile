@@ -11,11 +11,8 @@ import {
 } from 'react-native'
 import {
   User,
-  Settings,
   Bell,
   Shield,
-  CreditCard,
-  FileText,
   HelpCircle,
   LogOut,
   ChevronRight,
@@ -37,6 +34,7 @@ import {LanguageSwitch} from '@/components/LanguageSwitch'
 import {useAuth} from '@/contexts/AuthContext'
 import {useNotifications} from '@/hooks/useNotifications'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
+import Constants from 'expo-constants'
 
 const getProfileSections = (t: (key: string) => string) => [
   {
@@ -104,20 +102,17 @@ export default function ProfileScreen() {
   const [showForgetMeModal, setShowForgetMeModal] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const loadSignalStats = useCallback(
-    async (reporterId: string) => {
-      try {
-        setLoadingStats(true)
-        const stats = await fetchSignalStats(reporterId)
-        setSignalStats(stats)
-      } catch (error) {
-        console.error('Error loading signal stats:', error)
-      } finally {
-        setLoadingStats(false)
-      }
-    },
-    [i18n.language]
-  )
+  const loadSignalStats = useCallback(async (reporterId: string) => {
+    try {
+      setLoadingStats(true)
+      const stats = await fetchSignalStats(reporterId)
+      setSignalStats(stats)
+    } catch (error) {
+      console.error('Error loading signal stats:', error)
+    } finally {
+      setLoadingStats(false)
+    }
+  }, [])
 
   useEffect(() => {
     getUniqueReporterId().then((id) => {
@@ -452,7 +447,9 @@ export default function ProfileScreen() {
 
         {/* App Version */}
         <View style={styles.versionContainer}>
-          <Text style={styles.versionText}>{t('common.version')}</Text>
+          <Text style={styles.versionText}>
+            Твоята София v{Constants.expoConfig?.version ?? ''}
+          </Text>
           <Text style={styles.copyrightText}>{t('common.copyright')}</Text>
         </View>
       </ScrollView>
