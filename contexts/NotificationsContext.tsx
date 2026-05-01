@@ -6,8 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Constants from 'expo-constants'
 import {useRouter} from 'expo-router'
 import {getUniqueReporterId} from '../lib/deviceId'
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL
+import {environmentManager} from '../lib/environment'
 const PUSH_TOKEN_KEY = 'pushToken'
 const UNREAD_COUNT_KEY = 'unreadNotificationCount'
 const CLOSED_SIGNALS_KEY = 'closedSignalsCount'
@@ -188,7 +187,7 @@ export function NotificationsProvider({children}: {children: React.ReactNode}) {
     try {
       await AsyncStorage.setItem(PUSH_TOKEN_KEY, token)
       const reporterUniqueId = await getUniqueReporterId().catch(() => null)
-      const response = await fetch(`${API_URL}/api/push-tokens`, {
+      const response = await fetch(`${environmentManager.getApiUrl()}/api/push-tokens`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
