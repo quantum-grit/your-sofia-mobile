@@ -43,7 +43,7 @@ export default {
     edit: 'Редактиране',
     verifiedCitizen: 'Непотвърден гражданин',
     signOut: 'Изход',
-    version: 'Твоята София v1.0.0',
+    version: 'Твоята София',
     copyright: '© 2026 Столична община',
     yourLocation: 'Вашето местоположение',
     error: 'Грешка',
