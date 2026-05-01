@@ -31,6 +31,7 @@ interface NotificationsContextValue {
   updatedSignalIds: string[]
   removeUpdatedSignalId: (signalId: string) => Promise<void>
   clearUpdatedSignalIds: () => Promise<void>
+  registerAndSendToken: () => Promise<void>
 }
 
 const NotificationsContext = createContext<NotificationsContextValue | null>(null)
@@ -45,12 +46,7 @@ export function NotificationsProvider({children}: {children: React.ReactNode}) {
   const responseListener = useRef<Notifications.Subscription | null>(null)
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      if (token) {
-        setExpoPushToken(token)
-        sendTokenToBackend(token)
-      }
-    })
+    registerAndSendToken()
 
     loadUnreadCount()
     loadClosedSignalsCount()
@@ -176,6 +172,18 @@ export function NotificationsProvider({children}: {children: React.ReactNode}) {
     } catch {}
   }
 
+  const registerAndSendToken = async () => {
+    console.log('[Notifications] registerAndSendToken called')
+    const token = await registerForPushNotificationsAsync()
+    if (token) {
+      console.log('[Notifications] Token obtained:', token)
+      setExpoPushToken(token)
+      await sendTokenToBackend(token)
+    } else {
+      console.warn('[Notifications] No token returned from registerForPushNotificationsAsync')
+    }
+  }
+
   const sendTokenToBackend = async (token: string) => {
     try {
       await AsyncStorage.setItem(PUSH_TOKEN_KEY, token)
@@ -209,6 +217,7 @@ export function NotificationsProvider({children}: {children: React.ReactNode}) {
         updatedSignalIds,
         removeUpdatedSignalId,
         clearUpdatedSignalIds,
+        registerAndSendToken,
       }}
     >
       {children}
@@ -223,7 +232,12 @@ export function useNotifications(): NotificationsContextValue {
 }
 
 async function registerForPushNotificationsAsync() {
-  if (!Device.isDevice) return null
+  if (!Device.isDevice) {
+    console.warn(
+      '[Notifications] Not a physical device — push tokens are not supported on simulators'
+    )
+    return null
+  }
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {

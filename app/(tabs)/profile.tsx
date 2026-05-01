@@ -116,7 +116,8 @@ export default function ProfileScreen() {
   const {t, i18n} = useTranslation()
   const router = useRouter()
   const {user, isAuthenticated, isContainerAdmin, logout, deleteAccount} = useAuth()
-  const {expoPushToken} = useNotifications()
+  const {expoPushToken, registerAndSendToken} = useNotifications()
+  const [isRegisteringToken, setIsRegisteringToken] = useState(false)
   const [deviceId, setDeviceId] = useState<string>('')
   const [signalStats, setSignalStats] = useState<{
     total: number
@@ -267,14 +268,32 @@ export default function ProfileScreen() {
           <View style={styles.languageSwitchContainer}>
             <LanguageSwitch />
           </View>
-          {
-            <View style={styles.pushTokenContainer}>
-              <Text style={styles.pushTokenLabel}>Push Token</Text>
-              <Text style={styles.pushTokenText} selectable>
-                {expoPushToken}
+          <View style={styles.pushTokenContainer}>
+            <Text style={styles.pushTokenLabel}>Push Token</Text>
+            <Text style={styles.pushTokenText} selectable>
+              {expoPushToken ?? '—'}
+            </Text>
+            <TouchableOpacity
+              style={[
+                styles.registerTokenButton,
+                isRegisteringToken && styles.registerTokenButtonDisabled,
+              ]}
+              onPress={async () => {
+                setIsRegisteringToken(true)
+                try {
+                  await registerAndSendToken()
+                } finally {
+                  setIsRegisteringToken(false)
+                }
+              }}
+              disabled={isRegisteringToken}
+              accessibilityRole="button"
+            >
+              <Text style={styles.registerTokenButtonText}>
+                {isRegisteringToken ? '…' : 'Register Token'}
               </Text>
-            </View>
-          }
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Quick Stats */}
@@ -622,6 +641,21 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontFamily: fonts.monoRegular,
     textAlign: 'center',
+  },
+  registerTokenButton: {
+    marginTop: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  registerTokenButtonDisabled: {
+    opacity: 0.5,
+  },
+  registerTokenButtonText: {
+    color: colors.surface,
+    fontSize: fontSizes.bodySm,
+    fontFamily: fonts.medium,
   },
   section: {
     paddingHorizontal: 20,
