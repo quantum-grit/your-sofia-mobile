@@ -87,7 +87,6 @@ export interface WasteContainer {
   capacityVolume: number
   capacitySize: CapacitySize
   binCount?: number
-  serviceInterval?: string
   servicedBy?: string
   wasteType: WasteType
   status: 'active' | 'full' | 'maintenance' | 'inactive'

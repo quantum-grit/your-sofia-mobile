@@ -507,15 +507,6 @@ export function WasteContainerCard({
               </View>
             )}
 
-            {
-              <View style={styles.extendedInfoRow}>
-                <Text style={styles.extendedInfoLabel}>
-                  {t('wasteContainers.serviceInterval')}:
-                </Text>
-                <Text style={styles.extendedInfoValue}>{container.serviceInterval}</Text>
-              </View>
-            }
-
             {container.collectionDaysOfWeek && container.collectionDaysOfWeek.length > 0 && (
               <>
                 <View style={styles.extendedInfoRow}>
@@ -528,7 +519,7 @@ export function WasteContainerCard({
                 </View>
                 <View style={styles.extendedInfoRow}>
                   <Text style={styles.extendedInfoLabel}>
-                    {t('wasteContainers.serviceInterval')}:
+                    {t('wasteContainers.collectionFrequencyLabel')}:
                   </Text>
                   <Text style={styles.extendedInfoValue}>
                     {getFrequencyLabel(
