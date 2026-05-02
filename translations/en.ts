@@ -272,7 +272,7 @@ export default {
     cleanError: 'Error marking container as clean',
     cleanConfirm: 'Are you sure you want to mark this container as clean?',
     lastCleaned: 'Last Cleaned',
-    lastObservations: 'Recent observations',
+    lastObservations: 'Last three observations',
     cleaningHistory: 'Cleaning History',
     noHistory: 'No cleaning records found',
     signals: 'Signals',

@@ -93,6 +93,7 @@ export function WasteContainerCard({
   const formRef = useRef<any>(null)
   const [lastObservationPhotos, setLastObservationPhotos] = useState<any[]>([])
   const [loadingPhotos, setLoadingPhotos] = useState(true)
+  const [recentObservations, setRecentObservations] = useState<any[]>([])
 
   const handleReportIssue = () => {
     if (!isAuthenticated) {
@@ -133,6 +134,7 @@ export function WasteContainerCard({
           `${environmentManager.getApiUrl()}/api/waste-container-observations?where[container][equals]=${container.id}&depth=2&sort=-cleanedAt&limit=3`
         )
         const observationsData = await observationsResponse.json()
+        setRecentObservations(observationsData.docs || [])
         const observationPhotos = (observationsData.docs || [])
           .filter((obs: any) => obs.photo)
           .map((obs: any) => ({
@@ -542,9 +544,15 @@ export function WasteContainerCard({
             {container.lastCleaned && (
               <View style={styles.extendedInfoRow}>
                 <Text style={styles.extendedInfoLabel}>{t('wasteContainers.lastCleaned')}:</Text>
-                <Text style={styles.extendedInfoValue}>
-                  {new Date(container.lastCleaned).toLocaleString()}
-                </Text>
+                <TouchableOpacity
+                  onPress={() => setShowObservations(true)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('wasteContainers.lastCleaned')}
+                >
+                  <Text style={[styles.extendedInfoValue, styles.linkText]}>
+                    {new Date(container.lastCleaned).toLocaleString()}
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
 
@@ -659,15 +667,54 @@ export function WasteContainerCard({
         <View style={styles.formModalOverlay}>
           <View style={styles.formModalContent}>
             <View style={styles.formHeader}>
-              <Text style={styles.formTitle}>{t('wasteContainers.cleaningHistory')}</Text>
+              <Text style={styles.formTitle}>{t('wasteContainers.lastObservations')}</Text>
               <TouchableOpacity
                 onPress={() => setShowObservations(false)}
                 accessibilityRole="button"
                 accessibilityLabel={t('common.close')}
               >
-                <X size={24} color="#666" />
+                <X size={24} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
+            {recentObservations.length === 0 ? (
+              <Text style={styles.noObservationsText}>{t('wasteContainers.noHistory')}</Text>
+            ) : (
+              recentObservations.map((obs: any, index: number) => {
+                const photoUrl = obs.photo?.url
+                  ? obs.photo.url.startsWith('http')
+                    ? obs.photo.url
+                    : `${environmentManager.getApiUrl()}${obs.photo.url}`
+                  : null
+                return (
+                  <View key={obs.id ?? index} style={styles.observationRow}>
+                    {photoUrl ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setShowObservations(false)
+                          setSelectedPhotoUrl(photoUrl)
+                          setShowPhotoModal(true)
+                        }}
+                        accessibilityRole="imagebutton"
+                        accessibilityLabel={new Date(obs.cleanedAt).toLocaleString()}
+                      >
+                        <Image
+                          source={{uri: photoUrl}}
+                          style={styles.observationThumbnail}
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={styles.observationThumbnailPlaceholder}>
+                        <CheckCircle size={20} color={colors.textSecondary} />
+                      </View>
+                    )}
+                    <Text style={styles.observationDate}>
+                      {new Date(obs.cleanedAt).toLocaleString()}
+                    </Text>
+                  </View>
+                )
+              })
+            )}
           </View>
         </View>
       </Modal>
@@ -1237,6 +1284,25 @@ const styles = StyleSheet.create({
     color: colors.primary,
     textDecorationLine: 'underline',
   },
+  linkText: {
+    color: colors.primary,
+    textDecorationLine: 'underline',
+  },
+  noObservationsText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.bodySm,
+    color: colors.textMuted,
+    textAlign: 'center',
+    paddingVertical: spacing.md,
+  },
+  observationThumbnailPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: radius.md,
+    backgroundColor: colors.surface2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   observationsList: {
     paddingVertical: spacing.xs,
   },
@@ -1248,9 +1314,11 @@ const styles = StyleSheet.create({
   },
   observationRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     gap: spacing.sm,
+    paddingVertical: spacing['2xs'],
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
   observationHeader: {
     flexDirection: 'row',
@@ -1288,8 +1356,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   observationThumbnail: {
-    width: 80,
-    height: 80,
+    width: 56,
+    height: 56,
     borderRadius: radius.md,
   },
   loadingContainer: {

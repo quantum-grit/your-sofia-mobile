@@ -275,7 +275,7 @@ export default {
     cleanError: 'Грешка при почистване на контейнера',
     cleanConfirm: 'Сигурни ли сте, че искате да почистите този контейнер?',
     lastCleaned: 'Последно почистване',
-    lastObservations: 'Последни наблюдения',
+    lastObservations: 'Последни три наблюдения',
     cleaningHistory: 'История на почистванията',
     noHistory: 'Няма записани почиствания',
     signals: 'Сигнали',
