@@ -30,7 +30,9 @@ export default function SignalsScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isFirstFocus, setIsFirstFocus] = useState(true)
-  const [filter, setFilter] = useState<'all' | 'mine'>('mine')
+  const [filter, setFilter] = useState<'all' | 'mine'>(() =>
+    containerReferenceId ? 'all' : 'mine'
+  )
   const [deviceId, setDeviceId] = useState<string | null>(null)
 
   useEffect(() => {
