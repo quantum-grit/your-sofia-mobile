@@ -34,15 +34,6 @@ export default function NewLayout() {
           headerShown: true,
         }}
       />
-      <Stack.Screen
-        name="ar-view"
-        options={{
-          title: 'Разгледай',
-          headerShown: true,
-          presentation: 'fullScreenModal',
-          headerBackTitle: t('common.back'),
-        }}
-      />
     </Stack>
   )
 }
