@@ -53,7 +53,7 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
           height: 64 + Math.max(insets.bottom, 8),
         },
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: {
           fontSize: fontSizes.caption,
           fontFamily: fonts.semiBold,
