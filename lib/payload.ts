@@ -1073,11 +1073,18 @@ export interface TimeBucket {
   containerCount: number
 }
 
+export interface DailyCollectionTrend {
+  date: string
+  totalContainers: number
+  collectedContainers: number
+}
+
 export interface CollectionMetrics {
   from: string
   to: string
   byDistrict: DistrictStat[]
   byZone: ZoneStat[]
+  byDay: DailyCollectionTrend[]
   byTimeSinceCollection: TimeBucket[]
   scheduleCompliance: {
     scheduledToday: number
