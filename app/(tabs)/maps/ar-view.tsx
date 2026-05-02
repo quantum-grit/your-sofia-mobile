@@ -40,7 +40,6 @@ const TEST_OVERLAYS: ProjectedContainer[] = [
       wasteType: 'general',
       status: 'active',
       lastCleaned: '2026-03-20 08:00:00+00',
-      serviceInterval: '1',
       servicedBy: 'ДКС',
       createdAt: '',
       updatedAt: '',
@@ -62,7 +61,6 @@ const TEST_OVERLAYS: ProjectedContainer[] = [
       status: 'full',
       state: ['full'],
       lastCleaned: '2026-03-18 14:30:00+00',
-      serviceInterval: '3',
       createdAt: '',
       updatedAt: '',
     },
@@ -83,7 +81,6 @@ const TEST_OVERLAYS: ProjectedContainer[] = [
       status: 'active',
       state: ['damaged'],
       lastCleaned: undefined,
-      serviceInterval: '2',
       createdAt: '',
       updatedAt: '',
     },
@@ -108,32 +105,6 @@ function getRelativeTimeLabel(lastCleaned: string | undefined, t: (k: string) =>
   }
   const days = Math.floor(hours / 24)
   return `${days} ${days === 1 ? t('arView.day') : t('arView.days')}`
-}
-
-/** Returns time until next expected cleaning, in hours, based on lastCleaned + serviceInterval (days). */
-function getExpectedCleanLabel(
-  lastCleaned: string | undefined,
-  serviceInterval: string | undefined,
-  t: (k: string) => string
-): string {
-  if (!lastCleaned || !serviceInterval) return t('arView.unknown')
-  const intervalDays = parseFloat(serviceInterval)
-  if (isNaN(intervalDays) || intervalDays <= 0) return t('arView.unknown')
-  const normalized = normaliseTimestamp(lastCleaned)
-  let nextMs = new Date(normalized).getTime() + intervalDays * 24 * 3_600_000
-  if (isNaN(nextMs)) return t('arView.unknown')
-
-  let diffH = Math.round((nextMs - Date.now()) / 3_600_000)
-  while (diffH < 0) {
-    // If overdue, keep adding intervals until we get to the next expected cleaning in the future
-    nextMs += intervalDays * 24 * 3_600_000
-    if (isNaN(nextMs)) return t('arView.unknown')
-    diffH = Math.round((nextMs - Date.now()) / 3_600_000)
-  }
-
-  return diffH < 48
-    ? `${diffH} ${t('arView.hours')}`
-    : `${Math.floor(diffH / 24)} ${t('arView.days')}`
 }
 
 function getPinColor(container: WasteContainer): string {
@@ -187,12 +158,6 @@ function ContainerAROverlay({container, distance, onPress}: ContainerAROverlayPr
         <Text style={styles.overlayRow} numberOfLines={1}>
           {t('arView.lastCleaned')}: {cleanedLabel}
         </Text>
-        {container.serviceInterval || container.lastCleaned ? (
-          <Text style={styles.overlayRow} numberOfLines={1}>
-            {t('arView.expectedCleaning')}:{' '}
-            {getExpectedCleanLabel(container.lastCleaned, container.serviceInterval, t)}
-          </Text>
-        ) : null}
         {container.servicedBy ? (
           <Text style={styles.overlayRow} numberOfLines={1}>
             {t('arView.servicedBy')}: {container.servicedBy}
