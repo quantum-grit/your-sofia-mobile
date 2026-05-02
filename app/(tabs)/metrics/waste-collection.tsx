@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {useTranslation} from 'react-i18next'
-import {CartesianChart, StackedBar, Bar} from 'victory-native'
+import {CartesianChart, StackedBar, Bar, Line} from 'victory-native'
 import {Text as SkiaText, matchFont} from '@shopify/react-native-skia'
 import {useCollectionMetrics, MetricsRange} from '../../../hooks/useCollectionMetrics'
 import {colors, fonts, fontSizes} from '@/styles/tokens'
@@ -18,7 +18,7 @@ type ChartTab = 'zone' | 'district'
 
 function colorByBucketOrder(order: number): string {
   if (order === 0) return colors.success
-  if (order === 1) return '#F97316'
+  if (order === 1) return colors.warning
   return colors.error
 }
 
@@ -27,7 +27,18 @@ export default function WasteCollectionDashboard() {
   const [range, setRange] = useState<MetricsRange>('week')
   const [chartTab, setChartTab] = useState<ChartTab>('district')
   const {data, loading, error, refresh} = useCollectionMetrics(range)
+  const {
+    data: monthlyData,
+    loading: monthlyLoading,
+    error: monthlyError,
+    refresh: refreshMonthly,
+  } = useCollectionMetrics('month')
   const font = matchFont({fontSize: 10})
+
+  const handleRefresh = () => {
+    refresh()
+    refreshMonthly()
+  }
 
   const totalContainers = data?.byZone.reduce((s, z) => s + z.totalContainers, 0) ?? 0
   const totalCollected = data?.byZone.reduce((s, z) => s + z.collectedContainers, 0) ?? 0
@@ -67,7 +78,7 @@ export default function WasteCollectionDashboard() {
         {
           status: t('metrics.complianceDelayed'),
           count: Math.max(0, compliance.delayed - compliance.missed),
-          color: '#F97316',
+          color: colors.warning,
         },
         {
           status: t('metrics.complianceMissed'),
@@ -79,11 +90,24 @@ export default function WasteCollectionDashboard() {
 
   const chartData = chartTab === 'zone' ? zoneData : districtData
 
+  const monthlyTrendData =
+    monthlyData?.byDay.slice(-30).map((day) => {
+      const [, month, date] = day.date.slice(0, 10).split('-')
+      const dayLabel = `${date}.${month}`
+      return {
+        day: dayLabel,
+        collected: day.collectedContainers,
+        total: day.totalContainers,
+      }
+    }) ?? []
+
   return (
     <ScrollView
       style={styles.scroll}
       contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} />}
+      refreshControl={
+        <RefreshControl refreshing={loading || monthlyLoading} onRefresh={handleRefresh} />
+      }
     >
       {/* Date range selector */}
       <View style={styles.rangeRow}>
@@ -121,7 +145,7 @@ export default function WasteCollectionDashboard() {
             <Text style={styles.summaryLabel}>{t('metrics.summaryZones')}</Text>
           </View>
           <View style={styles.summaryCard}>
-            <Text style={[styles.summaryValue, {color: '#D97706'}]}>{districtsWithData}</Text>
+            <Text style={[styles.summaryValue, {color: colors.warning}]}>{districtsWithData}</Text>
             <Text style={styles.summaryLabel}>{t('metrics.summaryDistricts')}</Text>
           </View>
         </View>
@@ -294,6 +318,85 @@ export default function WasteCollectionDashboard() {
         </View>
       )}
 
+      {/* Monthly Collection Trendline (last 30 days) */}
+      {!monthlyLoading && !monthlyError && monthlyData && (
+        <View style={[styles.chartSection, {marginTop: 8}]}>
+          <Text style={styles.sectionTitle}>{t('metrics.monthlyTrendline')}</Text>
+          {monthlyTrendData.length === 0 ? (
+            <View style={styles.center}>
+              <Text style={styles.emptyText}>{t('metrics.noData')}</Text>
+            </View>
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+              <View style={{width: Math.max(560, monthlyTrendData.length * 30), height: 300}}>
+                <CartesianChart
+                  data={monthlyTrendData}
+                  xKey="day"
+                  yKeys={['collected', 'total']}
+                  domainPadding={{left: 16, right: 16, top: 20}}
+                  axisOptions={{
+                    font,
+                    tickCount: {x: monthlyTrendData.length, y: 5},
+                    labelColor: colors.textSecondary,
+                    lineColor: colors.border,
+                  }}
+                  xAxis={{
+                    labelRotate: -45,
+                    font,
+                    tickCount: monthlyTrendData.length,
+                    labelColor: colors.textSecondary,
+                    lineColor: colors.border,
+                    labelOffset: -2,
+                  }}
+                >
+                  {({points, chartBounds}) => (
+                    <>
+                      {points.collected.map((point, i) => (
+                        <Bar
+                          key={i}
+                          points={[point]}
+                          barCount={points.collected.length}
+                          chartBounds={chartBounds}
+                          color={colors.primary}
+                          roundedCorners={{topLeft: 3, topRight: 3}}
+                          labels={{
+                            position: 'top',
+                            font,
+                            color: colors.primary,
+                          }}
+                        />
+                      ))}
+                      <Line
+                        points={points.total}
+                        color={colors.success}
+                        strokeWidth={4}
+                        curveType="linear"
+                        animate={{type: 'timing', duration: 300}}
+                      />
+                      {(() => {
+                        const firstPoint = points.total[0]
+                        if (!firstPoint) return null
+                        const lineLabel =
+                          'Общ брой контейнери за събиране: ' + monthlyTrendData[0]?.total
+                        return (
+                          <SkiaText
+                            x={firstPoint.x}
+                            y={(firstPoint.y ?? 0) - 10}
+                            text={lineLabel}
+                            font={font}
+                            color={colors.success}
+                          />
+                        )
+                      })()}
+                    </>
+                  )}
+                </CartesianChart>
+              </View>
+            </ScrollView>
+          )}
+        </View>
+      )}
+
       {/* Schedule compliance bar chart */}
       {!loading && !error && data && (
         <View style={[styles.chartSection, {marginTop: 8}]}>
@@ -422,7 +525,7 @@ const styles = StyleSheet.create({
   emptyText: {color: colors.textMuted, fontSize: fontSizes.bodySm},
   chartSection: {paddingHorizontal: 16, paddingTop: 8},
   sectionTitle: {
-    fontSize: fontSizes.bodySm,
+    fontSize: fontSizes.h3,
     fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     marginBottom: 10,
