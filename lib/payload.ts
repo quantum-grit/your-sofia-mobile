@@ -4,7 +4,7 @@
  * Client for fetching content from Payload CMS
  */
 
-import type {WasteContainer, CreateContainerInput} from '../types/wasteContainer'
+import type {WasteContainer, ContainerStatus, CreateContainerInput} from '../types/wasteContainer'
 import type {Signal, CreateSignalInput} from '../types/signal'
 import type {Assignment, CreateAssignmentInput, AssignmentProgress} from '../types/assignment'
 import {environmentManager} from './environment'
@@ -205,6 +205,7 @@ export async function fetchContainerClusters(options: {
   maxLat: number
   minLng: number
   maxLng: number
+  status?: ContainerStatus
 }): Promise<{type: 'clusters'; docs: ContainerCluster[]; zoom: number}> {
   const params = new URLSearchParams({
     zoom: String(options.zoom),
@@ -213,6 +214,9 @@ export async function fetchContainerClusters(options: {
     minLng: String(options.minLng),
     maxLng: String(options.maxLng),
   })
+  if (options.status) {
+    params.set('status', options.status)
+  }
   const url = `${getApiUrl()}/api/waste-containers/containers-with-signal-count?${params}`
   const response = await fetch(url)
   if (!response.ok) throw new Error(`Failed to fetch clusters: ${response.statusText}`)
@@ -223,7 +227,7 @@ export async function fetchContainerClusters(options: {
  * Fetch waste containers from Payload CMS
  */
 export async function fetchWasteContainers(options?: {
-  status?: 'active' | 'full' | 'maintenance' | 'inactive'
+  status?: ContainerStatus
   wasteType?: string
   limit?: number
   page?: number
@@ -288,7 +292,7 @@ export async function fetchNearbyWasteContainers(
   location: {latitude: number; longitude: number},
   radiusMeters: number = 500,
   options?: {
-    status?: 'active' | 'full' | 'maintenance' | 'inactive'
+    status?: ContainerStatus
     wasteType?: string
     limit?: number
   }

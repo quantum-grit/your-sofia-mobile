@@ -49,7 +49,7 @@ function latDeltaToZoom(latitudeDelta: number): number {
 /** Zoom level at which we switch from clusters to individual markers (matches server). */
 const INDIVIDUAL_ZOOM = 16
 
-type ContainerFilter = 'all' | 'uncollected' | ContainerState
+type ContainerFilter = 'all' | 'active' | 'uncollected' | ContainerState
 
 export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
   const {t} = useTranslation()
@@ -59,7 +59,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
   const mapRef = useRef<MapView>(null)
   const [location, setLocation] = useState<Location.LocationObject | null>(null)
   const [permissionStatus, setPermissionStatus] = useState<Location.PermissionStatus | null>(null)
-  const [selectedStateFilter, setSelectedStateFilter] = useState<ContainerFilter>('all')
+  const [selectedStateFilter, setSelectedStateFilter] = useState<ContainerFilter>('active')
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<WasteType | 'all'>('all')
   const [showStateFilters, setShowStateFilters] = useState(false)
   const [showTypeFilters, setShowTypeFilters] = useState(false)
@@ -122,7 +122,8 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
           minLng: region.longitude - region.longitudeDelta / 2,
           maxLng: region.longitude + region.longitudeDelta / 2,
         }
-        const data = await fetchContainerClusters({zoom: z, ...bounds})
+        const statusFilter = selectedStateFilter === 'active' ? 'active' : undefined
+        const data = await fetchContainerClusters({zoom: z, ...bounds, status: statusFilter})
         if (isMountedRef.current && data.type === 'clusters') {
           setClusters(data.docs)
         }
@@ -130,7 +131,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
         console.error('[fetchClusters] Error:', err)
       }
     },
-    []
+    [selectedStateFilter]
   )
 
   // Load nearby containers based on map center position
@@ -236,6 +237,15 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
     fetchClusters({...center, latitudeDelta, longitudeDelta})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location])
+
+  useEffect(() => {
+    const center = mapCenter || {
+      latitude: location?.coords.latitude ?? 42.6977,
+      longitude: location?.coords.longitude ?? 23.3219,
+    }
+    const {latitudeDelta, longitudeDelta} = regionDeltaRef.current
+    fetchClusters({...center, latitudeDelta, longitudeDelta})
+  }, [selectedStateFilter, mapCenter, location, fetchClusters])
 
   useEffect(() => {
     ;(async () => {
@@ -399,6 +409,14 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
         }
         return containers.length
       }
+      if (filterKey === 'active') {
+        return containers.filter((container) => {
+          const matchesStatus = container.status === 'active'
+          const matchesType =
+            selectedTypeFilter === 'all' || container.wasteType === selectedTypeFilter
+          return matchesStatus && matchesType
+        }).length
+      }
       if (filterKey === 'uncollected') {
         if (selectedTypeFilter !== 'all') {
           return containers.filter((c) => c.wasteType === selectedTypeFilter).length
@@ -420,6 +438,9 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
     (typeKey: WasteType | 'all'): number => {
       if (typeKey === 'all') {
         // If state filter is active, count only containers with that state
+        if (selectedStateFilter === 'active') {
+          return containers.filter((c) => c.status === 'active').length
+        }
         if (selectedStateFilter !== 'all' && selectedStateFilter !== 'uncollected') {
           return containers.filter(
             (c) => c.state?.includes(selectedStateFilter as ContainerState) ?? false
@@ -431,6 +452,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
         const matchesType = container.wasteType === typeKey
         const matchesState =
           selectedStateFilter === 'all' ||
+          (selectedStateFilter === 'active' && container.status === 'active') ||
           selectedStateFilter === 'uncollected' ||
           (container.state?.includes(selectedStateFilter as ContainerState) ?? false)
         return matchesType && matchesState
@@ -441,6 +463,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
 
   const stateFilters: {key: ContainerFilter; label: string}[] = [
     {key: 'all', label: t('wasteContainers.filters.all')},
+    {key: 'active', label: t('wasteContainers.statuses.active')},
     {key: 'full', label: t('wasteContainers.filters.full')},
     {key: 'dirty', label: t('wasteContainers.filters.dirty')},
     {key: 'damaged', label: t('wasteContainers.filters.damaged')},
@@ -469,6 +492,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
     return containers.filter((container) => {
       const matchesState =
         selectedStateFilter === 'all' ||
+        (selectedStateFilter === 'active' && container.status === 'active') ||
         selectedStateFilter === 'uncollected' ||
         (container.state?.includes(selectedStateFilter as ContainerState) ?? false)
       const matchesType = selectedTypeFilter === 'all' || container.wasteType === selectedTypeFilter

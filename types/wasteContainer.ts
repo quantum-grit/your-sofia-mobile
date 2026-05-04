@@ -12,6 +12,8 @@ export type WasteType =
 
 export type CapacitySize = 'tiny' | 'small' | 'standard' | 'big' | 'industrial'
 
+export type ContainerStatus = 'active' | 'full' | 'maintenance' | 'inactive' | 'pending'
+
 export interface CreateContainerInput {
   publicNumber: string
   wasteType: WasteType
@@ -89,7 +91,7 @@ export interface WasteContainer {
   binCount?: number
   servicedBy?: string
   wasteType: WasteType
-  status: 'active' | 'full' | 'maintenance' | 'inactive'
+  status: ContainerStatus
   state?: ContainerState[]
   notes?: string
   lastCleaned?: string
