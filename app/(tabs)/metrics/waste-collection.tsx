@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -33,7 +33,18 @@ export default function WasteCollectionDashboard() {
     error: monthlyError,
     refresh: refreshMonthly,
   } = useCollectionMetrics('month')
-  const font = matchFont({fontSize: 10})
+  const chartFont = useMemo(
+    () =>
+      matchFont({
+        fontFamily: fonts.monoMedium,
+        fontSize: 10,
+      }) ??
+      matchFont({
+        fontFamily: fonts.medium,
+        fontSize: 10,
+      }),
+    []
+  )
 
   const handleRefresh = () => {
     refresh()
@@ -223,7 +234,7 @@ export default function WasteCollectionDashboard() {
                 yKeys={['collected', 'notCollected', 'total']}
                 domainPadding={{left: 20, right: 20, top: 20}}
                 axisOptions={{
-                  font,
+                  font: chartFont,
                   tickCount: {x: chartData.length, y: 5},
                   labelColor: colors.textSecondary,
                   lineColor: colors.border,
@@ -249,7 +260,7 @@ export default function WasteCollectionDashboard() {
                           x={point.x - label.length * 3}
                           y={(point.y ?? 0) - 4}
                           text={label}
-                          font={font}
+                          font={chartFont}
                           color={colors.primary}
                         />
                       )
@@ -286,7 +297,7 @@ export default function WasteCollectionDashboard() {
                   yKeys={['count']}
                   domainPadding={{left: 20, right: 20, top: 24}}
                   axisOptions={{
-                    font,
+                    font: chartFont,
                     tickCount: {x: histogramData.length, y: 5},
                     labelColor: colors.textSecondary,
                     lineColor: colors.border,
@@ -304,7 +315,7 @@ export default function WasteCollectionDashboard() {
                           roundedCorners={{topLeft: 4, topRight: 4}}
                           labels={{
                             position: 'top',
-                            font,
+                            font: chartFont,
                             color: colorByBucketOrder(histogramData[i]?.bucketOrder ?? i),
                           }}
                         />
@@ -335,14 +346,14 @@ export default function WasteCollectionDashboard() {
                   yKeys={['collected', 'total']}
                   domainPadding={{left: 16, right: 16, top: 20}}
                   axisOptions={{
-                    font,
+                    font: chartFont,
                     tickCount: {x: monthlyTrendData.length, y: 5},
                     labelColor: colors.textSecondary,
                     lineColor: colors.border,
                   }}
                   xAxis={{
                     labelRotate: -45,
-                    font,
+                    font: chartFont,
                     tickCount: monthlyTrendData.length,
                     labelColor: colors.textSecondary,
                     lineColor: colors.border,
@@ -361,7 +372,7 @@ export default function WasteCollectionDashboard() {
                           roundedCorners={{topLeft: 3, topRight: 3}}
                           labels={{
                             position: 'top',
-                            font,
+                            font: chartFont,
                             color: colors.primary,
                           }}
                         />
@@ -383,7 +394,7 @@ export default function WasteCollectionDashboard() {
                             x={firstPoint.x}
                             y={(firstPoint.y ?? 0) - 10}
                             text={lineLabel}
-                            font={font}
+                            font={chartFont}
                             color={colors.success}
                           />
                         )
@@ -416,7 +427,7 @@ export default function WasteCollectionDashboard() {
               yKeys={['count']}
               domainPadding={{left: 40, right: 40, top: 24}}
               axisOptions={{
-                font,
+                font: chartFont,
                 tickCount: {x: 3, y: 5},
                 labelColor: colors.textSecondary,
                 lineColor: colors.border,
@@ -434,7 +445,7 @@ export default function WasteCollectionDashboard() {
                       roundedCorners={{topLeft: 4, topRight: 4}}
                       labels={{
                         position: 'top',
-                        font,
+                        font: chartFont,
                         color: complianceData[i]?.color ?? colors.textSecondary,
                       }}
                     />
