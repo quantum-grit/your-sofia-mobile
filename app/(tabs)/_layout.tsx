@@ -33,8 +33,11 @@ export default function TabLayout() {
 
 function TabLayoutContent({t}: {t: (key: string) => string}) {
   const insets = useSafeAreaInsets()
-  const {isContainerAdmin, isAuthenticated} = useAuth()
+  const {isContainerAdmin, isAuthenticated, user} = useAuth()
   const {closedSignalsCount} = useNotifications()
+  const canAccessNewTab =
+    isAuthenticated &&
+    (user?.role === 'admin' || user?.role === 'containerAdmin' || user?.role === 'inspector')
 
   return (
     <Tabs
@@ -81,6 +84,7 @@ function TabLayoutContent({t}: {t: (key: string) => string}) {
       <Tabs.Screen
         name="new"
         options={{
+          href: canAccessNewTab ? '/new' : null,
           title: t('common.new'),
           tabBarLabel: t('common.new'),
           tabBarIcon: ({color}) => <MapPlus size={24} color={color} />,
