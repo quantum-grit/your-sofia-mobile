@@ -44,7 +44,7 @@ export default function NewScreen() {
   const {t} = useTranslation()
   const router = useRouter()
   const params = useLocalSearchParams()
-  const {isContainerAdmin} = useAuth()
+  const {isContainerAdmin, token} = useAuth()
   const cameraRef = useRef<CameraView>(null)
   const scrollViewRef = useRef<ScrollView>(null)
 
@@ -350,6 +350,7 @@ export default function NewScreen() {
         signalData,
         photoFiles.length > 0 ? photoFiles : undefined,
         deviceId,
+        token || undefined,
         (current, total) => {
           setUploadProgress({stage: 'uploading', current, total})
         }

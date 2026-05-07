@@ -132,8 +132,19 @@ export async function fetchNewsById(
  */
 export function getMediaUrl(media: any): string | undefined {
   if (!media) return undefined
-  if (typeof media === 'string') return `${getApiUrl()}${media}`
-  if (media.url) return `${getApiUrl()}${media.url}`
+
+  const toAbsoluteUrl = (rawUrl: string): string => {
+    if (!rawUrl) return rawUrl
+
+    // Payload can return absolute URLs when serverURL is configured.
+    if (/^(?:https?:)?\/\//i.test(rawUrl)) return rawUrl
+
+    const normalizedPath = rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`
+    return `${getApiUrl()}${normalizedPath}`
+  }
+
+  if (typeof media === 'string') return toAbsoluteUrl(media)
+  if (media.url) return toAbsoluteUrl(media.url)
   return undefined
 }
 
@@ -568,9 +579,16 @@ export async function createSignal(
   signalData: CreateSignalInput,
   photos?: {uri: string; type: string; name: string}[],
   reporterUniqueId?: string,
+  authToken?: string,
   onUploadProgress?: (current: number, total: number) => void
 ): Promise<Signal> {
   let response: Response
+
+  const authHeaders: Record<string, string> = authToken
+    ? {
+        Authorization: `JWT ${authToken}`,
+      }
+    : {}
 
   if (photos && photos.length > 0) {
     // Upload photos first, then create signal with image references
@@ -600,6 +618,7 @@ export async function createSignal(
 
       const uploadResponse = await fetch(`${getApiUrl()}/api/media`, {
         method: 'POST',
+        headers: authHeaders,
         body: formData,
       })
 
@@ -619,6 +638,7 @@ export async function createSignal(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
       body: JSON.stringify({
         ...serializeSignalLocation(signalData),
@@ -631,6 +651,7 @@ export async function createSignal(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
       },
       body: JSON.stringify(serializeSignalLocation(signalData)),
     })
