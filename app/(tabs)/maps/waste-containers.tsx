@@ -411,7 +411,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
       }
       if (filterKey === 'active') {
         return containers.filter((container) => {
-          const matchesStatus = container.status === 'active'
+          const matchesStatus = isOperational(container)
           const matchesType =
             selectedTypeFilter === 'all' || container.wasteType === selectedTypeFilter
           return matchesStatus && matchesType
@@ -437,9 +437,9 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
   const getTypeFilterCount = useCallback(
     (typeKey: WasteType | 'all'): number => {
       if (typeKey === 'all') {
-        // If state filter is active, count only containers with that state
+        // If state filter is active, count only operational containers
         if (selectedStateFilter === 'active') {
-          return containers.filter((c) => c.status === 'active').length
+          return containers.filter((c) => isOperational(c)).length
         }
         if (selectedStateFilter !== 'all' && selectedStateFilter !== 'uncollected') {
           return containers.filter(
@@ -452,7 +452,7 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
         const matchesType = container.wasteType === typeKey
         const matchesState =
           selectedStateFilter === 'all' ||
-          (selectedStateFilter === 'active' && container.status === 'active') ||
+          (selectedStateFilter === 'active' && isOperational(container)) ||
           selectedStateFilter === 'uncollected' ||
           (container.state?.includes(selectedStateFilter as ContainerState) ?? false)
         return matchesType && matchesState
@@ -487,12 +487,17 @@ export default function WasteContainers({onOpenAR}: {onOpenAR?: () => void}) {
     {key: 'trashCan', label: t('wasteContainers.types.trashCan')},
   ]
 
+  // 'active' filter means "operational" — hide only inactive/pending containers.
+  // Containers that gain states (full, dirty, etc.) via signals remain visible.
+  const isOperational = (container: WasteContainer) =>
+    container.status !== 'inactive' && container.status !== 'pending'
+
   // Filter containers based on selected filters - use useMemo to avoid recalculating on every render
   const visibleContainers = React.useMemo(() => {
     return containers.filter((container) => {
       const matchesState =
         selectedStateFilter === 'all' ||
-        (selectedStateFilter === 'active' && container.status === 'active') ||
+        (selectedStateFilter === 'active' && isOperational(container)) ||
         selectedStateFilter === 'uncollected' ||
         (container.state?.includes(selectedStateFilter as ContainerState) ?? false)
       const matchesType = selectedTypeFilter === 'all' || container.wasteType === selectedTypeFilter
